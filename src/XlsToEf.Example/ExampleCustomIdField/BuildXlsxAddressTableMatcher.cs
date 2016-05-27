@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using XlsToEf.Example.Domain;
 using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomIdField
@@ -17,7 +18,7 @@ namespace XlsToEf.Example.ExampleCustomIdField
         public async Task<ImportColumnData> Handle(XlsAddressColumnMatcherQuery message)
         {
             message.FilePath = Path.GetTempPath() + message.FileName;
-            var wo = new Domain.Address();
+            var wo = new Address();
 
             var columnData = new ImportColumnData
             {

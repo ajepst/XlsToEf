@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using XlsToEf.Example.Domain;
 using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleBaseClassIdField
@@ -17,7 +18,7 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
         public async Task<ImportColumnData> Handle(XlsxOrderColumnMatcherQuery message)
         {
             message.FilePath = Path.GetTempPath() + message.FileName;
-            var unit = new Domain.Order();
+            var unit = new Order();
 
             var columnData = new ImportColumnData
             {

@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
 }
-@model Usac.Udb.Features.Import.ImportViewInfo
+@model XlsToEf.Import.ImportViewInfo
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -52,6 +52,6 @@
     
 <script>
     $(function () {
-        udbApp.Import.ImportReady('@Model.UploadUrl', '@Model.UploadTitle', '@Model.ModalId');
+        App.Import.ImportReady('@Model.UploadUrl', '@Model.UploadTitle', '@Model.ModalId');
     }); 
 </script>

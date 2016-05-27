@@ -2,8 +2,10 @@ using System;
 
 namespace XlsToEf.Example.Domain
 {
-    public class Order : EntityBase<short>
+    public class Order : Entity<short>
     {
         public DateTime OrderDate { get; set; }
+
+        public DateTime? DeliveryDate { get; set; }
     }
 }

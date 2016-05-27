@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using MediatR;
+using XlsToEf.Example.Domain;
 using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleBaseClassIdField
@@ -15,7 +16,7 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
 
         public async Task<ImportResult> Handle(ImportMatchingOrderData message)
         {
-            return await _xlsxToTableImporter.ImportColumnData<Domain.Order, short>(message);
+            return await _xlsxToTableImporter.ImportColumnData<Order, short>(message);
         }
     }
 }

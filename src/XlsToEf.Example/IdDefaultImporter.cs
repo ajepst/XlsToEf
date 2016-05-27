@@ -16,7 +16,7 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
         }
 
         public Task<ImportResult> ImportColumnData<TEntity, TSelector>(ImportMatchingData matchingData,
-            UpdatePropertyOverrider<TEntity> overrider = null) where TEntity : EntityBase<TSelector>
+            UpdatePropertyOverrider<TEntity> overrider = null) where TEntity : Entity<TSelector>
             where TSelector : IEquatable<TSelector>
         {
             Func<TSelector, Expression<Func<TEntity, bool>>> finderExpression =

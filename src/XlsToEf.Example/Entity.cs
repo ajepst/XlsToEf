@@ -1,6 +1,6 @@
 ﻿namespace XlsToEf.Example
 {
-    public abstract class EntityBase<T>
+    public abstract class Entity<T> : BaseEntity
     {
         public int Id { get; set; }
     }
