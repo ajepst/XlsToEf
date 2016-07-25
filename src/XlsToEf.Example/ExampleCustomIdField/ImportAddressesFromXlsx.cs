@@ -26,7 +26,7 @@ namespace XlsToEf.Example.ExampleCustomIdField
         private static string GetSelectorColName()
         {
             var wo = new Address();
-            var selectorColName = ImportColumnDataBuilder.GetPropertyName(() => wo.AddrId);
+            var selectorColName = PropertyNameHelper.GetPropertyName(() => wo.AddrId);
             return selectorColName;
         }
     }

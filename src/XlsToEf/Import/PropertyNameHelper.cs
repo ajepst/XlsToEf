@@ -5,20 +5,8 @@ using System.Threading.Tasks;
 
 namespace XlsToEf.Import
 {
-    public class ImportColumnDataBuilder
+    public class PropertyNameHelper
     {
-        private readonly IExcelIoWrapper _excelIoWrapper;
-
-        public ImportColumnDataBuilder(IExcelIoWrapper excelIoWrapper)
-        {
-            _excelIoWrapper = excelIoWrapper;
-        }
-
-        public async Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
-        {
-            return await _excelIoWrapper.GetColumns(matcherQuery.FilePath, matcherQuery.Sheet);
-        }
-
         public static string GetPropertyName<T>(Expression<Func<T>> propertyLambda)
         {
             var me = propertyLambda.Body as MemberExpression;

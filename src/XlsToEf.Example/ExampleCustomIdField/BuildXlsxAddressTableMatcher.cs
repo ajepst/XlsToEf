@@ -8,11 +8,13 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomIdField
 {
-    public class BuildXlsxAddressTableMatcher : ImportColumnDataBuilder, IAsyncRequestHandler<XlsAddressColumnMatcherQuery, ImportColumnData>
+    public class BuildXlsxAddressTableMatcher : IAsyncRequestHandler<XlsAddressColumnMatcherQuery, ImportColumnData>
     {
+        private readonly IExcelIoWrapper _excelIoWrapper;
+
         public BuildXlsxAddressTableMatcher(IExcelIoWrapper excelIoWrapper)
-            : base(excelIoWrapper)
         {
+            _excelIoWrapper = excelIoWrapper;
         }
 
         public async Task<ImportColumnData> Handle(XlsAddressColumnMatcherQuery message)
@@ -22,12 +24,12 @@ namespace XlsToEf.Example.ExampleCustomIdField
 
             var columnData = new ImportColumnData
             {
-                XlsxColumns = (await GetImportColumnData(message)).ToArray(),
+                XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
                 FileName = message.FileName,
                 TableColumns = new Dictionary<string, SingleColumnData>
                 {
-                    {GetPropertyName(() => wo.AddrId), new SingleColumnData("Address Id")},
-                    {GetPropertyName(() => wo.AddressLine1), new SingleColumnData("Address Line 1", required:false)},
+                    {PropertyNameHelper.GetPropertyName(() => wo.AddrId), new SingleColumnData("Address Id")},
+                    {PropertyNameHelper.GetPropertyName(() => wo.AddressLine1), new SingleColumnData("Address Line 1", required:false)},
                 }
             };
 

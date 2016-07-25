@@ -31,15 +31,15 @@ namespace XlsToEf.Tests
             return Task.FromResult(Rows);
         }
 
-        public Task<IList<string>> GetColumns(string filePath, string sheet)
-        {
-            IList<string> result = new List<string> {"xlsCol1", "xlsCol2", "xlsCol3", "xlsCol4", "xlsCol5", "xlsCol6", "xlsCol7"};
-            return Task.FromResult(result);
-        }
-
         public Task<Dictionary<string, string>> GetFirstTwoColsSheetSlice(string filePath, string sheetName)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
+        {
+            IList<string> result = new List<string> { "xlsCol1", "xlsCol2", "xlsCol3", "xlsCol4", "xlsCol5", "xlsCol6", "xlsCol7" };
+            return Task.FromResult(result);
         }
     }
 }

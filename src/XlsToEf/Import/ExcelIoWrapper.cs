@@ -9,8 +9,8 @@ namespace XlsToEf.Import
     {
         Task<IList<string>> GetSheets(string filePath);
         Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName);
-        Task<IList<string>> GetColumns(string filePath, string sheet);
         Task<Dictionary<string, string>> GetFirstTwoColsSheetSlice(string filePath, string sheetName);
+        Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery);
     }
 
     public class ExcelIoWrapper : IExcelIoWrapper
@@ -28,7 +28,7 @@ namespace XlsToEf.Import
             return sheetNames;
         }
 
-        public async Task<IList<string>> GetColumns(string filePath, string sheet)
+        private async Task<IList<string>> GetColumns(string filePath, string sheet)
         {
             var colNames = await Task.Run(() =>
             {
@@ -39,6 +39,11 @@ namespace XlsToEf.Import
             });
 
             return colNames;
+        }
+
+        public async Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
+        {
+            return await GetColumns(matcherQuery.FilePath, matcherQuery.Sheet);
         }
 
         public async Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)

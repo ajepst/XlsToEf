@@ -75,7 +75,7 @@
   <ItemGroup>
     <Compile Include="Import\ExcelIoWrapper.cs" />
     <Compile Include="Import\ImportColumnData.cs" />
-    <Compile Include="Import\ImportColumnDataBuilder.cs" />
+    <Compile Include="Import\PropertyNameHelper.cs" />
     <Compile Include="Import\ImportMatchingData.cs" />
     <Compile Include="Import\ImportResult.cs" />
     <Compile Include="Import\ImportViewInfo.cs" />

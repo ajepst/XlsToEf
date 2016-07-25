@@ -8,11 +8,13 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleBaseClassIdField
 {
-    public class BuildXlsxOrderTableMatcher : ImportColumnDataBuilder, IAsyncRequestHandler<XlsxOrderColumnMatcherQuery, ImportColumnData>
+    public class BuildXlsxOrderTableMatcher : IAsyncRequestHandler<XlsxOrderColumnMatcherQuery, ImportColumnData>
     {
+        private readonly IExcelIoWrapper _excelIoWrapper;
+
         public BuildXlsxOrderTableMatcher(IExcelIoWrapper excelIoWrapper)
-            : base(excelIoWrapper)
         {
+            _excelIoWrapper = excelIoWrapper;
         }
 
         public async Task<ImportColumnData> Handle(XlsxOrderColumnMatcherQuery message)
@@ -22,12 +24,12 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
 
             var columnData = new ImportColumnData
             {
-                XlsxColumns = (await GetImportColumnData(message)).ToArray(),
+                XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
                 FileName = message.FileName,
                 TableColumns = new Dictionary<string, SingleColumnData>
                 {
-                    {GetPropertyName(() => unit.Id), new SingleColumnData("Unit ID")},
-                    {GetPropertyName(() => unit.OrderDate), new SingleColumnData("Order Date")},
+                    {PropertyNameHelper.GetPropertyName(() => unit.Id), new SingleColumnData("Unit ID")},
+                    {PropertyNameHelper.GetPropertyName(() => unit.OrderDate), new SingleColumnData("Order Date")},
                 }
             };
 
