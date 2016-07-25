@@ -90,7 +90,7 @@ task help {
 #These are the actual build tasks. They should be Pascal case by convention
 task InitialPrivateBuild -depends Clean, Compile, UpdateExampleDatabase, UpdateTestDatabase, RunAllTests
 
-task DeveloperBuild -depends Clean, SetDebugBuild, Compile,UpdateExampleDatabase, UpdateTestDatabase, RunAllTests
+task DeveloperBuild -depends Clean, SetDebugBuild, Compile, UpdateExampleDatabase, UpdateTestDatabase, RunAllTests
 
 task CompileOnly -depends Clean, SetDebugBuild, Compile
 
@@ -209,9 +209,7 @@ function Write-Help-For-Alias($alias,$description) {
 # generalized functions
 # --------------------------------------------------------------------------------------------------------------
 function deploy-database($action, $connectionString, $scripts_dir, $env, $indexes) {
-    $roundhouse_version_file = "$source_dir\$project_name\bin\$project_name.dll"
 
-    write-host "roundhouse version file: $roundhouse_version_file"
     write-host "action: $action"
     write-host "connectionString: $connectionString"
     write-host "scripts_dir: $scripts_dir"
@@ -231,7 +229,7 @@ function deploy-database($action, $connectionString, $scripts_dir, $env, $indexe
     if ($action -eq "Rebuild"){
       $indexesFolder = if ($indexes -ne $null) { $indexes } else { "indexes" }
        exec { &$roundhouse_exe_path -cs "$connectionString" --commandtimeout=300 --env $env --silent -drop -o $roundhouse_output_dir }
-       exec { &$roundhouse_exe_path -cs "$connectionString" --commandtimeout=300 -f $scripts_dir -env $env -vf $roundhouse_version_file --silent --simple -o $roundhouse_output_dir --transaction --amg afterMigration --indexes $indexesFolder }
+       exec { &$roundhouse_exe_path -cs "$connectionString" --commandtimeout=300 -f $scripts_dir -env $env --silent --simple -o $roundhouse_output_dir --transaction --amg afterMigration --indexes $indexesFolder }
     }
 }
 
