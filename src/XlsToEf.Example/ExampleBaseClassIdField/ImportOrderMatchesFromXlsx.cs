@@ -16,7 +16,7 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
 
         public async Task<ImportResult> Handle(ImportMatchingOrderData message)
         {
-            return await _xlsxToTableImporter.ImportColumnData<Order, short>(message);
+            return await _xlsxToTableImporter.ImportColumnData<Order, int>(message);
         }
     }
 }

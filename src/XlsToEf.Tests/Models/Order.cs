@@ -2,7 +2,7 @@ using System;
 
 namespace XlsToEf.Tests.Models
 {
-    public class Order : Entity<short>
+    public class Order : Entity<int>
     {
         public DateTime OrderDate { get; set; }
 

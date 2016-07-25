@@ -111,9 +111,9 @@ namespace XlsToEf.Tests
 
         private static void ResetDatabases()
         {
-            var unitDatabase = ConfigurationManager.ConnectionStrings["UnitDatabase"].ToString();
+            var testDb = ConfigurationManager.ConnectionStrings["XlsToEfTestDatabase"].ToString();
             
-            DatabaseTestCheckpoint.DbCheckpoint.Reset(unitDatabase);
+            DatabaseTestCheckpoint.DbCheckpoint.Reset(testDb);
         }
 
 

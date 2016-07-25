@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using Shouldly;
 using XlsToEf.Import;
-using XlsToEf.Tests;
 
-namespace XlsToEx.Tests
+namespace XlsToEf.Tests
 {
     public class SheetsGetterFromFileTests
     {

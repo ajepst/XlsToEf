@@ -64,7 +64,7 @@ namespace XlsToEf.Import
                 {
                     importResult.RowErrorDetails.Add(rowNumber.ToString(), "Error: " + e.Message);
                 }
-                catch
+                catch (Exception)
                 {
                     importResult.RowErrorDetails.Add(rowNumber.ToString(), "Cannot be updated - error importing");
                 }

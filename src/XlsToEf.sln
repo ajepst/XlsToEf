@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsToEf", "XlsToEf\XlsToEf.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsToEf.Example", "XlsToEf.Example\XlsToEf.Example.csproj", "{04CE9680-F4EC-46EB-88C5-63FB4F16B095}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsToEx.Tests", "XlsToEf.Tests\XlsToEx.Tests.csproj", "{A958A907-289F-4669-8181-10DD33592F99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsToEf.Tests", "XlsToEf.Tests\XlsToEf.Tests.csproj", "{A958A907-289F-4669-8181-10DD33592F99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

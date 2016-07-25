@@ -14,7 +14,7 @@ namespace XlsToEf.Example.Infrastructure
                 .HasColumnName("ID")
                 .HasColumnType("int")
                 .IsRequired()
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             Property(m => m.OrderDate);
             Property(m => m.DeliveryDate);
         }

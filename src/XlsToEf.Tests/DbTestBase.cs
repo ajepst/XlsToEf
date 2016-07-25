@@ -8,19 +8,19 @@ namespace XlsToEf.Tests
     {
         protected DbContext GetDb()
         {
-            return new XlsToEfDbContext("XlsToEf");
+            return new XlsToEfDbContext("XlsToEfTestDatabase");
         }
 
-        protected void PersistToUnitDatabase(params object[] objects)
+        protected void PersistToDatabase(params object[] objects)
         {
-            using (var udb = GetDb())
+            using (var db = GetDb())
             {
                 foreach (var o in objects)
                 {
-                    udb.Set(o.GetType()).Add(o);
+                    db.Set(o.GetType()).Add(o);
                 }
 
-                udb.SaveChanges();
+                db.SaveChanges();
             }
         }
 

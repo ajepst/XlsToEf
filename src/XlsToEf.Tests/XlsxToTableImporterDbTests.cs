@@ -20,7 +20,7 @@ namespace XlsToEf.Tests
                 Id = 346,
                 OrderDate = DateTime.Today,
             };
-            PersistToUnitDatabase(objectToUpdate);
+            PersistToDatabase(objectToUpdate);
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new IdDefaultImporter(new XlsxToTableImporter(GetDb(), excelIoWrapper));
@@ -36,11 +36,11 @@ namespace XlsToEf.Tests
                         {"DeliveryDate", "xlsCol4"},
                     }
             };
-            await importer.ImportColumnData<Order, short>(importMatchingData);
+            await importer.ImportColumnData<Order, int>(importMatchingData);
 
             var updatedItem = GetDb().Set<Order>().First();
             updatedItem.OrderDate.ShouldBe(new DateTime(2014, 8, 15));
-            updatedItem.DeliveryDate.ShouldBe(new DateTime(2014, 9, 22));
+            updatedItem.DeliveryDate.ShouldBe(new DateTime(2015, 9, 22));
         }
 
         public async Task Should_report_bad_data_and_process_good_data()
@@ -53,7 +53,7 @@ namespace XlsToEf.Tests
                 DeliveryDate = new DateTime(2010, 5, 7)
             };
 
-            PersistToUnitDatabase(objectToUpdate);
+            PersistToDatabase(objectToUpdate);
             var excelIoWrapper = new FakeExcelIo();
             var badRowIdDoesNotExist = new Dictionary<string, string>
             {
@@ -76,7 +76,7 @@ namespace XlsToEf.Tests
                         {"DeliveryDate", "xlsCol4"},
                     }
             };
-            var results = await importer.ImportColumnData<Order, short>(importMatchingData);
+            var results = await importer.ImportColumnData<Order, int>(importMatchingData);
 
             results.SuccessCount.ShouldBe(1);
             results.RowErrorDetails.Count().ShouldBe(1);
@@ -90,7 +90,7 @@ namespace XlsToEf.Tests
                 OrderDate = DateTime.Today,
                 DeliveryDate = null,
             };
-            PersistToUnitDatabase(objectToUpdate);
+            PersistToDatabase(objectToUpdate);
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new IdDefaultImporter(new XlsxToTableImporter(GetDb(), excelIoWrapper));
@@ -102,13 +102,13 @@ namespace XlsToEf.Tests
                     new Dictionary<string, string>
                     {
                         {"Id", "xlsCol5"},
-                        {"AuditDueDate", "xlsCol2"},
+                        {"DeliveryDate", "xlsCol2"},
                     }
             };
-            await importer.ImportColumnData<Order, short>(importMatchingData);
+            await importer.ImportColumnData<Order, int>(importMatchingData);
 
             var updatedItem = GetDb().Set<Order>().First();
-            updatedItem.OrderDate.ShouldBe(new DateTime(2014, 8, 15));
+            updatedItem.DeliveryDate.ShouldBe(new DateTime(2014, 8, 15));
         }
 
         public async Task Should_Import_rows_using_non_id_column()
@@ -119,7 +119,7 @@ namespace XlsToEf.Tests
                 AddrId = "123456",
                 AddressLine1 = addressLine1
             };
-            PersistToUnitDatabase(objectToUpdate);
+            PersistToDatabase(objectToUpdate);
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
@@ -130,15 +130,15 @@ namespace XlsToEf.Tests
                 Selected =
                     new Dictionary<string, string>
                     {
-                        {"WorkOrderNumber", "xlsCol6"},
-                        {"DateSoftClose", "xlsCol2"},
+                        {"Addr 1", "xlsCol6"},
+                        {"AddressLine1", "xlsCol2"},
                     }
             };
             Func<string, Expression<Func<Address, bool>>> selectorFinder = (y) => z => z.AddrId == y;
-            await importer.ImportColumnData(importMatchingData, "WorkOrderNumber", finder: selectorFinder);
+            await importer.ImportColumnData(importMatchingData, "Addr 1", finder: selectorFinder);
 
             var updatedItem = GetDb().Set<Address>().First();
-            updatedItem.AddressLine1.ShouldBe(addressLine1);   
+            updatedItem.AddressLine1.ShouldBe("8/15/2014");   
         }
     }
 }

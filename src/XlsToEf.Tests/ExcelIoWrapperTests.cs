@@ -3,19 +3,18 @@ using Shouldly;
 using XlsToEf.Import;
 using XlsToEf.Tests;
 
-namespace XlsToEx.Tests
+namespace XlsToEf.Tests
 {
     public class ExcelIoWrapperTests
     {
-        [Skip]
         public void ShouldGetTwoColumnSliceFromSpreadsheet()
         {
             var excel = new ExcelIoWrapper();
             var task = excel.GetFirstTwoColsSheetSlice("TestExcelDoc.xlsx", "Sheet2");
             Task.WaitAll(task);
             task.Result.Keys.Count.ShouldBe(2);
-            task.Result["Mileage Start"].ShouldBe("11");
-            task.Result["Mileage Stop"].ShouldBe("15");
+            task.Result["Price"].ShouldBe("11");
+            task.Result["Count"].ShouldBe("15");
         }
     }
 }
