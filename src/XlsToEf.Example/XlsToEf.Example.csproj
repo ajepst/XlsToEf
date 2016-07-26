@@ -53,8 +53,8 @@
       <HintPath>..\packages\LinqToExcel_x64.1.10.1\lib\LinqToExcel.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MediatR">
@@ -262,7 +262,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="IdDefaultImporter.cs" />
+    <Compile Include="ExampleBaseClassIdField\IdDefaultImporter.cs" />
     <Compile Include="Infrastructure\AddressMapping.cs" />
     <Compile Include="Infrastructure\OrderMapping.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
@@ -336,6 +336,9 @@
       <Project>{020fa720-f93c-4782-a9a2-bc246e7a5400}</Project>
       <Name>XlsToEf</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
