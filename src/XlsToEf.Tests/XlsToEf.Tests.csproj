@@ -103,6 +103,8 @@
     <Compile Include="Infrastructure\Bootstrapper.cs" />
     <Compile Include="Infrastructure\IoC.cs" />
     <Compile Include="Infrastructure\OrderMapping.cs" />
+    <Compile Include="Infrastructure\ProductCategoryMapping.cs" />
+    <Compile Include="Infrastructure\ProductMapping.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Entity.cs" />
@@ -111,8 +113,11 @@
     <Compile Include="ImportHelperFiles\ImportMatchingOrderData.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Infrastructure\XlsToEfDbContext.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SheetsGetterFromFileTests.cs" />
+    <Compile Include="TestPropertyOverriderDbTests.cs" />
     <Compile Include="XlsxToTableImporterDbTests.cs" />
   </ItemGroup>
   <ItemGroup>
