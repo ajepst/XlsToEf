@@ -6,12 +6,11 @@ using XlsToEf.Tests.Models;
 
 namespace XlsToEf.Tests.ImportHelperFiles
 {
-
-    public class IdDefaultImporter
+    public class IdDefaultWithCreateImporter
     {
         private readonly XlsxToTableImporter _importer;
 
-        public IdDefaultImporter(XlsxToTableImporter importer)
+        public IdDefaultWithCreateImporter(XlsxToTableImporter importer)
         {
             _importer = importer;
         }
@@ -21,7 +20,7 @@ namespace XlsToEf.Tests.ImportHelperFiles
         {
             Func<TSelector, Expression<Func<TEntity, bool>>> finderExpression =
                 selectorValue => entity => entity.Id.Equals(selectorValue);
-            return _importer.ImportColumnData(matchingData, finderExpression, "Id", overrider: overrider, recordMode: RecordMode.UpdateOnly);
+            return _importer.ImportColumnData(matchingData, finderExpression, "Id", overrider: overrider, recordMode: RecordMode.Upsert);
         }
     }
 }

@@ -95,10 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbTestBase.cs" />
-    <Compile Include="ExcelIoWrapperTests.cs" />
     <Compile Include="FakeExcelIo.cs" />
     <Compile Include="FakeXlsxFileCreator.cs" />
     <Compile Include="FixieConventions.cs" />
+    <Compile Include="ImportHelperFiles\IdDefaultWithCreateImporter.cs" />
     <Compile Include="Infrastructure\AddressMapping.cs" />
     <Compile Include="Infrastructure\Bootstrapper.cs" />
     <Compile Include="Infrastructure\IoC.cs" />

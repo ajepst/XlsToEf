@@ -21,9 +21,16 @@ namespace XlsToEf.Import
             _excelIoWrapper = excelIoWrapper;
         }
 
-        public async Task<ImportResult> ImportColumnData<TEntity, TSelector>(ImportMatchingData matchingData, string selectorColName, Func<TSelector, Expression<Func<TEntity, bool>>> finder, UpdatePropertyOverrider<TEntity> overrider = null)
-           where TEntity : class
+        public async Task<ImportResult> ImportColumnData<TEntity, TSelector>(ImportMatchingData matchingData, Func<TSelector, Expression<Func<TEntity, bool>>> finder, string selectorColName = null, UpdatePropertyOverrider<TEntity> overrider = null, RecordMode recordMode = RecordMode.Upsert)
+           where TEntity : class, new()
         {
+
+
+            if ((recordMode == RecordMode.UpdateOnly || recordMode == RecordMode.Upsert ) && selectorColName == null)
+            {
+                throw new Exception("Selector Column Name Required for Updates");
+            }
+
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
 
             var filePath  = Path.GetTempPath() + matchingData.FileName;
@@ -38,18 +45,42 @@ namespace XlsToEf.Import
                     if (excelRow.All(x => string.IsNullOrWhiteSpace(x.Value)))
                         continue;
 
-                    var xlsxSelectorColName = matchingData.Selected[selectorColName];
-                    var selectorData = (TSelector) Convert.ChangeType(excelRow[xlsxSelectorColName], typeof(TSelector));
 
-                    var getExp = finder(selectorData);
+                    var rowLabel = "Sheet Row " + rowNumber;
 
-                    var matchedDbObject = await _dbContext.Set<TEntity>().FirstOrDefaultAsync(getExp);
+                    TEntity matchedDbObject = null;
+                    if (selectorColName != null)
+                    {
+                        var xlsxSelectorColName = matchingData.Selected[selectorColName];
+                        rowLabel = xlsxSelectorColName;
+
+                        var selectorData = (TSelector)Convert.ChangeType(excelRow[xlsxSelectorColName], typeof(TSelector));
+
+                        var getExp = finder(selectorData);
+
+                        matchedDbObject = await _dbContext.Set<TEntity>().FirstOrDefaultAsync(getExp);
+                        if (matchedDbObject == null && recordMode == RecordMode.UpdateOnly)
+                        {
+                            importResult.RowErrorDetails.Add(rowNumber.ToString(), rowLabel + " value " + selectorData +
+                                                             " cannot be updated - not found in database");
+                            continue;
+                        }
+
+                        if (matchedDbObject != null && recordMode == RecordMode.CreateOnly)
+                        {
+                            importResult.RowErrorDetails.Add(rowNumber.ToString(), rowLabel + " value " + selectorData +
+                                                                                   " cannot be added - already in database");
+                            continue;
+                        }
+                    }
+
                     if (matchedDbObject == null)
                     {
-                        importResult.RowErrorDetails.Add(rowNumber.ToString(), xlsxSelectorColName + " value " + selectorData +
-                                                         " cannot be updated - not found in database");
-                        continue;
+                        matchedDbObject = new TEntity();
+                        _dbContext.Set<TEntity>().Add(matchedDbObject);
                     }
+
+
                     if (overrider != null)
                     {
                         await overrider.UpdateProperties(matchedDbObject, matchingData.Selected, excelRow);
@@ -77,15 +108,15 @@ namespace XlsToEf.Import
         private static void UpdateProperties<TSelector>(TSelector matchedObject, Dictionary<string, string> matches,
             Dictionary<string, string> excelRow, string selectorColName) where TSelector : class
         {
-            foreach (var tablePropertyName in matches.Keys)
+            foreach (var entityPropertyName in matches.Keys)
             {
-                if (tablePropertyName == selectorColName) continue;
-                var xlsxColumnName = matches[tablePropertyName];
+                if (entityPropertyName == selectorColName) continue;
+                var xlsxColumnName = matches[entityPropertyName];
                 var xlsxItemData = excelRow[xlsxColumnName];
 
 
                 Type matchedObjectType = matchedObject.GetType();
-                PropertyInfo propToSet = matchedObjectType.GetProperty(tablePropertyName);
+                PropertyInfo propToSet = matchedObjectType.GetProperty(entityPropertyName);
 
                 var converted = StringToTypeConverter.Convert(xlsxItemData, propToSet.PropertyType);
 
@@ -131,5 +162,13 @@ namespace XlsToEf.Import
 
             return System.Convert.ChangeType(xlsxItemData, propertyType, CultureInfo.CurrentCulture);
         }
+    }
+
+
+    public enum RecordMode
+    {
+        UpdateOnly,
+        CreateOnly,
+        Upsert
     }
 }

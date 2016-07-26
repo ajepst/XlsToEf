@@ -20,7 +20,7 @@ namespace XlsToEf.Example.ExampleCustomIdField
         {
             Func<string, Expression<Func<Address, bool>>> finderExpression = selectorValue => address => address.AddrId == selectorValue;
             var selectorColName = GetSelectorColName();
-            return await _xlsxToTableImporter.ImportColumnData(message, selectorColName, finderExpression);
+            return await _xlsxToTableImporter.ImportColumnData(message, finderExpression, selectorColName);
         }
 
         private static string GetSelectorColName()

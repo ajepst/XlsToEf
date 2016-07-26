@@ -43,6 +43,30 @@ namespace XlsToEf.Tests
             updatedItem.DeliveryDate.ShouldBe(new DateTime(2015, 9, 22));
         }
 
+        public async Task Should_Import_new_Column_data_into_db_from_excel()
+        {
+
+            var excelIoWrapper = new FakeExcelIo();
+            var importer = new IdDefaultWithCreateImporter(new XlsxToTableImporter(GetDb(), excelIoWrapper));
+            var importMatchingData = new ImportMatchingOrderData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected =
+                    new Dictionary<string, string>
+                    {
+                        {"Id", "xlsCol5"},
+                        {"OrderDate", "xlsCol2"},
+                        {"DeliveryDate", "xlsCol4"},
+                    }
+            };
+            await importer.ImportColumnData<Order, int>(importMatchingData);
+
+            var updatedItem = GetDb().Set<Order>().First();
+            updatedItem.OrderDate.ShouldBe(new DateTime(2014, 8, 15));
+            updatedItem.DeliveryDate.ShouldBe(new DateTime(2015, 9, 22));
+        }
+
         public async Task Should_report_bad_data_and_process_good_data()
         {
 
@@ -135,7 +159,7 @@ namespace XlsToEf.Tests
                     }
             };
             Func<string, Expression<Func<Address, bool>>> selectorFinder = (y) => z => z.AddrId == y;
-            await importer.ImportColumnData(importMatchingData, "Addr 1", finder: selectorFinder);
+            await importer.ImportColumnData(importMatchingData, finder: selectorFinder, selectorColName: "Addr 1");
 
             var updatedItem = GetDb().Set<Address>().First();
             updatedItem.AddressLine1.ShouldBe("8/15/2014");   

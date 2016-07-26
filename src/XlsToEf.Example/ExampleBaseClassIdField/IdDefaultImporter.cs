@@ -16,12 +16,11 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
         }
 
         public Task<ImportResult> ImportColumnData<TEntity, TSelector>(ImportMatchingData matchingData,
-            UpdatePropertyOverrider<TEntity> overrider = null) where TEntity : Entity<TSelector>
-            where TSelector : IEquatable<TSelector>
+            UpdatePropertyOverrider<TEntity> overrider = null) where TEntity : Entity<TSelector>, new() where TSelector : IEquatable<TSelector>
         {
             Func<TSelector, Expression<Func<TEntity, bool>>> finderExpression =
                 selectorValue => entity => entity.Id.Equals(selectorValue);
-            return _importer.ImportColumnData(matchingData, "Id", finderExpression, overrider: overrider);
+            return _importer.ImportColumnData(matchingData, finderExpression, "Id", overrider: overrider);
         }
     }
 }
