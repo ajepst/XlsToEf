@@ -45,7 +45,8 @@ namespace XlsToEf.Example.DependencyResolution {
 
             For<XlsToEfDbContext>().Use(new XlsToEfDbContext("XlsToEf"))
                 .Transient();
-            Forward<XlsToEfDbContext, DbContext>();
+            ForConcreteType<XlsxToTableImporter>()
+                .Configure.Ctor<DbContext>().Is<XlsToEfDbContext>();
         }
 
         #endregion
