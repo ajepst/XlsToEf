@@ -26,6 +26,8 @@ properties {
   $build_dir = "$base_dir\build"
   $source_dir = "$base_dir\src"
   $app_dir = "$source_dir\$project_name"
+  $app_test_dir = "$source_dir\$project_name.tests"
+  $app_example_dir = "$source_dir\$project_name.example"
   $test_dir = "$build_dir\test"
   $result_dir = "$build_dir\results"
   $octopus_nuget_repo = "$build_dir\packages"
@@ -50,7 +52,6 @@ properties {
 
   $exampleConnectionString = if(test-path env:$example_connection_string_name) { (get-item env:$example_connection_string_name).Value } else { "Server=$db_server;Database=$example_db_name;Trusted_Connection=True;MultipleActiveResultSets=true" }
   $testConnectionString = if(test-path env:$test_connection_string_name) { (get-item env:$test_connection_string_name).Value } else { "Server=$db_server;Database=$test_db_name;Trusted_Connection=True;MultipleActiveResultSets=true" }
-
   $db_scripts_dir = "$source_dir\DatabaseMigration"
 
   $auth_mode = if ($env:auth_mode) { $env:auth_mode } else { "None" }
@@ -61,7 +62,7 @@ properties {
 #please list all aliases in the help task
 task default -depends InitialPrivateBuild
 task dev -depends DeveloperBuild
-task ci -depends IntegrationBuild
+task ci -depends CIBuild
 task udb -depends UpdateExampleDatabase
 task utdb -depends UpdateTestDatabase
 task rdb -depends RebuildAllDatabase
@@ -88,7 +89,10 @@ task help {
 }
 
 #These are the actual build tasks. They should be Pascal case by convention
+
 task InitialPrivateBuild -depends Clean, Compile, UpdateExampleDatabase, UpdateTestDatabase, RunAllTests
+
+task CIBuild -depends SetBuildDb, Clean, Compile, UpdateTestDatabase, RunAllTests
 
 task DeveloperBuild -depends Clean, SetDebugBuild, Compile, UpdateExampleDatabase, UpdateTestDatabase, RunAllTests
 
@@ -129,6 +133,10 @@ task UpdateTestDatabase {
 
 task CommonAssemblyInfo {
     create-commonAssemblyInfo "$ReleaseNumber" $project_name "$source_dir\SharedAssemblyInfo.cs"
+}
+
+task SetBuildDb {
+  poke-xml "$app_test_dir\app.config" "configuration/connectionStrings/add[@name='XlsToEfTestDatabase']/@connectionString" $testConnectionString
 }
 
 task ApplicationConfiguration {
