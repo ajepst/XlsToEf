@@ -18,7 +18,10 @@ namespace XlsToEf.Tests
                 {"xlsCol3", "8888.5"},
                 {"xlsCol4", "9/22/2015"},
                 {"xlsCol6", "123456"},
-            }
+                {"xlsCol7", "Frozen Food"},
+                {"xlsCol8", "FRZ"},
+            },
+
         };
 
         public Task<IList<string>> GetSheets(string filePath)

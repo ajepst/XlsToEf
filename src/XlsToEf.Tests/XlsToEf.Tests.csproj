@@ -100,6 +100,7 @@
     <Compile Include="FakeXlsxFileCreator.cs" />
     <Compile Include="FixieConventions.cs" />
     <Compile Include="ImportHelperFiles\IdDefaultWithCreateImporter.cs" />
+    <Compile Include="ImportHelperFiles\ImportMatchingData.cs" />
     <Compile Include="Infrastructure\AddressMapping.cs" />
     <Compile Include="Infrastructure\Bootstrapper.cs" />
     <Compile Include="Infrastructure\IoC.cs" />

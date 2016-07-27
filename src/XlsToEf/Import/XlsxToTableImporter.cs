@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Mapping;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -21,14 +26,23 @@ namespace XlsToEf.Import
             _excelIoWrapper = excelIoWrapper;
         }
 
-        public async Task<ImportResult> ImportColumnData<TEntity, TSelector>(ImportMatchingData matchingData, Func<TSelector, Expression<Func<TEntity, bool>>> finder, string selectorColName = null, UpdatePropertyOverrider<TEntity> overrider = null, RecordMode recordMode = RecordMode.Upsert)
+        public async Task<ImportResult> ImportColumnData<TEntity, TSelector>(ImportMatchingData matchingData, Func<TSelector, Expression<Func<TEntity, bool>>> finder, string selectorPropertyName = null, UpdatePropertyOverrider<TEntity> overrider = null, RecordMode recordMode = RecordMode.Upsert)
            where TEntity : class, new()
         {
+            var shouldSkipIdInsert = true;
 
-
-            if ((recordMode == RecordMode.UpdateOnly || recordMode == RecordMode.Upsert ) && selectorColName == null)
+            if ((recordMode == RecordMode.UpdateOnly || recordMode == RecordMode.Upsert ) && selectorPropertyName == null)
             {
                 throw new Exception("Selector Column Name Required for Updates");
+            }
+
+            if ((recordMode == RecordMode.CreateOnly || recordMode == RecordMode.Upsert) && selectorPropertyName != null)
+            {
+                shouldSkipIdInsert = IsIdAutoIncrementing(typeof(TEntity));
+                if (shouldSkipIdInsert && recordMode == RecordMode.CreateOnly)
+                {
+                    throw new Exception("Id is created in the database. You cannot import an ID column when creating.");
+                }
             }
 
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
@@ -46,36 +60,47 @@ namespace XlsToEf.Import
                         continue;
 
 
-                    var rowLabel = "Sheet Row " + rowNumber;
-
                     TEntity matchedDbObject = null;
-                    if (selectorColName != null)
+                    string idValue = null;
+                    if (selectorPropertyName != null)
                     {
-                        var xlsxSelectorColName = matchingData.Selected[selectorColName];
-                        rowLabel = xlsxSelectorColName;
+                        var xlsxSelectorColName = matchingData.Selected[selectorPropertyName];
+                        var rowLabel = xlsxSelectorColName;
 
-                        var selectorData = (TSelector)Convert.ChangeType(excelRow[xlsxSelectorColName], typeof(TSelector));
-
-                        var getExp = finder(selectorData);
-
-                        matchedDbObject = await _dbContext.Set<TEntity>().FirstOrDefaultAsync(getExp);
-                        if (matchedDbObject == null && recordMode == RecordMode.UpdateOnly)
+                        idValue = excelRow[xlsxSelectorColName];
+                        if (!string.IsNullOrWhiteSpace(idValue))
                         {
-                            importResult.RowErrorDetails.Add(rowNumber.ToString(), rowLabel + " value " + selectorData +
-                                                             " cannot be updated - not found in database");
-                            continue;
-                        }
+                            var selectorData = (TSelector) Convert.ChangeType(idValue, typeof (TSelector));
 
-                        if (matchedDbObject != null && recordMode == RecordMode.CreateOnly)
-                        {
-                            importResult.RowErrorDetails.Add(rowNumber.ToString(), rowLabel + " value " + selectorData +
-                                                                                   " cannot be added - already in database");
-                            continue;
+                            var getExp = finder(selectorData);
+
+                            matchedDbObject = await _dbContext.Set<TEntity>().FirstOrDefaultAsync(getExp);
+                            if (matchedDbObject == null && recordMode == RecordMode.UpdateOnly)
+                            {
+                                importResult.RowErrorDetails.Add(rowNumber.ToString(),
+                                    rowLabel + " value " + selectorData +
+                                    " cannot be updated - not found in database");
+                                continue;
+                            }
+
+                            if (matchedDbObject != null && recordMode == RecordMode.CreateOnly)
+                            {
+                                importResult.RowErrorDetails.Add(rowNumber.ToString(),
+                                    rowLabel + " value " + selectorData +
+                                    " cannot be added - already in database");
+                                continue;
+                            }
                         }
                     }
 
                     if (matchedDbObject == null)
                     {
+                        if (shouldSkipIdInsert && !string.IsNullOrWhiteSpace(idValue))
+                        {
+                            importResult.RowErrorDetails.Add(rowNumber.ToString(), selectorPropertyName + " value " + idValue +
+                                                                                   " cannot be added - you cannot import id for new items when underlying table id is autoincrementing");
+                            continue;
+                        }
                         matchedDbObject = new TEntity();
                         _dbContext.Set<TEntity>().Add(matchedDbObject);
                     }
@@ -87,7 +112,7 @@ namespace XlsToEf.Import
                     }
                     else
                     {
-                        UpdateProperties(matchedDbObject, matchingData.Selected, excelRow, selectorColName);
+                        UpdateProperties(matchedDbObject, matchingData.Selected, excelRow, selectorPropertyName, shouldSkipIdInsert);
                     }
                     importResult.SuccessCount++;
                 }
@@ -95,7 +120,7 @@ namespace XlsToEf.Import
                 {
                     importResult.RowErrorDetails.Add(rowNumber.ToString(), "Error: " + e.Message);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     importResult.RowErrorDetails.Add(rowNumber.ToString(), "Cannot be updated - error importing");
                 }
@@ -105,12 +130,47 @@ namespace XlsToEf.Import
             return importResult;
         }
 
+        private bool IsIdAutoIncrementing(Type eType)
+        {
+            var metadata = ((IObjectContextAdapter)_dbContext).ObjectContext.MetadataWorkspace;
+
+            // Get the part of the model that contains info about the actual CLR types
+            var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
+
+            // Get the entity type from the model that maps to the CLR type
+            var entityType = metadata
+                    .GetItems<EntityType>(DataSpace.OSpace)
+                    .Single(e => objectItemCollection.GetClrType(e) == eType);
+
+            // Get the entity set that uses this entity type
+            var entitySet = metadata
+                .GetItems<EntityContainer>(DataSpace.CSpace)
+                .Single()
+                .EntitySets
+                .Single(s => s.ElementType.Name == entityType.Name);
+
+            // Find the mapping between conceptual and storage model for this entity set
+            var mapping = metadata.GetItems<EntityContainerMapping>(DataSpace.CSSpace)
+                    .Single()
+                    .EntitySetMappings
+                    .Single(s => s.EntitySet == entitySet);
+
+            // Find the storage entity set (table) that the entity is mapped
+            var table = mapping
+                .EntityTypeMappings.Single()
+                .Fragments.Single()
+                .StoreEntitySet;
+
+            var key = table.ElementType.KeyMembers.First();
+            return key.IsStoreGeneratedIdentity;
+        }
+
         private static void UpdateProperties<TSelector>(TSelector matchedObject, Dictionary<string, string> matches,
-            Dictionary<string, string> excelRow, string selectorColName) where TSelector : class
+            Dictionary<string, string> excelRow, string selectorColName, bool shouldSkipIdInsert) where TSelector : class
         {
             foreach (var entityPropertyName in matches.Keys)
             {
-                if (entityPropertyName == selectorColName) continue;
+                if ((entityPropertyName == selectorColName) && shouldSkipIdInsert) continue;
                 var xlsxColumnName = matches[entityPropertyName];
                 var xlsxItemData = excelRow[xlsxColumnName];
 
