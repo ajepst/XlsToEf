@@ -23,7 +23,7 @@ namespace XlsToEf.Tests
             PersistToDatabase(objectToUpdate);
 
             var excelIoWrapper = new FakeExcelIo();
-            var importer = new IdDefaultImporter(new XlsxToTableImporter(GetDb(), excelIoWrapper));
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
@@ -36,7 +36,7 @@ namespace XlsToEf.Tests
                         {"DeliveryDate", "xlsCol4"},
                     }
             };
-            await importer.ImportColumnData<Order, int>(importMatchingData);
+            await importer.ImportColumnData<Order>(importMatchingData, recordMode:RecordMode.Upsert);
 
             var updatedItem = GetDb().Set<Order>().First();
             updatedItem.OrderDate.ShouldBe(new DateTime(2014, 8, 15));
@@ -47,7 +47,7 @@ namespace XlsToEf.Tests
         {
 
             var excelIoWrapper = new FakeExcelIo();
-            var importer = new IdDefaultWithCreateImporter(new XlsxToTableImporter(GetDb(), excelIoWrapper));
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
@@ -60,7 +60,7 @@ namespace XlsToEf.Tests
                         {"DeliveryDate", "xlsCol4"},
                     }
             };
-            await importer.ImportColumnData<Order, int>(importMatchingData);
+            await importer.ImportColumnData<Order>(importMatchingData, recordMode: RecordMode.Upsert);
 
             var updatedItem = GetDb().Set<Order>().First();
             updatedItem.OrderDate.ShouldBe(new DateTime(2014, 8, 15));
@@ -87,7 +87,7 @@ namespace XlsToEf.Tests
             };
             excelIoWrapper.Rows.Add(badRowIdDoesNotExist);
 
-            var importer = new IdDefaultImporter(new XlsxToTableImporter(GetDb(), excelIoWrapper));
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
@@ -100,10 +100,10 @@ namespace XlsToEf.Tests
                         {"DeliveryDate", "xlsCol4"},
                     }
             };
-            var results = await importer.ImportColumnData<Order, int>(importMatchingData);
+            var results = await importer.ImportColumnData<Order>(importMatchingData, recordMode: RecordMode.CreateOnly);
 
             results.SuccessCount.ShouldBe(1);
-            results.RowErrorDetails.Count().ShouldBe(1);
+            results.RowErrorDetails.Count.ShouldBe(1);
         }
 
         public async Task Should_Import_Column_data_matching_nullable_column_without_error()
@@ -117,7 +117,7 @@ namespace XlsToEf.Tests
             PersistToDatabase(objectToUpdate);
 
             var excelIoWrapper = new FakeExcelIo();
-            var importer = new IdDefaultImporter(new XlsxToTableImporter(GetDb(), excelIoWrapper));
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
@@ -129,7 +129,7 @@ namespace XlsToEf.Tests
                         {"DeliveryDate", "xlsCol2"},
                     }
             };
-            await importer.ImportColumnData<Order, int>(importMatchingData);
+            await importer.ImportColumnData<Order>(importMatchingData);
 
             var updatedItem = GetDb().Set<Order>().First();
             updatedItem.DeliveryDate.ShouldBe(new DateTime(2014, 8, 15));
@@ -158,8 +158,7 @@ namespace XlsToEf.Tests
                         {"AddressLine1", "xlsCol2"},
                     }
             };
-            Func<string, Expression<Func<Address, bool>>> selectorFinder = (y) => z => z.AddrId == y;
-            await importer.ImportColumnData(importMatchingData, finder: selectorFinder, selectorPropertyName: "AddrId");
+            await importer.ImportColumnData<Address>(importMatchingData);
 
             var updatedItem = GetDb().Set<Address>().First();
             updatedItem.AddressLine1.ShouldBe("8/15/2014");   
@@ -181,7 +180,7 @@ namespace XlsToEf.Tests
                         {"CategoryName", "xlsCol7"},
                     }
             };
-            Func<int, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == y;
+            Func<string, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == int.Parse(y);
             await importer.ImportColumnData(importMatchingData, finder: selectorFinder, recordMode:RecordMode.CreateOnly);
 
             var updatedItem = GetDb().Set<ProductCategory>().First();
@@ -227,8 +226,8 @@ namespace XlsToEf.Tests
                     {"xlsCol8", "VEG"},
                 });
 
-            Func<int, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == y;
-            await importer.ImportColumnData(importMatchingData, finder: selectorFinder, selectorPropertyName: "Id", recordMode: RecordMode.Upsert);
+            Func<string, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == int.Parse(y);
+            await importer.ImportColumnData<ProductCategory>(importMatchingData);
 
             var updatedItem = GetDb().Set<ProductCategory>().First(x => x.Id == id);
             updatedItem.CategoryCode.ShouldBe("FRZ");
@@ -264,8 +263,7 @@ namespace XlsToEf.Tests
             var id = objectToUpdate.Id;
             excelIoWrapper.Rows[0]["xlsCol6"] = id.ToString(); // change the id to the autogenerated one so we can update it.
 
-            Func<int, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == y;
-            await importer.ImportColumnData(importMatchingData, finder: selectorFinder, selectorPropertyName: "Id", recordMode: RecordMode.UpdateOnly);
+            await importer.ImportColumnData<ProductCategory>(importMatchingData, recordMode: RecordMode.UpdateOnly);
 
             var updatedItem = GetDb().Set<ProductCategory>().First(x => x.Id == id);
             updatedItem.CategoryCode.ShouldBe("FRZ");

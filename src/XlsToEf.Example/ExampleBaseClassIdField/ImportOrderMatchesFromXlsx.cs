@@ -7,16 +7,16 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
 {
     public class ImportOrderMatchesFromXlsx : IAsyncRequestHandler<ImportMatchingOrderData, ImportResult>
     {
-        private readonly IdDefaultImporter _xlsxToTableImporter;
+        private readonly XlsxToTableImporter _xlsxToTableImporter;
 
-        public ImportOrderMatchesFromXlsx(IdDefaultImporter xlsxToTableImporter)
+        public ImportOrderMatchesFromXlsx(XlsxToTableImporter xlsxToTableImporter)
         {
             _xlsxToTableImporter = xlsxToTableImporter;
         }
 
         public async Task<ImportResult> Handle(ImportMatchingOrderData message)
         {
-            return await _xlsxToTableImporter.ImportColumnData<Order, int>(message);
+            return await _xlsxToTableImporter.ImportColumnData<Order>(message);
         }
     }
 }

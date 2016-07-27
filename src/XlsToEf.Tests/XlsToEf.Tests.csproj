@@ -99,7 +99,6 @@
     <Compile Include="FakeExcelIo.cs" />
     <Compile Include="FakeXlsxFileCreator.cs" />
     <Compile Include="FixieConventions.cs" />
-    <Compile Include="ImportHelperFiles\IdDefaultWithCreateImporter.cs" />
     <Compile Include="ImportHelperFiles\ImportMatchingData.cs" />
     <Compile Include="Infrastructure\AddressMapping.cs" />
     <Compile Include="Infrastructure\Bootstrapper.cs" />
@@ -110,7 +109,6 @@
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="ImportHelperFiles\IdDefaultImporter.cs" />
     <Compile Include="ImportHelperFiles\ImportMatchingAddressData.cs" />
     <Compile Include="ImportHelperFiles\ImportMatchingOrderData.cs" />
     <Compile Include="Models\Order.cs" />

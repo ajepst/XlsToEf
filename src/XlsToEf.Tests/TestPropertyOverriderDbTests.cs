@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Shouldly;
 using XlsToEf.Import;
+using XlsToEf.Tests.ImportHelperFiles;
 using XlsToEf.Tests.Models;
 
 namespace XlsToEf.Tests
@@ -40,6 +43,32 @@ namespace XlsToEf.Tests
             await overrider.UpdateProperties(destination, matches, excelRow);
             destination.ProductCategory.CategoryCode.ShouldBe(newCategory.CategoryCode);
             destination.ProductName.ShouldBe(awesomeNewName);
+        }
+
+        public async Task ShouldImportWithOverrider()
+        {
+            var dbContext = GetDb();
+            var overrider = new ProductPropertyOverrider<Product>(dbContext);
+
+
+            var excelIoWrapper = new FakeExcelIo();
+            var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+
+            var importMatchingData = new ImportMatchingOrderData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected =
+                    new Dictionary<string, string>
+                    {
+                        {"Id", "xlsCol5"},
+                        {"DeliveryDate", "xlsCol2"},
+                    }
+            };
+
+
+            Func<string, Expression<Func<Product, bool>>> finderExpression = selectorValue => entity => entity.Id.Equals( int.Parse(selectorValue));
+            var result =  await importer.ImportColumnData(importMatchingData, finderExpression, overridingMapper: overrider, recordMode: RecordMode.Upsert);
         }
 
 
