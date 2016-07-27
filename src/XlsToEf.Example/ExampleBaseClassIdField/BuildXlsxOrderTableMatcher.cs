@@ -20,7 +20,7 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
         public async Task<ImportColumnData> Handle(XlsxOrderColumnMatcherQuery message)
         {
             message.FilePath = Path.GetTempPath() + message.FileName;
-            var unit = new Order();
+            var order = new Order();
 
             var columnData = new ImportColumnData
             {
@@ -28,8 +28,8 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
                 FileName = message.FileName,
                 TableColumns = new Dictionary<string, SingleColumnData>
                 {
-                    {PropertyNameHelper.GetPropertyName(() => unit.Id), new SingleColumnData("Unit ID")},
-                    {PropertyNameHelper.GetPropertyName(() => unit.OrderDate), new SingleColumnData("Order Date")},
+                    {PropertyNameHelper.GetPropertyName(() => order.Id), new SingleColumnData("Order ID")},
+                    {PropertyNameHelper.GetPropertyName(() => order.OrderDate), new SingleColumnData("Order Date")},
                 }
             };
 
