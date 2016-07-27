@@ -29,6 +29,11 @@ The IExcelIoWrapper interface has several useful functions that are useful in im
 
 *GetImportColumnData* - This returns a collection of the column names in a spreadsheet. This could be useful for implementing a matching UI, as in the example project.
 
+### Notable Dependencies ###
+
+Like most of these Excel integration tools, his relies on the Microsoft Access Database Engine 2010 Redistributable, which you can get here: 
+https://www.microsoft.com/en-us/download/details.aspx?id=13255
+
 ###Known Issues###
 
 * Currently if an xls selector column name is supplied (to check for pre-existence) AND we are adding a new entity the application will not apply the identifier property to the new entity. If the identifier autoincrements in the database, that is the desired behavior, but if the identifier *should* come in via the spreadsheet then we'll get an error. We could do one of the following to fix it:
