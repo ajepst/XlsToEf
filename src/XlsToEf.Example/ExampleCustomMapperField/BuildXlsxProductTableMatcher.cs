@@ -6,21 +6,21 @@ using MediatR;
 using XlsToEf.Example.Domain;
 using XlsToEf.Import;
 
-namespace XlsToEf.Example.ExampleCustomIdField
+namespace XlsToEf.Example.ExampleCustomMapperField
 {
-    public class BuildXlsxAddressTableMatcher : IAsyncRequestHandler<XlsAddressColumnMatcherQuery, ImportColumnData>
+    public class BuildXlsxProductTableMatcher : IAsyncRequestHandler<XlsProductColumnMatcherQuery, ImportColumnData>
     {
         private readonly IExcelIoWrapper _excelIoWrapper;
 
-        public BuildXlsxAddressTableMatcher(IExcelIoWrapper excelIoWrapper)
+        public BuildXlsxProductTableMatcher(IExcelIoWrapper excelIoWrapper)
         {
             _excelIoWrapper = excelIoWrapper;
         }
 
-        public async Task<ImportColumnData> Handle(XlsAddressColumnMatcherQuery message)
+        public async Task<ImportColumnData> Handle(XlsProductColumnMatcherQuery message)
         {
             message.FilePath = Path.GetTempPath() + message.FileName;
-            var wo = new Address();
+            var product = new Product();
 
             var columnData = new ImportColumnData
             {
@@ -28,8 +28,8 @@ namespace XlsToEf.Example.ExampleCustomIdField
                 FileName = message.FileName,
                 TableColumns = new Dictionary<string, SingleColumnData>
                 {
-                    {PropertyNameHelper.GetPropertyName(() => wo.AddrId), new SingleColumnData("Address Id")},
-                    {PropertyNameHelper.GetPropertyName(() => wo.AddressLine1), new SingleColumnData("Address Line 1", required:false)},
+                    {"ProductCategoryName", new SingleColumnData("Category Name")},
+                    {PropertyNameHelper.GetPropertyName(() => product.ProductName), new SingleColumnData("Product Name", required:false)},
                 }
             };
 

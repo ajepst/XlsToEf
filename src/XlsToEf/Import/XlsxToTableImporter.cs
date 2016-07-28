@@ -24,17 +24,34 @@ namespace XlsToEf.Import
             _excelIoWrapper = excelIoWrapper;
         }
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TEntity">The type of EF Entity</typeparam>
         /// <param name="matchingData">Specification for how to match spreadsheet to entity</param>
-        /// <param name="finder">A func to look for an existing copy of the entity id. default will use "find". Gets run via EF.</param>
-        /// <param name="idPropertyName">The unique identifier property. Leave blank unless you are using an overrider to use something other than the real key.</param>
-        /// <param name="overridingMapper">An custom mapper for mapping between excel columns and an entity. </param>
         /// <param name="recordMode">Indicate whether import should be UpdateOnly, CreateOnly or Upsert. Upsert is the default.</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity>(ImportMatchingData matchingData, Func<string, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, RecordMode recordMode = RecordMode.Upsert)
+        public async Task<ImportResult> ImportColumnData<TEntity>(ImportMatchingData matchingData, RecordMode recordMode = RecordMode.Upsert)
+            where TEntity : class, new()
+        {
+            return await ImportColumnData<TEntity, string>(matchingData, null, null, null, recordMode);
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity">The type of EF Entity</typeparam>
+        /// <typeparam name="TId">Type of the item to use for finding</typeparam>
+        /// <param name="matchingData">Specification for how to match spreadsheet to entity</param>
+        /// <param name="finder">A func to look for an existing copy of the entity id. default will use "find". Runs against the DB via EF.</param>
+        /// <param name="idPropertyName">The unique identifier property. Leave blank unless you are using an overrider to use something other than the real key.</param>
+        /// <param name="overridingMapper">A custom mapper for mapping between excel columns and an entity. </param>
+        /// <param name="recordMode">Indicate whether import should be UpdateOnly, CreateOnly or Upsert. Upsert is the default.</param>
+        /// <returns></returns>
+        public async Task<ImportResult> ImportColumnData<TEntity, TId>(ImportMatchingData matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, RecordMode recordMode = RecordMode.Upsert)
            where TEntity : class, new()
         {
             var keyInfo =  GetEntityKeys(typeof (TEntity));
@@ -129,14 +146,16 @@ namespace XlsToEf.Import
             }
         }
 
-        private async Task<TEntity> GetMatchedDbObject<TEntity>(Func<string, Expression<Func<TEntity, bool>>> finder, string idStringValue, Type idType) where TEntity : class
+        private async Task<TEntity> GetMatchedDbObject<TEntity, TId>(Func<TId, Expression<Func<TEntity, bool>>> finder, string idStringValue, Type idType) where TEntity : class
         {
             if (string.IsNullOrWhiteSpace(idStringValue)) return null;
 
             TEntity matchedDbObject;
+
             if (finder != null)
             {
-                var getExp = finder(idStringValue);
+                var finderInputType = (TId) Convert.ChangeType(idStringValue,typeof(TId));
+                var getExp = finder(finderInputType);
                 matchedDbObject = await _dbContext.Set<TEntity>().FirstOrDefaultAsync(getExp);
             }
             else

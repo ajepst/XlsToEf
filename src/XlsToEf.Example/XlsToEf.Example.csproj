@@ -250,21 +250,29 @@
     <Compile Include="DependencyResolution\StructureMapScopeModule.cs" />
     <Compile Include="Domain\Address.cs" />
     <Compile Include="Domain\Order.cs" />
+    <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\ProductCategory.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="ExampleBaseClassIdField\BuildXlsxOrderTableMatcher.cs" />
     <Compile Include="ExampleBaseClassIdField\ImportMatchingOrderData.cs" />
     <Compile Include="ExampleBaseClassIdField\ImportOrderMatchesFromXlsx.cs" />
+    <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\BuildXlsxOrderTableMatcher.cs" />
+    <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\ImportMatchingProductCategoryData.cs" />
+    <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\ImportOrderMatchesFromXlsx.cs" />
+    <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\XlsxProductCategoryColumnMatcherQuery.cs" />
     <Compile Include="ExampleBaseClassIdField\XlsxOrderColumnMatcherQuery.cs" />
-    <Compile Include="ExampleCustomIdField\BuildXlsxAddressTableMatcher.cs" />
-    <Compile Include="ExampleCustomIdField\ImportAddressesFromXlsx.cs" />
-    <Compile Include="ExampleCustomIdField\ImportMatchingAddressData.cs" />
-    <Compile Include="ExampleCustomIdField\XlsAddressColumnMatcherQuery.cs" />
+    <Compile Include="ExampleCustomMapperField\BuildXlsxProductTableMatcher.cs" />
+    <Compile Include="ExampleCustomMapperField\ImportProductsFromXlsx.cs" />
+    <Compile Include="ExampleCustomMapperField\ImportMatchingProductData.cs" />
+    <Compile Include="ExampleCustomMapperField\XlsProductColumnMatcherQuery.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AddressMapping.cs" />
     <Compile Include="Infrastructure\OrderMapping.cs" />
+    <Compile Include="Infrastructure\ProductCategoryMapping.cs" />
+    <Compile Include="Infrastructure\ProductMapping.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Infrastructure\XlsToEfDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

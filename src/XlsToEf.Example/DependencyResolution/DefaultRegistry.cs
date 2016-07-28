@@ -39,6 +39,7 @@ namespace XlsToEf.Example.DependencyResolution {
                     scan.AssemblyContainingType<ImportMatchingData>();
                     scan.AddAllTypesOf(typeof (IModelBinder));
                     scan.AddAllTypesOf(typeof (IModelBinderProvider));
+                    scan.ConnectImplementationsToTypesClosing(typeof(UpdatePropertyOverrider<>));
                     scan.With(new ControllerConvention());
                 });
             For<HttpSessionStateBase>().Use(() => new HttpSessionStateWrapper(HttpContext.Current.Session));

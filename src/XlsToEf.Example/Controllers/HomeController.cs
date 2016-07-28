@@ -7,7 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using MediatR;
 using XlsToEf.Example.ExampleBaseClassIdField;
-using XlsToEf.Example.ExampleCustomIdField;
+using XlsToEf.Example.ExampleCustomMapperField;
+using XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles;
 using XlsToEf.Import;
 
 namespace XlsToEf.Example.Controllers
@@ -51,9 +52,15 @@ namespace XlsToEf.Example.Controllers
             {
                 new UploadDestinationInformation
                 {
-                    Name = "Address",
-                    SelectSheetUrl = Url.Action("SelectSheetAndDestinationForAddress"),
-                    MatchSubmitUrl = Url.Action("SubmitAddressColumnMatches"),
+                    Name = "Product",
+                    SelectSheetUrl = Url.Action("SelectSheetAndDestinationForProduct"),
+                    MatchSubmitUrl = Url.Action("SubmitProductColumnMatches"),
+                },
+                 new UploadDestinationInformation
+                {
+                    Name = "Product Category",
+                    SelectSheetUrl = Url.Action("SelectSheetAndDestinationForProductCategory"),
+                    MatchSubmitUrl = Url.Action("SubmitProductCategoryColumnMatches"),
                 },
                 new UploadDestinationInformation
                 {
@@ -68,7 +75,7 @@ namespace XlsToEf.Example.Controllers
 
         }
 
-        public async Task<ActionResult> SelectSheetAndDestinationForAddress(XlsAddressColumnMatcherQuery selectedInfo)
+        public async Task<ActionResult> SelectSheetAndDestinationForProduct(XlsProductColumnMatcherQuery selectedInfo)
         {
             try
             {
@@ -82,7 +89,27 @@ namespace XlsToEf.Example.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SubmitAddressColumnMatches(ImportMatchingAddressData data)
+        public async Task<ActionResult> SubmitProductColumnMatches(ImportMatchingProductData data)
+        {
+            var c = new DbContext("XlsToEf");
+            var result = await _mediator.SendAsync(data);
+            return Json(result);
+        }
+        public async Task<ActionResult> SelectSheetAndDestinationForProductCategory(XlsxProductCategoryColumnMatcherQuery selectedInfo)
+        {
+            try
+            {
+                var data = await _mediator.SendAsync(selectedInfo);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR:" + ex.Message.ToString());
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SubmitProductCategoryColumnMatches(ImportMatchingProductCategoryData data)
         {
             var c = new DbContext("XlsToEf");
             var result = await _mediator.SendAsync(data);
