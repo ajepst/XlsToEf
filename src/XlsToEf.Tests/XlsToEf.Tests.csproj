@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbTestBase.cs" />
+    <Compile Include="ExcelIoWrapperTests.cs" />
     <Compile Include="FakeExcelIo.cs" />
     <Compile Include="FakeXlsxFileCreator.cs" />
     <Compile Include="FixieConventions.cs" />
