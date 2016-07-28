@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MediatR;
 using XlsToEf.Example.Domain;
+using XlsToEf.Example.Infrastructure;
 using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField
@@ -33,7 +34,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
     {
         private readonly DbContext _context;
 
-        public ProductPropertyOverrider(DbContext context)
+        public ProductPropertyOverrider(XlsToEfDbContext context)
         {
             _context = context;
         }

@@ -3,6 +3,17 @@
 }
 
 <div class="jumbotron">
+  <p>To test this, make sure you've run the build so you have the database set up, then <a href="~/Content/SampleSpreadsheet.xlsx" download>get the sample file</a>. 
+  You'll want to import the categories before you try the products.
+  </p>
+  <p>
+    Note: Product Category has an autoincrementing id, and is set to import as an "Upsert" - since it is set that way, it is expecting the ID column, and the
+    program will attempt to update for any that have a value in the column. For any that are left blank, it'll go ahead and create. If it were set to CreateOnly, 
+    then you should configure it to not import the ID at all.
+  </p>
+  <p>  
+    On the other hand, Order has an inserted ID - you should make sure to always have that field filled out.
+  </p>
   <p>
     <a href="#" data-url="@Url.Action("ImportModal", "Home")" class="btn btn-default" data-toggle="modal" data-target="#modal">Import</a>
 

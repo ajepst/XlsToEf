@@ -44,10 +44,12 @@ namespace XlsToEf.Example.DependencyResolution {
                 });
             For<HttpSessionStateBase>().Use(() => new HttpSessionStateWrapper(HttpContext.Current.Session));
 
-            For<XlsToEfDbContext>().Use(new XlsToEfDbContext("XlsToEf"))
+            ForConcreteType<XlsToEfDbContext>().Configure
+                .Ctor<string>().Is(() => "XlsToEf")
                 .Transient();
+
             ForConcreteType<XlsxToTableImporter>()
-                .Configure.Ctor<DbContext>().Is<XlsToEfDbContext>();
+                .Configure.Ctor<DbContext>().Is(x => x.GetInstance<XlsToEfDbContext>());
         }
 
         #endregion

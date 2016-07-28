@@ -9,8 +9,8 @@ namespace XlsToEf.Example.Infrastructure
     {
         private DbContextTransaction _currentTransaction;
 
-        public XlsToEfDbContext(string connString)
-            : base(connString)
+        public XlsToEfDbContext(string nameOrConnectionString)
+            : base(nameOrConnectionString)
         {
             Database.SetInitializer<XlsToEfDbContext>(null);
         }

@@ -29,7 +29,7 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
                 TableColumns = new Dictionary<string, SingleColumnData>
                 {
                     {PropertyNameHelper.GetPropertyName(() => order.Id), new SingleColumnData("Order ID")},
-                    {PropertyNameHelper.GetPropertyName(() => order.OrderDate), new SingleColumnData("Order Date")},
+                    {PropertyNameHelper.GetPropertyName(() => order.OrderDate), new SingleColumnData("Order Date", required: false)},
                 }
             };
 

@@ -303,6 +303,7 @@
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\SampleSpreadsheet.xlsx" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\import.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
