@@ -44,7 +44,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
         {
             {
                 var product = new Product();
-                var productCategoryPropertyName = "ProductCategoryName";
+                var productCategoryPropertyName = "ProductCategoryCode";
                 var productPropertyName = PropertyNameHelper.GetPropertyName(() => product.ProductName);
 
                 foreach (var destinationProperty in matches.Keys)
@@ -54,9 +54,9 @@ namespace XlsToEf.Example.ExampleCustomMapperField
                     if (destinationProperty == productCategoryPropertyName)
                     {
                         var newCategory =
-                            await _context.Set<ProductCategory>().Where(x => x.CategoryName == value).FirstAsync();
+                            await _context.Set<ProductCategory>().Where(x => x.CategoryCode == value).FirstOrDefaultAsync();
                         if (newCategory == null)
-                            throw new RowParseException("Category Name does not match a category");
+                            throw new RowParseException("Category Code does not match a category");
                         destination1.ProductCategory = newCategory;
                     }
                     else if (destinationProperty == productPropertyName)

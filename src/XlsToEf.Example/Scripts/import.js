@@ -189,7 +189,7 @@
         }).fail(function (err) {
           alert("Error - failed to import");
         }).always(function () {
-          aprunBtn.hideLoadingAfterShortDelay();
+          //aprunBtn.hideLoadingAfterShortDelay();
         });
   });
 

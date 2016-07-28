@@ -28,7 +28,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
                 FileName = message.FileName,
                 TableColumns = new Dictionary<string, SingleColumnData>
                 {
-                    {"ProductCategoryName", new SingleColumnData("Category Name")},
+                    {"ProductCategoryCode", new SingleColumnData("Category Code")},
                     {PropertyNameHelper.GetPropertyName(() => product.ProductName), new SingleColumnData("Product Name", required:false)},
                 }
             };

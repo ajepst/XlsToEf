@@ -80,13 +80,12 @@ namespace XlsToEf.Import
             {
                 var excelRow = excelRows[index];
                 var rowNumber = index + 2; // add 2 to reach the first data row because the first row is a header, excel row numbers start with 1 not 0
+                TEntity entityToUpdate = null;
                 try
                 {
                     if (ExcelRowIsBlank(excelRow))
                         continue;
 
-
-                    TEntity entityToUpdate = null;
                     string idValue = null;
                     if (isImportingEntityId)
                     {
@@ -110,15 +109,29 @@ namespace XlsToEf.Import
                 catch (RowParseException e)
                 {
                     importResult.RowErrorDetails.Add(rowNumber.ToString(), "Error: " + e.Message);
+                    MarkForNotSaving(entityToUpdate);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     importResult.RowErrorDetails.Add(rowNumber.ToString(), "Cannot be updated - error importing");
+                    MarkForNotSaving(entityToUpdate);
                 }
             }
             _dbContext.SaveChanges();
             
             return importResult;
+        }
+
+        private void MarkForNotSaving<TEntity>(TEntity entityToUpdate) where TEntity : class, new()
+        {
+            if (_dbContext.Entry(entityToUpdate).State == EntityState.Added)
+            {
+                _dbContext.Entry(entityToUpdate).State = EntityState.Detached;
+            }
+            else
+            {
+                _dbContext.Entry(entityToUpdate).State = EntityState.Unchanged;
+            }
         }
 
         private static async Task MapIntoEntity<TEntity>(ImportMatchingData matchingData, string idPropertyName,
