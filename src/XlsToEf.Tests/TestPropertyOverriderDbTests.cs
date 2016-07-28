@@ -48,10 +48,39 @@ namespace XlsToEf.Tests
         public async Task ShouldImportWithOverrider()
         {
             var dbContext = GetDb();
+            var categoryName = "Cookies";
+            var categoryToSelect = new ProductCategory { CategoryCode = "CK", CategoryName = categoryName };
+            var unselectedCategory = new ProductCategory { CategoryCode = "UC", CategoryName = "Unrelated Category" };
+
+            PersistToDatabase(categoryToSelect, unselectedCategory);
+
+            var existingProduct = new Product {ProductCategoryId = unselectedCategory.Id, ProductName = "Vanilla Wafers"};
+            PersistToDatabase(existingProduct);
+
+
             var overrider = new ProductPropertyOverrider<Product>(dbContext);
 
 
             var excelIoWrapper = new FakeExcelIo();
+            excelIoWrapper.Rows.Clear();
+            var cookieType = "Mint Cookies";
+            excelIoWrapper.Rows.Add(new Dictionary<string, string>
+            {
+                {"xlsCol1", "CK"},
+                {"xlsCol2", cookieType },
+                {"xlsCol5", "" },
+
+            });
+            var updatedCookieName = "Strawberry Wafers";
+            excelIoWrapper.Rows.Add(new Dictionary<string, string>
+            {
+                {"xlsCol1", "CK"},
+                {"xlsCol2", updatedCookieName },
+                {"xlsCol5", existingProduct.Id.ToString() },
+
+            });
+
+
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
 
             var importMatchingData = new ImportMatchingOrderData
@@ -62,13 +91,21 @@ namespace XlsToEf.Tests
                     new Dictionary<string, string>
                     {
                         {"Id", "xlsCol5"},
-                        {"DeliveryDate", "xlsCol2"},
+                        {"ProductCategory", "xlsCol1"},
+                        {"ProductName", "xlsCol2"},
                     }
             };
 
 
-            Func<string, Expression<Func<Product, bool>>> finderExpression = selectorValue => entity => entity.Id.Equals( int.Parse(selectorValue));
+            Func<int, Expression<Func<Product, bool>>> finderExpression = selectorValue => entity => entity.Id.Equals( selectorValue);
             var result =  await importer.ImportColumnData(importMatchingData, finderExpression, overridingMapper: overrider, recordMode: RecordMode.Upsert);
+
+            var newItem = GetDb().Set<Product>().Include(x => x.ProductCategory).First(x => x.ProductName == cookieType);
+            newItem.ProductCategory.CategoryName.ShouldBe("Cookies");
+            newItem.ProductName.ShouldBe(cookieType);
+
+            var updated = GetDb().Set<Product>().Include(x => x.ProductCategory).First(x => x.Id == existingProduct.Id);
+            updated.ProductName.ShouldBe(updatedCookieName);
         }
 
 
