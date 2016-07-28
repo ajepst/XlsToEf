@@ -25,7 +25,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
         public async Task<ImportResult> Handle(ImportMatchingProductData message)
         {
             Func<int, Expression<Func<Product, bool>>> finderExpression = selectorValue => prod => prod.Id == selectorValue;
-            return await _xlsxToTableImporter.ImportColumnData(message, finderExpression, overridingMapper:_productOverrider, recordMode: RecordMode.CreateOnly );
+            return await _xlsxToTableImporter.ImportColumnData(message, finderExpression, overridingMapper:_productOverrider, saveBehavior: new ImportSaveBehavior {RecordMode = RecordMode.CreateOnly});
         }
 
     }

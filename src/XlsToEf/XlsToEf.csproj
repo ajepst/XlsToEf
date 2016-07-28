@@ -73,17 +73,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Import\CommitMode.cs" />
     <Compile Include="Import\ExcelIoWrapper.cs" />
     <Compile Include="Import\ImportColumnData.cs" />
+    <Compile Include="Import\ImportSaveBehavior.cs" />
     <Compile Include="Import\PropertyNameHelper.cs" />
     <Compile Include="Import\ImportMatchingData.cs" />
     <Compile Include="Import\ImportResult.cs" />
     <Compile Include="Import\ImportViewInfo.cs" />
+    <Compile Include="Import\RecordMode.cs" />
     <Compile Include="Import\RowParseException.cs" />
     <Compile Include="Import\SaveAndGetSheetsForFileUpload.cs" />
     <Compile Include="Import\SelectedSheetAndDestination.cs" />
     <Compile Include="Import\SheetPickerInformation.cs" />
     <Compile Include="Import\SheetsGetterFromFile.cs" />
+    <Compile Include="Import\UpdatePropertyOverrider.cs" />
     <Compile Include="Import\XlsxColumnMatcherQuery.cs" />
     <Compile Include="Import\XlsxFileCreator.cs" />
     <Compile Include="Import\XlsxToTableImporter.cs" />

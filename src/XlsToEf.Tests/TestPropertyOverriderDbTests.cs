@@ -98,7 +98,7 @@ namespace XlsToEf.Tests
 
 
             Func<int, Expression<Func<Product, bool>>> finderExpression = selectorValue => entity => entity.Id.Equals( selectorValue);
-            var result =  await importer.ImportColumnData(importMatchingData, finderExpression, overridingMapper: overrider, recordMode: RecordMode.Upsert);
+            var result =  await importer.ImportColumnData(importMatchingData, finderExpression, overridingMapper: overrider);
 
             var newItem = GetDb().Set<Product>().Include(x => x.ProductCategory).First(x => x.ProductName == cookieType);
             newItem.ProductCategory.CategoryName.ShouldBe("Cookies");

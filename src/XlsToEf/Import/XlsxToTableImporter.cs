@@ -24,20 +24,25 @@ namespace XlsToEf.Import
             _excelIoWrapper = excelIoWrapper;
         }
 
+        public XlsxToTableImporter(DbContext dbContext)
+        {
+            _dbContext = dbContext;
+            _excelIoWrapper = new ExcelIoWrapper();
+        }
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TEntity">The type of EF Entity</typeparam>
         /// <param name="matchingData">Specification for how to match spreadsheet to entity</param>
-        /// <param name="recordMode">Indicate whether import should be UpdateOnly, CreateOnly or Upsert. Upsert is the default.</param>
+        /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity>(ImportMatchingData matchingData, RecordMode recordMode = RecordMode.Upsert)
+        public async Task<ImportResult> ImportColumnData<TEntity>(ImportMatchingData matchingData, ImportSaveBehavior saveBehavior = null)
             where TEntity : class, new()
         {
-            return await ImportColumnData<TEntity, string>(matchingData, null, null, null, recordMode);
+            return await ImportColumnData<TEntity, string>(matchingData, null, null, null, saveBehavior);
         }
-
 
 
         /// <summary>
@@ -49,11 +54,16 @@ namespace XlsToEf.Import
         /// <param name="finder">A func to look for an existing copy of the entity id. default will use "find". Runs against the DB via EF.</param>
         /// <param name="idPropertyName">The unique identifier property. Leave blank unless you are using an overrider to use something other than the real key.</param>
         /// <param name="overridingMapper">A custom mapper for mapping between excel columns and an entity. </param>
-        /// <param name="recordMode">Indicate whether import should be UpdateOnly, CreateOnly or Upsert. Upsert is the default.</param>
+        /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity, TId>(ImportMatchingData matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, RecordMode recordMode = RecordMode.Upsert)
+        public async Task<ImportResult> ImportColumnData<TEntity, TId>(ImportMatchingData matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null)
            where TEntity : class, new()
         {
+            if (saveBehavior == null)
+            {
+                saveBehavior = new ImportSaveBehavior();
+            }
+
             var keyInfo =  GetEntityKeys(typeof (TEntity));
             EnsureImportingEntityHasSingleKey(keyInfo);
             var pk = keyInfo[0];
@@ -68,7 +78,7 @@ namespace XlsToEf.Import
             var isImportingEntityId = matchingData.Selected.ContainsKey(idPropertyName);
             var isAutoIncrementingId = IsIdAutoIncrementing(typeof(TEntity));
 
-            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(recordMode, isAutoIncrementingId, isImportingEntityId);
+            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(saveBehavior.RecordMode, isAutoIncrementingId, isImportingEntityId);
             
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
 
@@ -76,6 +86,7 @@ namespace XlsToEf.Import
 
             var excelRows = await _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
 
+            var foundErrors = false;
             for (var index = 0; index < excelRows.Count; index++)
             {
                 var excelRow = excelRows[index];
@@ -93,7 +104,7 @@ namespace XlsToEf.Import
                         var idStringValue = excelRow[xlsxIdColName];
                         entityToUpdate = await GetMatchedDbObject(finder, idStringValue, idType);
 
-                        ValidateDbResult(entityToUpdate, recordMode, xlsxIdColName, idStringValue);
+                        ValidateDbResult(entityToUpdate, saveBehavior.RecordMode, xlsxIdColName, idStringValue);
                     }
 
                     if (entityToUpdate == null)
@@ -108,18 +119,35 @@ namespace XlsToEf.Import
                 }
                 catch (RowParseException e)
                 {
-                    importResult.RowErrorDetails.Add(rowNumber.ToString(), "Error: " + e.Message);
-                    MarkForNotSaving(entityToUpdate);
+                    HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Error: " + e.Message);
+                    foundErrors = true;
                 }
                 catch (Exception e)
                 {
-                    importResult.RowErrorDetails.Add(rowNumber.ToString(), "Cannot be updated - error importing");
-                    MarkForNotSaving(entityToUpdate);
+                    HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Cannot be updated - error importing");
+                    foundErrors = true;
+                }
+
+                if (saveBehavior.CommitMode == CommitMode.AnySuccessfulOneAtATime)
+                {
+                   await  _dbContext.SaveChangesAsync();
                 }
             }
-            _dbContext.SaveChanges();
-            
+
+            if ((saveBehavior.CommitMode == CommitMode.AnySuccessfulAtEndAsBulk) ||
+                (saveBehavior.CommitMode == CommitMode.CommitAllAtEndIfAllGoodOrRejectAll && !foundErrors))
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+
             return importResult;
+        }
+
+        private void HandleError<TEntity>(IDictionary<string, string> rowErrorDetails, int rowNumber, TEntity entityToRollBack, string message)
+            where TEntity : class, new()
+        {
+            rowErrorDetails.Add(rowNumber.ToString(), message);
+            MarkForNotSaving(entityToRollBack);
         }
 
         private void MarkForNotSaving<TEntity>(TEntity entityToUpdate) where TEntity : class, new()
@@ -295,11 +323,6 @@ namespace XlsToEf.Import
         }
     }
 
-    public abstract class UpdatePropertyOverrider<TSelector>
-    {
-        public abstract Task UpdateProperties(TSelector destination, Dictionary<string, string> destinationProperty, Dictionary<string, string> value);
-    }
-
     public static class StringToTypeConverter
     {
         public static object Convert(string xlsxItemData, Type propertyType)
@@ -332,13 +355,5 @@ namespace XlsToEf.Import
 
             return System.Convert.ChangeType(xlsxItemData, propertyType, CultureInfo.CurrentCulture);
         }
-    }
-
-
-    public enum RecordMode
-    {
-        UpdateOnly,
-        CreateOnly,
-        Upsert
     }
 }
