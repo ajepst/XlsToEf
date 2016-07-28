@@ -5,11 +5,11 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
 {
-    public class ImportOrderMatchesFromXlsx : IAsyncRequestHandler<ImportMatchingProductCategoryData, ImportResult>
+    public class ImportProductCategoryMatchesFromXlsx : IAsyncRequestHandler<ImportMatchingProductCategoryData, ImportResult>
     {
         private readonly XlsxToTableImporter _xlsxToTableImporter;
 
-        public ImportOrderMatchesFromXlsx(XlsxToTableImporter xlsxToTableImporter)
+        public ImportProductCategoryMatchesFromXlsx(XlsxToTableImporter xlsxToTableImporter)
         {
             _xlsxToTableImporter = xlsxToTableImporter;
         }

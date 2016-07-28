@@ -259,7 +259,7 @@
     <Compile Include="ExampleBaseClassIdField\ImportOrderMatchesFromXlsx.cs" />
     <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\BuildXlsxOrderTableMatcher.cs" />
     <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\ImportMatchingProductCategoryData.cs" />
-    <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\ImportOrderMatchesFromXlsx.cs" />
+    <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\ImportProductCategoryMatchesFromXlsx.cs" />
     <Compile Include="ExampleCustomMapperField\ProductCategoryFiles\XlsxProductCategoryColumnMatcherQuery.cs" />
     <Compile Include="ExampleBaseClassIdField\XlsxOrderColumnMatcherQuery.cs" />
     <Compile Include="ExampleCustomMapperField\BuildXlsxProductTableMatcher.cs" />
