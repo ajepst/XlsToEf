@@ -17,13 +17,15 @@ Take a look at the Example project- *ImportOrderMatchesFromXlsx* is how you woul
 Optionally, you can pass a few more things:
 
 * a Func that lets ImportColumnData know how to match a particular row against the database.
-* The name of the Xlsx column to check against the identifier of existing objects (Only optional in CreateOnly mode)
+* The name of the Xlsx column to check against the identifier of existing objects
 * An overrider if you want to handle the mapping yourself - for instance if you will need to update multiple entities per row or have relationships you're going to need to look up
-* A switch to select Update Only, Create only, or Upsert behavior. Upsert behavior is the default.
+* A save behavior configuration object that has two items:
+  * A switch to select Update Only, Create only, or Upsert behavior. Upsert behavior is the default.
+  * A switch to select the commit mode. Options are AnySuccessfulOneAtATime, AnySuccessfulAtEndAsBulk, CommitAllAtEndIfAllGoodOrRejectAll, and NoCommit. AnySuccessfulAtEndAsBulk is the default.
 
 ###Additional Tools:###
 
-The IExcelIoWrapper interface has several useful functions that are useful in implementing a column-matching UI:
+The ExcelIoWrapper interface has several useful functions that are useful in implementing a column-matching UI:
 
 *GetSheets* - returns the list of sheet names in the uploaded spreadsheet
 
@@ -31,9 +33,9 @@ The IExcelIoWrapper interface has several useful functions that are useful in im
 
 ### Notable Dependencies ###
 
-Like most open source Excel integration tools, this project relies on the Microsoft Access Database Engine 2010 Redistributable, which you can get here: 
+Like most open source Excel integration tools, this project relies on the Microsoft Access Database Engine 2010 Redistributable, which you can get here:
 https://www.microsoft.com/en-us/download/details.aspx?id=13255
-The CI build is set up for AppVeyor, and installs it automatically-the basic build does not. If you use [Chocolatey](https://chocolatey.org/) you can easily install it with the following: 
+The CI build is set up for AppVeyor, and installs it automatically-the basic build does not. If you use [Chocolatey](https://chocolatey.org/) you can easily install it with the following:
 
 ```
 choco install msaccess2010-redist-x64
