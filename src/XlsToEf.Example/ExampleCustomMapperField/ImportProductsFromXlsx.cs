@@ -39,7 +39,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
             _context = context;
         }
 
-        public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow)
+        public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
         {
             {
                 var product = new Product();

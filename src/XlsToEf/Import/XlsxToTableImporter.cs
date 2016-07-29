@@ -114,7 +114,7 @@ namespace XlsToEf.Import
                         _dbContext.Set<TEntity>().Add(entityToUpdate);
                     }
 
-                    await MapIntoEntity(matchingData, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId);
+                    await MapIntoEntity(matchingData, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId, saveBehavior.RecordMode);
                     importResult.SuccessCount++;
                 }
                 catch (RowParseException e)
@@ -166,12 +166,12 @@ namespace XlsToEf.Import
         }
 
         private static async Task MapIntoEntity<TEntity>(ImportMatchingData matchingData, string idPropertyName,
-            UpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId)
+            UpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode)
             
         {
             if (overridingMapper != null)
             {
-                await overridingMapper.UpdateProperties(entityToUpdate, matchingData.Selected, excelRow);
+                await overridingMapper.UpdateProperties(entityToUpdate, matchingData.Selected, excelRow, recordMode);
             }
             else
             {

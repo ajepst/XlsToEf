@@ -5,6 +5,6 @@ namespace XlsToEf.Import
 {
     public abstract class UpdatePropertyOverrider<TSelector>
     {
-        public abstract Task UpdateProperties(TSelector destination, Dictionary<string, string> destinationProperty, Dictionary<string, string> value);
+        public abstract Task UpdateProperties(TSelector destination, Dictionary<string, string> destinationProperty, Dictionary<string, string> value, RecordMode recordMode);
     }
 }

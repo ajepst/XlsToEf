@@ -40,7 +40,7 @@ namespace XlsToEf.Tests
             };
 
             var overrider = new ProductPropertyOverrider<Product>(dbContext);
-            await overrider.UpdateProperties(destination, matches, excelRow);
+            await overrider.UpdateProperties(destination, matches, excelRow, RecordMode.Upsert);
             destination.ProductCategory.CategoryCode.ShouldBe(newCategory.CategoryCode);
             destination.ProductName.ShouldBe(awesomeNewName);
         }
@@ -118,7 +118,7 @@ namespace XlsToEf.Tests
                 _context = context;
             }
 
-            public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow)
+            public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
             {
                 {
                     var product = new Product();
