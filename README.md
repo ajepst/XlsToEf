@@ -2,9 +2,16 @@
 
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/ajepst/XlstoEf?branch=master&svg=true)](https://ci.appveyor.com/project/ajepst/xlstoef)
 
-### What is XlsToEf? ###
+###What is XlsToEf?###
 
 XlsToEf is a library you can use to help you import rows from excel files and then save right to the database with Entity Framework.  It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.
+
+### Where can I get it? ###
+It's available on nuget at https://www.nuget.org/packages/XlsToEf and you can install it from the package manager console:
+
+```
+PM> Install-package XlsToEF
+```
 
 ###How Do I Get Started?###
 
