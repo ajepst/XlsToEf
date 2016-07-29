@@ -28,7 +28,7 @@ Optionally, you can pass a few more things:
 
 ###Additional Tools:###
 
-The ExcelIoWrapper interface has several useful functions that are useful in implementing a column-matching UI:
+The ExcelIoWrapper class has several useful functions that are useful in implementing a column-matching UI:
 
 *GetSheets* - returns the list of sheet names in the uploaded spreadsheet
 
