@@ -19,6 +19,7 @@ Optionally, you can pass a few more things:
 * a Func that lets ImportColumnData know how to match a particular row against the database.
 * The name of the Xlsx column to check against the identifier of existing objects
 * An overrider if you want to handle the mapping yourself - for instance if you will need to update multiple entities per row or have relationships you're going to need to look up
+  * NOTE: if you edit any related entities in addition to your "main" entity in your overrider, you're going to have to make sure you handle the rollback part of the save behavior yourself. The main entity is already handled, so you don't have to do anything if that's all you're modifying.  However, if you created or modified any extra entities and you got a failure before you left your overrider, you'll want to make those additional entities as detached/unchanged as appropriate to avoid side affects. In addition, you'll also want to throw any errors as necessary as RowParseExceptions (unless you want to stop all processing), which will are caught per-row higher up.
 * A save behavior configuration object that has two items:
   * A switch to select Update Only, Create only, or Upsert behavior. Upsert behavior is the default.
   * A switch to select the commit mode. Options are AnySuccessfulOneAtATime, AnySuccessfulAtEndAsBulk, CommitAllAtEndIfAllGoodOrRejectAll, and NoCommit. AnySuccessfulAtEndAsBulk is the default.

@@ -118,8 +118,7 @@ namespace XlsToEf.Tests
                 _context = context;
             }
 
-            public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches,
-                Dictionary<string, string> excelRow)
+            public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow)
             {
                 {
                     var product = new Product();

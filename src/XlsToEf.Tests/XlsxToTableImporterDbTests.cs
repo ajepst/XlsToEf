@@ -67,7 +67,7 @@ namespace XlsToEf.Tests
             updatedItem.DeliveryDate.ShouldBe(new DateTime(2015, 9, 22));
         }
 
-        public async Task Should_report_bad_data_and_process_good_data()
+        public async Task Should_report_bad_data_and_save_good_data_with_only_updates_allowed()
         {
 
             var objectToUpdate = new Order
@@ -87,7 +87,8 @@ namespace XlsToEf.Tests
             };
             excelIoWrapper.Rows.Add(badRowIdDoesNotExist);
 
-            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var dbContext = GetDb();
+            var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
@@ -100,10 +101,122 @@ namespace XlsToEf.Tests
                         {"DeliveryDate", "xlsCol4"},
                     }
             };
-            var results = await importer.ImportColumnData<Order>(importMatchingData, new ImportSaveBehavior { RecordMode= RecordMode.CreateOnly});
+            var results = await importer.ImportColumnData<Order>(importMatchingData, new ImportSaveBehavior { RecordMode= RecordMode.UpdateOnly});
 
             results.SuccessCount.ShouldBe(1);
             results.RowErrorDetails.Count.ShouldBe(1);
+
+            var dbSet = dbContext.Set<Order>().ToArray();
+            dbSet.Length.ShouldBe(1);
+            var entity = dbSet.First();
+            entity.DeliveryDate.ShouldBe(DateTime.Parse("9/22/2015"));
+        }
+
+        public async Task Should_report_bad_data_and_save_good_data_with_only_updates_allowed_incremental_saves()
+        {
+
+            var objectToUpdate = new Order
+            {
+                Id = 346,
+                OrderDate = new DateTime(2009, 1, 5),
+                DeliveryDate = new DateTime(2010, 5, 7)
+            };
+
+            PersistToDatabase(objectToUpdate);
+            var excelIoWrapper = new FakeExcelIo();
+            var badRowIdDoesNotExist = new Dictionary<string, string>
+            {
+                {"xlsCol5", "999"},
+                {"xlsCol2", "12/16/2016"},
+                {"xlsCol4", "8/1/2014"}
+            };
+            excelIoWrapper.Rows.Add(badRowIdDoesNotExist);
+
+            var dbContext = GetDb();
+            var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+            var importMatchingData = new ImportMatchingOrderData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected =
+                    new Dictionary<string, string>
+                    {
+                        {"Id", "xlsCol5"},
+                        {"OrderDate", "xlsCol2"},
+                        {"DeliveryDate", "xlsCol4"},
+                    }
+            };
+            var results =
+                await
+                    importer.ImportColumnData<Order>(importMatchingData,
+                        new ImportSaveBehavior
+                        {
+                            RecordMode = RecordMode.UpdateOnly,
+                            CommitMode = CommitMode.AnySuccessfulOneAtATime
+                        });
+
+            results.SuccessCount.ShouldBe(1);
+            results.RowErrorDetails.Count.ShouldBe(1);
+
+            var dbSet = dbContext.Set<Order>().ToArray();
+            dbSet.Length.ShouldBe(1);
+            var entity = dbSet.First();
+            entity.DeliveryDate.ShouldBe(DateTime.Parse("9/22/2015"));
+        }
+
+        public async Task Should_reject_all_changes_if_all_or_nothing_and_encounters_error()
+        {
+            var originalOrderDate = new DateTime(2009, 1, 5);
+            var originalDeliveryDate = new DateTime(2010, 5, 7);
+            var objectToUpdate = new Order
+            {
+                Id = 346,
+                OrderDate = originalOrderDate,
+                DeliveryDate = originalDeliveryDate
+            };
+
+            PersistToDatabase(objectToUpdate);
+            var excelIoWrapper = new FakeExcelIo();
+            var badRowIdDoesNotExist = new Dictionary<string, string>
+            {
+                {"xlsCol5", "999"},
+                {"xlsCol2", "12/16/2016"},
+                {"xlsCol4", "8/1/2014"}
+            };
+            excelIoWrapper.Rows.Add(badRowIdDoesNotExist);
+
+            var dbContext = GetDb();
+            var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+            var importMatchingData = new ImportMatchingOrderData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected =
+                    new Dictionary<string, string>
+                    {
+                        {"Id", "xlsCol5"},
+                        {"OrderDate", "xlsCol2"},
+                        {"DeliveryDate", "xlsCol4"},
+                    }
+            };
+            var results =
+                await
+                    importer.ImportColumnData<Order>(importMatchingData,
+                        new ImportSaveBehavior
+                        {
+                            RecordMode = RecordMode.CreateOnly,
+                            CommitMode = CommitMode.CommitAllAtEndIfAllGoodOrRejectAll
+                        });
+
+            results.SuccessCount.ShouldBe(1);
+            results.RowErrorDetails.Count.ShouldBe(1);
+
+
+            var dbSet = dbContext.Set<Order>().ToArray();
+            dbSet.Count().ShouldBe(1);
+            dbSet
+                .Any(x => x.DeliveryDate == originalDeliveryDate && x.OrderDate == originalOrderDate)
+                .ShouldBe(true);
         }
 
         public async Task Should_Import_Column_data_matching_nullable_column_without_error()

@@ -131,7 +131,7 @@ namespace XlsToEf.Import
                 if (saveBehavior.CommitMode == CommitMode.AnySuccessfulOneAtATime)
                 {
                    await  _dbContext.SaveChangesAsync();
-                }
+                } 
             }
 
             if ((saveBehavior.CommitMode == CommitMode.AnySuccessfulAtEndAsBulk) ||
@@ -147,7 +147,10 @@ namespace XlsToEf.Import
             where TEntity : class, new()
         {
             rowErrorDetails.Add(rowNumber.ToString(), message);
-            MarkForNotSaving(entityToRollBack);
+            if (entityToRollBack != null)
+            {
+                MarkForNotSaving(entityToRollBack);
+            }
         }
 
         private void MarkForNotSaving<TEntity>(TEntity entityToUpdate) where TEntity : class, new()
