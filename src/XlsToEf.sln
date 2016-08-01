@@ -7,6 +7,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "XlsToEf", "XlsToEf\XlsToEf.
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "XlsToEf.Tests", "XlsToEf.Tests\XlsToEf.Tests.xproj", "{69C176A1-3A9C-484B-A613-FF83BEB416A4}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "XlsToEf.Example", "XlsToEf.Example\XlsToEf.Example.xproj", "{B911655C-CD1B-4562-85CA-F11B477304AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{69C176A1-3A9C-484B-A613-FF83BEB416A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69C176A1-3A9C-484B-A613-FF83BEB416A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69C176A1-3A9C-484B-A613-FF83BEB416A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B911655C-CD1B-4562-85CA-F11B477304AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B911655C-CD1B-4562-85CA-F11B477304AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B911655C-CD1B-4562-85CA-F11B477304AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B911655C-CD1B-4562-85CA-F11B477304AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
