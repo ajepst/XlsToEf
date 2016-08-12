@@ -9,6 +9,7 @@ using MediatR;
 using XlsToEf.Example.ExampleBaseClassIdField;
 using XlsToEf.Example.ExampleCustomMapperField;
 using XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles;
+using XlsToEf.Example.SheetGetterExample;
 using XlsToEf.Import;
 
 namespace XlsToEf.Example.Controllers

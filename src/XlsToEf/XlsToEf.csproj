@@ -47,10 +47,6 @@
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MediatR, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MediatR.2.1.0\lib\net45\MediatR.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Remotion, Version=1.13.52.2, Culture=neutral, PublicKeyToken=0669cf0452175907, processorArchitecture=MSIL">
       <HintPath>..\packages\LinqToExcel_x64.1.10.1\lib\Remotion.dll</HintPath>
       <Private>True</Private>
@@ -83,7 +79,6 @@
     <Compile Include="Import\ImportViewInfo.cs" />
     <Compile Include="Import\RecordMode.cs" />
     <Compile Include="Import\RowParseException.cs" />
-    <Compile Include="Import\SaveAndGetSheetsForFileUpload.cs" />
     <Compile Include="Import\SelectedSheetAndDestination.cs" />
     <Compile Include="Import\SheetPickerInformation.cs" />
     <Compile Include="Import\SheetsGetterFromFile.cs" />
