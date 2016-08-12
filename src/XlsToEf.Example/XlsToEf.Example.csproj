@@ -272,6 +272,7 @@
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Infrastructure\XlsToEfDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SheetGetterExample\SheetsFromFileHandler.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
