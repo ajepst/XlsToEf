@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Net;
-using System.Security.Policy;
+using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using XlsToEf.Example.ExampleBaseClassIdField;
 using XlsToEf.Example.ExampleCustomMapperField;
 using XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles;
+using XlsToEf.Example.SheetGetterExample;
 using XlsToEf.Import;
 
 namespace XlsToEf.Example.Controllers
@@ -39,14 +41,18 @@ namespace XlsToEf.Example.Controllers
             return View("ImportModal", importInfoModel);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> UploadXlsx(HttpPostedFileBase uploadFile)
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public async Task<ActionResult> UploadXlsx(IFormFile uploadFile)
         {
-            if (uploadFile == null || uploadFile.ContentLength <= 0)
+            if (uploadFile == null || uploadFile.Length <= 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR: No file found");
+                throw new HttpResponseException(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR: No file found",
+                });
             }
-            var sheetInfo = await _mediator.SendAsync(new SaveAndGetSheetsForFileUpload {File = uploadFile.InputStream});
+            var sheetInfo = await _mediator.SendAsync(new SaveAndGetSheetsForFileUpload {File = uploadFile.OpenReadStream()});
 
 
             sheetInfo.Destinations = new List<UploadDestinationInformation>
@@ -85,11 +91,15 @@ namespace XlsToEf.Example.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR:" + ex.Message.ToString());
+                throw new HttpResponseException(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR:" + ex.Message.ToString(),
+                });
             }
         }
 
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<ActionResult> SubmitProductColumnMatches(ImportMatchingProductData data)
         {
             var c = new DbContext("XlsToEf");
@@ -105,11 +115,15 @@ namespace XlsToEf.Example.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR:" + ex.Message.ToString());
+                throw new HttpResponseException(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR:" + ex.Message.ToString(),
+                });
             }
         }
 
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<ActionResult> SubmitProductCategoryColumnMatches(ImportMatchingProductCategoryData data)
         {
             var c = new DbContext("XlsToEf");
@@ -126,7 +140,11 @@ namespace XlsToEf.Example.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR:" + ex.Message.ToString());
+                throw new HttpResponseException(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR:" + ex.Message.ToString(),
+                });
             }
         }
 

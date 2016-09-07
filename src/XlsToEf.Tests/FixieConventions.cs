@@ -5,52 +5,62 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Reflection;
 using Fixie;
+using Microsoft.Extensions.DependencyInjection;
 using Respawn;
-using StructureMap;
 using XlsToEf.Tests.Infrastructure;
+using XlsToEf.Tests;
 
 namespace XlsToEf.Tests
 {
-    public static class TestDependencyScope
+    public class TestStartup 
     {
-        private static readonly Lazy<IContainer> RootContainer = new Lazy<IContainer>(InitializeContainer, true);
-
-        private static IContainer _currentNestedContainer;
-
-        private static IContainer InitializeContainer()
+        public void ConfigureTestServices(IServiceCollection services)
         {
-            var container = IoC.Initialize();
-            Bootstrapper.Initialize(container);
-            return container;
+           // base.ConfigureServices(services);
+
+         //   services.Replace<IService, MockedService>();
+        }
+    }
+}
+
+public  class TestDependencyScope 
+    {
+        private static readonly Lazy<IServiceCollection> RootContainer = new Lazy<IServiceCollection>(InitializeContainer, true);
+
+        private static IServiceScope _currentScope;
+
+        private static IServiceCollection InitializeContainer()
+        {
+            var sc = new ServiceCollection();
+            return sc;
         }
 
         public static void Begin()
         {
-            if (_currentNestedContainer != null)
+        
+            if (_currentScope != null)
                 throw new Exception("Cannot begin test dependency scope. Another dependency scope is still in effect.");
 
-            _currentNestedContainer = RootContainer.Value.GetNestedContainer();
+           _currentScope= RootContainer.Value.BuildServiceProvider().GetService<IServiceScopeFactory>().CreateScope();
 
         }
 
-        public static IContainer CurrentNestedContainer
+        public static IServiceScope CurrentScope
         {
             get
             {
-                if (_currentNestedContainer == null)
+                if (_currentScope == null)
                     throw new Exception("Cannot access the current nested container. There is no dependency scope in effect.");
-
-                return _currentNestedContainer;
+                return _currentScope;
             }
         }
 
         public static void End()
         {
-            if (_currentNestedContainer == null)
+            if (_currentScope == null)
                 throw new Exception("Cannot end test dependency scope. There is no dependency scope in effect.");
-
-            _currentNestedContainer.Dispose();
-            _currentNestedContainer = null;
+            _currentScope.Dispose();
+            _currentScope = null;
         }
     }
 
@@ -156,4 +166,3 @@ namespace XlsToEf.Tests
     public class SkipAttribute : Attribute
     {
     }
-}

@@ -1,19 +1,24 @@
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace XlsToEf.Example.Infrastructure
 {
     public class UnitOfWork : ActionFilterAttribute
     {
+        private readonly XlsToEfDbContext _xlsToEfDbContext;
+
+        UnitOfWork(XlsToEfDbContext xlsToEfDbContext)
+        {
+            _xlsToEfDbContext = xlsToEfDbContext;
+        }
+
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var directory = DependencyResolver.Current.GetService<XlsToEfDbContext>();
-            directory.BeginTransaction();
+            _xlsToEfDbContext.BeginTransaction();
         }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var directory = DependencyResolver.Current.GetService<XlsToEfDbContext>();
-            directory.CloseTransaction(filterContext.Exception);
+            _xlsToEfDbContext.CloseTransaction(filterContext.Exception);
         }
     }
 }

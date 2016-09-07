@@ -125,7 +125,8 @@ namespace XlsToEf.Example.Infrastructure
                 System.Diagnostics.Trace.WriteLine(closeTransactionEx);
                 try
                 {
-                    if (_currentTransaction != null && _currentTransaction.UnderlyingTransaction.Connection != null)
+                   // if (_currentTransaction != null && _currentTransaction.UnderlyingTransaction.Connection != null)
+                    if (_currentTransaction != null)
                     {
                         _currentTransaction.Rollback();
                     }

@@ -12,11 +12,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var sheetsGetterFromFile = new SheetsGetterFromFile(excelIoWrapper, new FakeXlsxFileCreator());
 
-            var saveAndGetSheetsForFileUpload = new SaveAndGetSheetsForFileUpload
-            {
-                File = Stream.Null
-            };
-            var result = await sheetsGetterFromFile.Handle(saveAndGetSheetsForFileUpload);
+            var result = await sheetsGetterFromFile.Handle(Stream.Null);
 
             result.File.ShouldBe(FakeXlsxFileCreator.FileName);
             result.Sheets.ShouldBe(excelIoWrapper.Sheets);

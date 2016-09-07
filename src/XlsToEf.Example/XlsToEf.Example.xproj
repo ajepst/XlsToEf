@@ -6,7 +6,7 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>b911655c-cd1b-4562-85ca-f11b477304ab</ProjectGuid>
+    <ProjectGuid>fe405c2f-6f3b-4822-8ff4-a8750d36b672</ProjectGuid>
     <RootNamespace>XlsToEf.Example</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>

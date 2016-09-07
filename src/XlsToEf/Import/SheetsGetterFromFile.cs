@@ -1,10 +1,9 @@
 using System.IO;
 using System.Threading.Tasks;
-using MediatR;
 
 namespace XlsToEf.Import
 {
-    public class SheetsGetterFromFile : IAsyncRequestHandler<SaveAndGetSheetsForFileUpload, SheetPickerInformation>
+    public class SheetsGetterFromFile
     {
         private readonly IExcelIoWrapper _excelIoWrapper;
         private readonly IXlsxFileCreator _xlsxFileCreator;
@@ -15,9 +14,15 @@ namespace XlsToEf.Import
             _xlsxFileCreator = xlsxFileCreator;
         }
 
-        public async Task<SheetPickerInformation> Handle(SaveAndGetSheetsForFileUpload uploadStream)
+        public SheetsGetterFromFile()
         {
-            var filePath = await _xlsxFileCreator.Create(uploadStream.File);
+            _excelIoWrapper = new ExcelIoWrapper();
+            _xlsxFileCreator = new XlsxFileCreator();
+        }
+
+        public async Task<SheetPickerInformation> Handle(Stream uploadStream)
+        {
+            var filePath = await _xlsxFileCreator.Create(uploadStream);
             var sheets = await _excelIoWrapper.GetSheets(filePath);
             return new SheetPickerInformation {Sheets = sheets, File = Path.GetFileName(filePath) };
         }

@@ -1,15 +1,30 @@
-﻿{
+{
   "dependencies": {
+    "CommonServiceLocation": "1.0.0",
+    "EntityFramework": "6.1.3",
     "log4net": "2.0.5",
     "MediatR": "2.1.0",
-    "Microsoft.AspNet.Mvc": "5.2.3",
-    "Microsoft.AspNet.Web.Optimization": "1.1.3",
-    "Microsoft.Owin": "3.0.1",
-    "Microsoft.Owin.Host.SystemWeb": "3.0.1",
-    "structuremap": "4.3.0",
-    "StructureMap.MVC5": "3.1.1.134",
-    "structuremap.web": "4.0.0.315",
-    "XlsToEf": { "target": "project" }
+    "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
+    "Microsoft.AspNetCore.Mvc": "1.0.0",
+    "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.0",
+    "Microsoft.AspNetCore.Razor.Tools": {
+      "version": "1.0.0-preview2-final",
+      "type": "build"
+    },
+    "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
+    "Microsoft.AspNetCore.StaticFiles": "1.0.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.Extensions.Logging": "1.0.0",
+    "Microsoft.Extensions.Logging.Console": "1.0.0",
+    "Microsoft.Extensions.Logging.Debug": "1.0.0",
+    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
+    "Scrutor": "1.8.0",
+    "StructureMap": "4.4.0",
+    "XlsToEf": "1.0.0-*"
   },
 
   "tools": {
@@ -19,10 +34,9 @@
   },
 
   "frameworks": {
-    "net452": {
+    "net46": {
       "frameworkAssemblies": {
-        "System.Data": "4.0.0.0",
-        "System.Web": "4.0.0.0"
+        "System.Data": "4.0.0.0"
       }
     }
   },
@@ -30,12 +44,6 @@
   "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true
-  },
-
-  "runtimeOptions": {
-    "configProperties": {
-      "System.GC.Server": true
-    }
   },
 
   "publishOptions": {
