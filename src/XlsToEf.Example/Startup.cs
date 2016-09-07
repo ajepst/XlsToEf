@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -44,6 +46,7 @@ namespace XlsToEf.Example
             services.AddMvc();
             services.AddScoped<DbContext, XlsToEfDbContext>();
             services.AddScoped(m => new XlsToEfDbContext("XlsToEf"));
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
             services.Scan(scan => scan
                 // We start out with all types in the assembly of ITransientService
