@@ -82,7 +82,7 @@ namespace XlsToEf.Example.Controllers
 
         }
 
-        public async Task<ActionResult> SelectSheetAndDestinationForProduct(XlsProductColumnMatcherQuery selectedInfo)
+        public async Task<ActionResult> SelectSheetAndDestinationForProduct([FromBody]XlsProductColumnMatcherQuery selectedInfo)
         {
             try
             {
@@ -100,13 +100,13 @@ namespace XlsToEf.Example.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<ActionResult> SubmitProductColumnMatches(ImportMatchingProductData data)
+        public async Task<ActionResult> SubmitProductColumnMatches([FromBody]ImportMatchingProductData data)
         {
             var c = new DbContext("XlsToEf");
             var result = await _mediator.SendAsync(data);
             return Json(result);
         }
-        public async Task<ActionResult> SelectSheetAndDestinationForProductCategory(XlsxProductCategoryColumnMatcherQuery selectedInfo)
+        public async Task<ActionResult> SelectSheetAndDestinationForProductCategory([FromBody]XlsxProductCategoryColumnMatcherQuery selectedInfo)
         {
             try
             {
@@ -124,14 +124,14 @@ namespace XlsToEf.Example.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<ActionResult> SubmitProductCategoryColumnMatches(ImportMatchingProductCategoryData data)
+        public async Task<ActionResult> SubmitProductCategoryColumnMatches([FromBody]ImportMatchingProductCategoryData data)
         {
             var c = new DbContext("XlsToEf");
             var result = await _mediator.SendAsync(data);
             return Json(result);
         }
 
-        public async Task<ActionResult> SelectSheetAndDestinationForOrder(XlsxOrderColumnMatcherQuery selectedInfo)
+        public async Task<ActionResult> SelectSheetAndDestinationForOrder([FromBody]XlsxOrderColumnMatcherQuery selectedInfo)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace XlsToEf.Example.Controllers
             }
         }
 
-        public async Task<JsonResult> SubmitOrderColumnMatches(ImportMatchingOrderData data)
+        public async Task<JsonResult> SubmitOrderColumnMatches([FromBody]ImportMatchingOrderData data)
         {
             var result = await _mediator.SendAsync(data);
             return Json(result);

@@ -101,7 +101,7 @@
             .append($('<td class="form-group" />').append(selectXlsNode))
             .append($('<td />').text(displayText)));
         $.each(data.xlsxColumns, function (xlsxItem) {
-          var xlsColText = data.XlsxColumns[xlsxItem];
+          var xlsColText = data.xlsxColumns[xlsxItem];
           selectXlsNode.append(($('<option>', { value: xlsColText }).text(xlsColText)));
         });
         row++;
