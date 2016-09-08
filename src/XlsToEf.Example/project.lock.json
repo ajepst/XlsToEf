@@ -3,15 +3,6 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.6": {
-      "CommonServiceLocation/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/Microsoft.Practices.ServiceLocation.dll": {}
-        },
-        "runtime": {
-          "lib/Microsoft.Practices.ServiceLocation.dll": {}
-        }
-      },
       "EntityFramework/6.1.3": {
         "type": "package",
         "frameworkAssemblies": [
@@ -1669,15 +1660,6 @@
           "lib/netstandard1.0/Scrutor.dll": {}
         }
       },
-      "StructureMap/4.4.0": {
-        "type": "package",
-        "compile": {
-          "lib/net45/StructureMap.dll": {}
-        },
-        "runtime": {
-          "lib/net45/StructureMap.dll": {}
-        }
-      },
       "System.AppContext/4.1.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -1960,13 +1942,13 @@
           "lib/net46/System.Numerics.Vectors.dll": {}
         }
       },
-      "System.Reflection/4.1.0": {
+      "System.Reflection/4.0.10": {
         "type": "package",
         "compile": {
-          "ref/net45/_._": {}
+          "ref/net46/_._": {}
         },
         "runtime": {
-          "lib/net45/_._": {}
+          "lib/net46/_._": {}
         }
       },
       "System.Reflection.Emit/4.0.1": {
@@ -2389,16 +2371,6 @@
     }
   },
   "libraries": {
-    "CommonServiceLocation/1.0.0": {
-      "sha512": "3Qe2TFqa9L2rqlaaWiDvaNRlbpyOCczwZLnS4cOXYtBlDX/b7w8ef0UUg11BrN632XFHMYbGZTP5OHJKkv9flQ==",
-      "type": "package",
-      "path": "CommonServiceLocation/1.0.0",
-      "files": [
-        "CommonServiceLocation.1.0.0.nupkg.sha512",
-        "CommonServiceLocation.nuspec",
-        "lib/Microsoft.Practices.ServiceLocation.dll"
-      ]
-    },
     "EntityFramework/6.1.3": {
       "sha512": "2xzFHAF3VVdmTR3//MygtQpwfbDjeaq+nQwCcokLzen7MKHOojPaxNPQPa4diHY1QtcR7zlHAJHNRqPB7W2Syw==",
       "type": "package",
@@ -3885,18 +3857,6 @@
         "lib/netstandard1.0/Scrutor.xml"
       ]
     },
-    "StructureMap/4.4.0": {
-      "sha512": "gLOP13+F1AwvXvs3bRdPya0NAR1hgsrSdOlwfhHNp6LabukoCb1F8AW5L++U+4b2IfeBAKh3pSYm0kSDkFXJYQ==",
-      "type": "package",
-      "path": "StructureMap/4.4.0",
-      "files": [
-        "StructureMap.4.4.0.nupkg.sha512",
-        "StructureMap.nuspec",
-        "lib/net45/StructureMap.dll",
-        "lib/netstandard1.3/StructureMap.dll",
-        "lib/netstandard1.5/StructureMap.dll"
-      ]
-    },
     "System.AppContext/4.1.0": {
       "sha512": "3QjO4jNV7PdKkmQAVp9atA+usVnKRwI3Kx1nMwJ93T0LcQfx7pKAYk0nKz5wn1oP5iqlhZuy6RXOFdhr7rDwow==",
       "type": "package",
@@ -5039,83 +4999,37 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "System.Reflection/4.1.0": {
-      "sha512": "JCKANJ0TI7kzoQzuwB/OoJANy1Lg338B6+JVacPl4TpUwi3cReg3nMLplMq2uqYfHFQpKIlHAUVAJlImZz/4ng==",
+    "System.Reflection/4.0.10": {
+      "sha512": "WZ+4lEE4gqGx6mrqLhSiW4oi6QLPWwdNjzhhTONmhELOrW8Cw9phlO9tltgvRUuQUqYtBiliFwhO5S5fCJElVw==",
       "type": "package",
-      "path": "System.Reflection/4.1.0",
+      "path": "System.Reflection/4.0.10",
       "files": [
-        "System.Reflection.4.1.0.nupkg.sha512",
+        "System.Reflection.4.0.10.nupkg.sha512",
         "System.Reflection.nuspec",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
+        "lib/DNXCore50/System.Reflection.dll",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
-        "lib/net45/_._",
-        "lib/net462/System.Reflection.dll",
-        "lib/portable-net45+win8+wp8+wpa81/_._",
-        "lib/win8/_._",
-        "lib/wp80/_._",
-        "lib/wpa81/_._",
+        "lib/net46/_._",
+        "lib/netcore50/System.Reflection.dll",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
-        "ref/net45/_._",
-        "ref/net462/System.Reflection.dll",
-        "ref/netcore50/System.Reflection.dll",
-        "ref/netcore50/System.Reflection.xml",
-        "ref/netcore50/de/System.Reflection.xml",
-        "ref/netcore50/es/System.Reflection.xml",
-        "ref/netcore50/fr/System.Reflection.xml",
-        "ref/netcore50/it/System.Reflection.xml",
-        "ref/netcore50/ja/System.Reflection.xml",
-        "ref/netcore50/ko/System.Reflection.xml",
-        "ref/netcore50/ru/System.Reflection.xml",
-        "ref/netcore50/zh-hans/System.Reflection.xml",
-        "ref/netcore50/zh-hant/System.Reflection.xml",
-        "ref/netstandard1.0/System.Reflection.dll",
-        "ref/netstandard1.0/System.Reflection.xml",
-        "ref/netstandard1.0/de/System.Reflection.xml",
-        "ref/netstandard1.0/es/System.Reflection.xml",
-        "ref/netstandard1.0/fr/System.Reflection.xml",
-        "ref/netstandard1.0/it/System.Reflection.xml",
-        "ref/netstandard1.0/ja/System.Reflection.xml",
-        "ref/netstandard1.0/ko/System.Reflection.xml",
-        "ref/netstandard1.0/ru/System.Reflection.xml",
-        "ref/netstandard1.0/zh-hans/System.Reflection.xml",
-        "ref/netstandard1.0/zh-hant/System.Reflection.xml",
-        "ref/netstandard1.3/System.Reflection.dll",
-        "ref/netstandard1.3/System.Reflection.xml",
-        "ref/netstandard1.3/de/System.Reflection.xml",
-        "ref/netstandard1.3/es/System.Reflection.xml",
-        "ref/netstandard1.3/fr/System.Reflection.xml",
-        "ref/netstandard1.3/it/System.Reflection.xml",
-        "ref/netstandard1.3/ja/System.Reflection.xml",
-        "ref/netstandard1.3/ko/System.Reflection.xml",
-        "ref/netstandard1.3/ru/System.Reflection.xml",
-        "ref/netstandard1.3/zh-hans/System.Reflection.xml",
-        "ref/netstandard1.3/zh-hant/System.Reflection.xml",
-        "ref/netstandard1.5/System.Reflection.dll",
-        "ref/netstandard1.5/System.Reflection.xml",
-        "ref/netstandard1.5/de/System.Reflection.xml",
-        "ref/netstandard1.5/es/System.Reflection.xml",
-        "ref/netstandard1.5/fr/System.Reflection.xml",
-        "ref/netstandard1.5/it/System.Reflection.xml",
-        "ref/netstandard1.5/ja/System.Reflection.xml",
-        "ref/netstandard1.5/ko/System.Reflection.xml",
-        "ref/netstandard1.5/ru/System.Reflection.xml",
-        "ref/netstandard1.5/zh-hans/System.Reflection.xml",
-        "ref/netstandard1.5/zh-hant/System.Reflection.xml",
-        "ref/portable-net45+win8+wp8+wpa81/_._",
-        "ref/win8/_._",
-        "ref/wp80/_._",
-        "ref/wpa81/_._",
+        "ref/dotnet/System.Reflection.dll",
+        "ref/dotnet/System.Reflection.xml",
+        "ref/dotnet/de/System.Reflection.xml",
+        "ref/dotnet/es/System.Reflection.xml",
+        "ref/dotnet/fr/System.Reflection.xml",
+        "ref/dotnet/it/System.Reflection.xml",
+        "ref/dotnet/ja/System.Reflection.xml",
+        "ref/dotnet/ko/System.Reflection.xml",
+        "ref/dotnet/ru/System.Reflection.xml",
+        "ref/dotnet/zh-hans/System.Reflection.xml",
+        "ref/dotnet/zh-hant/System.Reflection.xml",
+        "ref/net46/_._",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._"
+        "runtimes/win8-aot/lib/netcore50/System.Reflection.dll"
       ]
     },
     "System.Reflection.Emit/4.0.1": {
@@ -6648,7 +6562,6 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "CommonServiceLocation >= 1.0.0",
       "EntityFramework >= 6.1.3",
       "MediatR >= 2.1.0",
       "MediatR.Extensions.Microsoft.DependencyInjection >= 1.0.1",
@@ -6668,8 +6581,7 @@
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.0.0",
       "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.0.0",
       "Scrutor >= 1.8.0",
-      "StructureMap >= 4.4.0",
-      "System.Reflection >= 4.1.0",
+      "System.Reflection >= 4.0.10",
       "XlsToEf >= 1.0.0-*",
       "log4net >= 2.0.5"
     ],

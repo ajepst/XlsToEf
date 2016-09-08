@@ -140,7 +140,7 @@ namespace XlsToEf.Example.Controllers
             }
             catch (Exception ex)
             {
-                throw new HttpResponseException(new HttpResponseMessage()
+                throw new HttpResponseException(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     ReasonPhrase = "ERROR:" + ex.Message.ToString(),

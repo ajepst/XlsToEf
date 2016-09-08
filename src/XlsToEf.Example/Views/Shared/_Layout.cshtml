@@ -1,21 +1,23 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.ApplicationInsights.Extensibility
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - XlsToEf.Example</title>
+  <title>@ViewData["Title"] - XlsToEf.Example</title>
+
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
-    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+  <environment names="Staging,Production">
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
+          asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+          asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"/>
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true"/>
+  </environment>
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -32,8 +34,6 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -47,9 +47,15 @@
     </div>
 
     <environment names="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+      <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
+      <script src="~/js/jquery-addons.min.js" asp-append-version="true"></script>
+      <script src="~/js/toastr.js" asp-append-version="true"></script>
+      <script src="~/js/site.js" asp-append-version="true"></script>
+      <script src="~/js/fileupload.js" asp-append-version="true"></script>
+      <script src="~/js/app.js" asp-append-version="true"></script>
+      <script src="~/js/import.js" asp-append-version="true"></script>
+
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -60,9 +66,58 @@
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
         </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+      <script src="~/js/bootstrap.min.js"></script>
+      <script src="~/js/toastr.min.js"></script>
+      <script src="~/js/fileupload.min.js"></script>
+      <script src="~/js/all.min.js"></script>
     </environment>
 
-    @RenderSection("scripts", required: false)
+
+  <!-- Modal -->
+  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+      <div id="modalContent" class="modal-content">
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+  $('body').on('click.modal.data-api', '[data-toggle="modal"]', function (e) {
+    e.preventDefault();
+    var btn = $(this);
+    var modalSize = btn.data('modalsize');
+    if (modalSize !== "undefined") {
+      $('.modal-dialog').addClass(modalSize);
+    }
+
+    var url = btn.data('url');
+    btn.addClass("disabled");
+    instantiateModalFromUrl(url, btn);
+  });
+  var instantiateModalFromUrl = function (url, button) {
+    var btn = button;
+    var onSuccess = function (data) {
+      $('#modalContent').html(data);
+      $('#modal').modal('show');
+    };
+
+    var onComplete = function () {
+      if (btn) {
+        btn.removeClass("disabled");
+      }
+    };
+    $.ajax({
+      url: url,
+      cache: false,
+      dataType: 'html',
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      type: 'GET',
+      success: onSuccess,
+      complete: onComplete
+    });
+  }
+  </script>
+
 </body>
 </html>

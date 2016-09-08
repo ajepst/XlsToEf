@@ -45,7 +45,8 @@ namespace XlsToEf.Example
 
             services.AddMvc();
             services.AddScoped<DbContext, XlsToEfDbContext>();
-            services.AddScoped(m => new XlsToEfDbContext("XlsToEf"));
+         //   services.AddScoped(m => new XlsToEfDbContext("XlsToEf"));
+            services.AddScoped(m => new XlsToEfDbContext(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
             services.Scan(scan => scan
