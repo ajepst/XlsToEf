@@ -115,15 +115,6 @@
           "lib/net40/Shouldly.dll": {}
         }
       },
-      "StructureMap/4.3.0": {
-        "type": "package",
-        "compile": {
-          "lib/net45/StructureMap.dll": {}
-        },
-        "runtime": {
-          "lib/net45/StructureMap.dll": {}
-        }
-      },
       "System.Collections/4.0.11": {
         "type": "package",
         "frameworkAssemblies": [
@@ -267,7 +258,6 @@
         "dependencies": {
           "EntityFramework": "6.1.3",
           "LinqToExcel_x64": "1.10.1",
-          "MediatR": "2.1.0",
           "log4net": "2.0.5"
         },
         "compile": {
@@ -420,18 +410,6 @@
         "lib/net35/Shouldly.dll",
         "lib/net40/Shouldly.dll",
         "lib/netstandard1.3/Shouldly.dll"
-      ]
-    },
-    "StructureMap/4.3.0": {
-      "sha512": "6Ixw5S17bT9EwumSmNKW1aJ/fDP/D5Upo0vk3waLQLT2V8iDJQPsMbnLQc8WR72WLeEAwWf/kHA6iIpTm9IzDA==",
-      "type": "package",
-      "path": "StructureMap/4.3.0",
-      "files": [
-        "StructureMap.4.3.0.nupkg.sha512",
-        "StructureMap.nuspec",
-        "lib/net45/StructureMap.dll",
-        "lib/netstandard1.3/StructureMap.dll",
-        "lib/netstandard1.5/StructureMap.dll"
       ]
     },
     "System.Collections/4.0.11": {
@@ -1271,7 +1249,6 @@
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 1.0.0",
       "Respawn >= 0.1.0",
       "Shouldly >= 2.8.1",
-      "StructureMap >= 4.3.0",
       "XlsToEf"
     ],
     ".NETFramework,Version=v4.6": [

@@ -7,25 +7,14 @@ using System.Reflection;
 using Fixie;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
-using XlsToEf.Tests.Infrastructure;
 using XlsToEf.Tests;
 
 namespace XlsToEf.Tests
 {
-    public class TestStartup 
+    public class TestDependencyScope
     {
-        public void ConfigureTestServices(IServiceCollection services)
-        {
-           // base.ConfigureServices(services);
-
-         //   services.Replace<IService, MockedService>();
-        }
-    }
-}
-
-public  class TestDependencyScope 
-    {
-        private static readonly Lazy<IServiceCollection> RootContainer = new Lazy<IServiceCollection>(InitializeContainer, true);
+        private static readonly Lazy<IServiceCollection> RootContainer =
+            new Lazy<IServiceCollection>(InitializeContainer, true);
 
         private static IServiceScope _currentScope;
 
@@ -37,11 +26,11 @@ public  class TestDependencyScope
 
         public static void Begin()
         {
-        
+
             if (_currentScope != null)
                 throw new Exception("Cannot begin test dependency scope. Another dependency scope is still in effect.");
 
-           _currentScope= RootContainer.Value.BuildServiceProvider().GetService<IServiceScopeFactory>().CreateScope();
+            _currentScope = RootContainer.Value.BuildServiceProvider().GetService<IServiceScopeFactory>().CreateScope();
 
         }
 
@@ -50,7 +39,8 @@ public  class TestDependencyScope
             get
             {
                 if (_currentScope == null)
-                    throw new Exception("Cannot access the current nested container. There is no dependency scope in effect.");
+                    throw new Exception(
+                        "Cannot access the current nested container. There is no dependency scope in effect.");
                 return _currentScope;
             }
         }
@@ -101,7 +91,7 @@ public  class TestDependencyScope
     {
         public void Execute(Case context, Action next)
         {
-            if (context.Class.IsSubclassOf(typeof(DbTestBase)))
+            if (context.Class.IsSubclassOf(typeof (DbTestBase)))
                 ResetDatabases();
 
             next();
@@ -122,7 +112,7 @@ public  class TestDependencyScope
         private static void ResetDatabases()
         {
             var testDb = ConfigurationManager.ConnectionStrings["XlsToEfTestDatabase"].ToString();
-            
+
             DatabaseTestCheckpoint.DbCheckpoint.Reset(testDb);
         }
 
@@ -154,7 +144,7 @@ public  class TestDependencyScope
         public object[] Parameters { get; private set; }
     }
 
-    class FromInputAttributes : ParameterSource
+    internal class FromInputAttributes : ParameterSource
     {
         public IEnumerable<object[]> GetParameters(MethodInfo method)
         {
@@ -166,3 +156,4 @@ public  class TestDependencyScope
     public class SkipAttribute : Attribute
     {
     }
+}

@@ -31,21 +31,21 @@
         progress + '%'
     );
   }).on('fileuploaddone', function (e, data) {
-    uploadedFile = data.result.File;
+    uploadedFile = data.result.file;
     if (data.url) {
       var selectSheetNode = $('<select class="form-control" id="sheetPicker" />');
       selectSheetNode.append($('<option />'));
-      $.each(data.result.Sheets, function (sheet) {
-        var sheetText = data.result.Sheets[sheet];
+      $.each(data.result.sheets, function (sheet) {
+        var sheetText = data.result.sheets[sheet];
         selectSheetNode.append($('<option />', { value: sheetText }).text(sheetText));
       });
       $('#sheets').append($("<span />").append($('<strong/>').text("Sheet"))).append(selectSheetNode);
 
       var destinationNode = $('<select class="form-control" id="destinationPicker" />');
       destinationNode.append($('<option />'));
-      destinationInfo = data.result.Destinations;
+      destinationInfo = data.result.destinations;
       $.each(destinationInfo, function (destIndex) {
-        destinationNode.append($('<option />', { value: destinationInfo[destIndex].Name }).text(destinationInfo[destIndex].Name));
+        destinationNode.append($('<option />', { value: destinationInfo[destIndex].name }).text(destinationInfo[destIndex].name));
       });
       $('#destinations').append($("<span />").append($('<strong/>').text("Destination"))).append(destinationNode);
 
@@ -66,7 +66,7 @@
       .parent().addClass($.support.fileInput ? undefined : 'disabled');
 
   $(".modal-body").on('change', '#sheetPicker, #destinationPicker', function () {
-    var selectedDestination = destinationInfo.filter(function (t) { return t.Name == $('#destinationPicker').val(); })[0];
+    var selectedDestination = destinationInfo.filter(function (t) { return t.name == $('#destinationPicker').val(); })[0];
 
     if ((selectedDestination == undefined) || (!!$('#sheetPicker').val() == false)) {
       $('#matcherDisplay').toggle(false);
@@ -74,7 +74,7 @@
       $('#matchRows').empty();
       return;
     }
-    $.ajax(selectedDestination.SelectSheetUrl, {
+    $.ajax(selectedDestination.selectSheetUrl, {
       type: "POST",
       data: JSON.stringify({ Sheet: $('#sheetPicker').val(), FileName: uploadedFile, Destination: selectedDestination }),
       contentType: "application/json; charset=utf-8",
@@ -86,11 +86,11 @@
       var row = 1;
       $('#matchRows').empty();
       matcherPickerInfo = {};
-      requiredTogether = data.RequiredTogether;
-      for (var key in data.TableColumns) {
-        var colData = data.TableColumns[key];
-        var displayText = colData.Name;
-        var required = colData.Required;
+      requiredTogether = data.requiredTogether;
+      for (var key in data.tableColumns) {
+        var colData = data.tableColumns[key];
+        var displayText = colData.name;
+        var required = colData.required;
         var selectXlsNode = $('<select class="form-control" />');
         if (required) {
           selectXlsNode.addClass("colRequired");
@@ -100,7 +100,7 @@
         $('#matchRows').append($('<tr />').append($('<td />').append($('<span class="center-vertical" />').text(row)))
             .append($('<td class="form-group" />').append(selectXlsNode))
             .append($('<td />').text(displayText)));
-        $.each(data.XlsxColumns, function (xlsxItem) {
+        $.each(data.xlsxColumns, function (xlsxItem) {
           var xlsColText = data.XlsxColumns[xlsxItem];
           selectXlsNode.append(($('<option>', { value: xlsColText }).text(xlsColText)));
         });

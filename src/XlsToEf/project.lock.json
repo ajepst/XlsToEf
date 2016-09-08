@@ -43,15 +43,6 @@
         "runtime": {
           "lib/net45-full/log4net.dll": {}
         }
-      },
-      "MediatR/2.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/net45/MediatR.dll": {}
-        },
-        "runtime": {
-          "lib/net45/MediatR.dll": {}
-        }
       }
     }
   },
@@ -121,24 +112,12 @@
         "log4net.2.0.5.nupkg.sha512",
         "log4net.nuspec"
       ]
-    },
-    "MediatR/2.1.0": {
-      "sha512": "KjnYX7BJdIA2YomyyRlRV5ecgiw70lzbEBBXREPJfMGwNCfyv0zleA80Qmp+W07tet1QFcnU3++H84z8VYPXsw==",
-      "type": "package",
-      "path": "MediatR/2.1.0",
-      "files": [
-        "MediatR.2.1.0.nupkg.sha512",
-        "MediatR.nuspec",
-        "lib/net45/MediatR.dll",
-        "lib/netstandard1.1/MediatR.dll"
-      ]
     }
   },
   "projectFileDependencyGroups": {
     "": [
       "EntityFramework >= 6.1.3",
       "LinqToExcel_x64 >= 1.10.1",
-      "MediatR >= 2.1.0",
       "log4net >= 2.0.5"
     ],
     ".NETFramework,Version=v4.6": []
