@@ -13,6 +13,16 @@ It's available on nuget at https://www.nuget.org/packages/XlsToEf and you can in
 PM> Install-package XlsToEF
 ```
 
+### Notable Dependencies ###
+
+Like many open source Excel integration tools, this project relies on the Microsoft Access Database Engine 2010 Redistributable, which you can get here:
+https://www.microsoft.com/en-us/download/details.aspx?id=13255
+The CI build is set up for AppVeyor, and installs it automatically-the basic build does not. If you use [Chocolatey](https://chocolatey.org/) you can easily install it with the following:
+
+```
+choco install msaccess2010-redist-x64
+```
+
 ###How Do I Get Started? (Basic usage)###
 
 The core of doing the import happens through the XlsxToTableImporter class, which depends on EF's DbContext class - (you can send it your own wrapped version of it if you like, so long as it inherits from the standard EF DbContext). The key method on there you're going to want to call is ImportColumnData. You must pass it at least one thing:
@@ -107,12 +117,4 @@ The ExcelIoWrapper class has several useful functions that are useful in impleme
 
 *GetImportColumnData* - This returns a collection of the column names in a particular sheet in a spreadsheet.
 
-### Notable Dependencies ###
 
-Like most open source Excel integration tools, this project relies on the Microsoft Access Database Engine 2010 Redistributable, which you can get here:
-https://www.microsoft.com/en-us/download/details.aspx?id=13255
-The CI build is set up for AppVeyor, and installs it automatically-the basic build does not. If you use [Chocolatey](https://chocolatey.org/) you can easily install it with the following:
-
-```
-choco install msaccess2010-redist-x64
-```
