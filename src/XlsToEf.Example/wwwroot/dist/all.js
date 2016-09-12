@@ -161,30 +161,30 @@ App.Import.ImportReady = function (uploadUrl, pageTitle, modalName) {
       }
     }
 
-    var selectedDestination = destinationInfo.filter(function (t) { return t.Name == $('#destinationPicker').val(); })[0];
-    $.ajax(selectedDestination.MatchSubmitUrl, {
+    var selectedDestination = destinationInfo.filter(function (t) { return t.name == $('#destinationPicker').val(); })[0];
+    $.ajax(selectedDestination.matchSubmitUrl, {
       type: "POST",
       data: JSON.stringify(matcherSubmissionValues),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
     })
         .done(function (data) {
-          if ($.isEmptyObject(data.RowErrorDetails)) {
+          if ($.isEmptyObject(data.rowErrorDetails)) {
             toastr.success(pageTitle + " was successfully updated");
             $('#' + modalName).modal('hide');
           } else {
             var modalBody = $(".modal-body");
             modalBody.empty();
-            var rowText = data.SuccessCount == 1 ? 'row.' : 'rows.';
+            var rowText = data.successCount == 1 ? 'row.' : 'rows.';
             modalBody.append($('<p />').text('Successfully imported ' + data.SuccessCount + ' ' + rowText));
 
             modalBody.append($("<span />").text("The following rows could not be imported:"));
             var errorTable = $('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table" />');
             errorTable.empty();
-            for (var errorKey in data.RowErrorDetails) {
+            for (var errorKey in data.rowErrorDetails) {
               errorTable.append($('<tr class="importErrorRow" />')
                   .append($('<td />').text(errorKey))
-                  .append($('<td />').text(data.RowErrorDetails[errorKey])));
+                  .append($('<td />').text(data.rowErrorDetails[errorKey])));
             }
             modalBody.append(errorTable);
             modalBody.append($('<span />').text("Please correct the Excel file and try to import it again."));

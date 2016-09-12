@@ -8,7 +8,8 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     rename = require("gulp-rename"),
     concat = require('gulp-concat'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    sass = require("gulp-sass");
   
 
 gulp.task("clean:js", function (cb) {
@@ -25,9 +26,16 @@ var paths = {
   bower: "./bower_components/",
   lib: "./" + project.webroot + "/lib/",
   app: "./" + project.webroot + "/js/",
-  dist: "./" + project.webroot + "/dist/"
+  dist: "./" + project.webroot + "/dist/",
+  sassSource: "./" + project.webroot +  "/lib/**/*.scss",
+  cssOutput:  "./" + project.webroot +  "/css"
 };
 
+gulp.task("sass", function() {
+  gulp.src(paths.sassSource)
+      .pipe(sass().on('error', sass.logError))
+      .pipe(gulp.dest(paths.cssOutput));
+  });
 
 gulp.task("bundleSite", function () {
 
@@ -91,4 +99,4 @@ gulp.task('fileupload', function () {
 
 gulp.task('allJs', ['jquery', 'jquery-addons', 'bootstrapJs', 'toastr', 'fileupload', 'bundleSite']);
 
-gulp.task("default", ['allJs']);
+gulp.task("default", ['allJs', 'sass']);
