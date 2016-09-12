@@ -46,10 +46,10 @@ namespace XlsToEf.Example
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc();
-            services.AddScoped<DbContext, XlsToEfDbContext>();
-         //   services.AddScoped(m => new XlsToEfDbContext("XlsToEf"));
+                      services.AddScoped<DbContext, XlsToEfDbContext>(m => m.GetService<XlsToEfDbContext>());
+         //      services.AddScoped<XlsToEfDbContext> (m => new XlsToEfDbContext("Server=.\\SqlExpress;Database=XlsToEf;Trusted_Connection=True;"));
             services.AddScoped(m => new XlsToEfDbContext(Configuration["Data:DefaultConnection:ConnectionString"]));
-               services.AddMediatR(typeof(HomeController).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof (HomeController).GetTypeInfo().Assembly);
 
 //            services.Scan(scan =>
 //            {
@@ -76,7 +76,7 @@ namespace XlsToEf.Example
                     // These types are then filtered by the delegate passed to the method.
                     // In this case, we filter out only the classes that are assignable to ITransientService
              //       .AddClasses(x => x.Where(y => ! y.IsGenericType || (y.GetGenericTypeDefinition() != typeof(IAsyncRequest<>) &&  y.GetGenericTypeDefinition() != typeof(IAsyncRequestHandler<,>))))
-                    .AddClasses()
+                    .AddClasses(x => x.Where(y => !y.IsAssignableFrom(typeof(XlsToEfDbContext))))
 //                        // Whe then specify what type we want to register these classes as.
 //                        // In this case, we wan to register the types as all of its implemented interfaces.
 //                        // So if a type implements 3 interfaces; A, B, C, we'd end up with three separate registrations.

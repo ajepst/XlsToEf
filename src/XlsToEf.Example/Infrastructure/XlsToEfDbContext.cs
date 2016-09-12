@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 
 namespace XlsToEf.Example.Infrastructure
 {
+    [DbConfigurationType(typeof(CodeConfig))]
     public class XlsToEfDbContext : DbContext
     {
         private DbContextTransaction _currentTransaction;

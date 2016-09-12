@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using XlsToEf.Example.ExampleBaseClassIdField;
 using XlsToEf.Example.ExampleCustomMapperField;
 using XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles;
+using XlsToEf.Example.Infrastructure;
 using XlsToEf.Example.SheetGetterExample;
 using XlsToEf.Import;
 
@@ -19,6 +20,7 @@ namespace XlsToEf.Example.Controllers
     public class HomeController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly XlsToEfDbContext _foo;
 
         public HomeController(IMediator mediator)
         {
@@ -102,7 +104,7 @@ namespace XlsToEf.Example.Controllers
         [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<ActionResult> SubmitProductColumnMatches([FromBody]ImportMatchingProductData data)
         {
-            var c = new DbContext("XlsToEf");
+        //    var c = new DbContext("XlsToEf");
             var result = await _mediator.SendAsync(data);
             return Json(result);
         }
