@@ -12,7 +12,7 @@
     "LinqToExcel_x64": "1.10.1",
     "MediatR": "2.1.0",
     "Respawn": "0.1.0",
-    "Shouldly": "2.8.1",
+    "Shouldly": "2.8.2",
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
     "Microsoft.Extensions.DependencyInjection": "1.0.0"
   },

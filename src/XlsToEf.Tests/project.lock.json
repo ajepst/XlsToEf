@@ -106,13 +106,13 @@
           "lib/net45/Respawn.dll": {}
         }
       },
-      "Shouldly/2.8.1": {
+      "Shouldly/2.8.2": {
         "type": "package",
         "compile": {
-          "lib/net40/Shouldly.dll": {}
+          "lib/net451/Shouldly.dll": {}
         },
         "runtime": {
-          "lib/net40/Shouldly.dll": {}
+          "lib/net451/Shouldly.dll": {}
         }
       },
       "System.Collections/4.0.11": {
@@ -400,15 +400,16 @@
         "lib/net45/Respawn.dll"
       ]
     },
-    "Shouldly/2.8.1": {
-      "sha512": "NHNtd2Fw12u7jfRP2qA7ToIhwUyf2vDlper69UTBylKHQ5wP3nCEAswGA8ogkkNeD7lV7ZAl2s1o1nI1l2AY7g==",
+    "Shouldly/2.8.2": {
+      "sha512": "H/AI4mu6J+ZHcRFfCT1Q/yeIxNYn73kAq94KJVZINTL7xJugRzZjqFPSTB4u4RpTsE9mk3xWEOhZrzmH8KasDA==",
       "type": "package",
-      "path": "Shouldly/2.8.1",
+      "path": "Shouldly/2.8.2",
       "files": [
-        "Shouldly.2.8.1.nupkg.sha512",
+        "Shouldly.2.8.2.nupkg.sha512",
         "Shouldly.nuspec",
         "lib/net35/Shouldly.dll",
         "lib/net40/Shouldly.dll",
+        "lib/net451/Shouldly.dll",
         "lib/netstandard1.3/Shouldly.dll"
       ]
     },
@@ -1248,7 +1249,7 @@
       "Microsoft.Extensions.DependencyInjection >= 1.0.0",
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 1.0.0",
       "Respawn >= 0.1.0",
-      "Shouldly >= 2.8.1",
+      "Shouldly >= 2.8.2",
       "XlsToEf"
     ],
     ".NETFramework,Version=v4.6": [

@@ -1647,7 +1647,7 @@
           "lib/net45/NuGet.Versioning.dll": {}
         }
       },
-      "Scrutor/1.8.0": {
+      "Scrutor/1.9.1": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
@@ -3845,12 +3845,12 @@
         "lib/netstandard1.0/NuGet.Versioning.xml"
       ]
     },
-    "Scrutor/1.8.0": {
-      "sha512": "Nn1VOnp02KpPSeJ4dz15/8iN3WoKVDFxD0ZisuCjtZH/wkFvNED1+DX/4/m27Soicw7q5HyBcGDgmFg11YJDDQ==",
+    "Scrutor/1.9.1": {
+      "sha512": "XuSh6UGYUXcngQTUkWHfQN8uEo8Fx/kic4BZWEEqAsEDfIIsi3LnCunW71iGKUXeSY9pOrtoIqVp7kYU7vWLMw==",
       "type": "package",
-      "path": "Scrutor/1.8.0",
+      "path": "Scrutor/1.9.1",
       "files": [
-        "Scrutor.1.8.0.nupkg.sha512",
+        "Scrutor.1.9.1.nupkg.sha512",
         "Scrutor.nuspec",
         "lib/netstandard1.0/Scrutor.dll",
         "lib/netstandard1.0/Scrutor.xml"
@@ -6579,7 +6579,7 @@
       "Microsoft.Extensions.Logging.Debug >= 1.0.0",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.0.0",
       "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.0.0",
-      "Scrutor >= 1.8.0",
+      "Scrutor >= 1.9.1",
       "System.Reflection >= 4.0.10",
       "XlsToEf >= 1.0.0-*",
       "log4net >= 2.0.5"

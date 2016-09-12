@@ -20,7 +20,6 @@ namespace XlsToEf.Example.Controllers
     public class HomeController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly XlsToEfDbContext _foo;
 
         public HomeController(IMediator mediator)
         {

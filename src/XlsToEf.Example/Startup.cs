@@ -47,59 +47,23 @@ namespace XlsToEf.Example
 
             services.AddMvc();
                       services.AddScoped<DbContext, XlsToEfDbContext>(m => m.GetService<XlsToEfDbContext>());
-         //      services.AddScoped<XlsToEfDbContext> (m => new XlsToEfDbContext("Server=.\\SqlExpress;Database=XlsToEf;Trusted_Connection=True;"));
             services.AddScoped(m => new XlsToEfDbContext(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddMediatR(typeof (HomeController).GetTypeInfo().Assembly);
 
-//            services.Scan(scan =>
-//            {
-//                scan.FromAssemblyOf<IMediator>()
-//                    .FromAssembliesOf(typeof (IMediator))
-//
-//                    .AddClasses(x => x.AssignableTo(typeof (IRequestHandler<,>)))
-//                    .AddClasses(x => x.AssignableTo(typeof (IAsyncRequestHandler<,>)))
-//                    .AddClasses(x => x.AssignableTo(typeof (INotificationHandler<>)))
-//                    .AddClasses(x => x.AssignableTo(typeof (IAsyncNotificationHandler<>)))
-//                    .AsImplementedInterfaces().WithScopedLifetime();
-//            });
-
-          //  services.AddScoped<SingleInstanceFactory>(x => x.GetService);
-          //  services.AddScoped<MultiInstanceFactory>(x => x.GetServices);
-          //  For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
-          //  For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
-
-
             services.Scan(scan => scan
-                // We start out with all types in the assembly of ITransientService
                 .FromAssemblyOf<Address>()
-                    // AddClasses starts out with all public, non-abstract types in this assembly.
-                    // These types are then filtered by the delegate passed to the method.
-                    // In this case, we filter out only the classes that are assignable to ITransientService
-             //       .AddClasses(x => x.Where(y => ! y.IsGenericType || (y.GetGenericTypeDefinition() != typeof(IAsyncRequest<>) &&  y.GetGenericTypeDefinition() != typeof(IAsyncRequestHandler<,>))))
-                    .AddClasses(x => x.Where(y => !y.IsAssignableFrom(typeof(XlsToEfDbContext))))
-//                        // Whe then specify what type we want to register these classes as.
-//                        // In this case, we wan to register the types as all of its implemented interfaces.
-//                        // So if a type implements 3 interfaces; A, B, C, we'd end up with three separate registrations.
-//                        .AsImplementedInterfaces()
-//                        // And lastly, we specify the lifetime of these registrations.
-//                        .WithTransientLifetime()
-//// Here we start again, with a new full set of classes from the assembly above.
-//// This time, filtering out only the classes assignable to IScopedService.
-////                    .AddClasses(classes => classes.AssignableTo<DbContext>())
-////                        // Now, we just want to register these types as a single interface, IScopedService.
-////                        .As<XlsToEfDbContext>()
-////                        // And again, just specify the lifetime.
-////                        .WithScopedLifetime()
-                .AddClasses(classes => classes.AssignableTo(typeof(UpdatePropertyOverrider<>)))
-                                    .AsImplementedInterfaces()
-                                    .WithTransientLifetime()
-                        );
+                .AddClasses(x => x.Where(y => !y.IsAssignableFrom(typeof (XlsToEfDbContext))))
+                .AddClasses(classes => classes.AssignableTo(typeof (UpdatePropertyOverrider<>)))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime()
+                );
             services.Scan(scan => scan
                 .FromAssemblyOf<XlsxToTableImporter>()
-                       .AddClasses()
-                       .AsSelf()
-                        .AsImplementedInterfaces()
-                        .WithTransientLifetime());
+                .AddClasses()
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .WithTransientLifetime()
+                );
 
             foreach (var service in services)
             {
