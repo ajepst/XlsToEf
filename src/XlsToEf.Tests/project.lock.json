@@ -1257,7 +1257,5 @@
       "System.Data >= 4.0.0",
       "System.Runtime >= 4.0.20"
     ]
-  },
-  "tools": {},
-  "projectFileToolGroups": {}
+  }
 }

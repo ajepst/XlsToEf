@@ -53,7 +53,7 @@ gulp.task("bundleSite", function () {
 
 gulp.task('jquery', function () {
   return gulp.src([
-          paths.lib + "jquery/dist/**/*.js",
+          paths.lib + "jquery/dist/**/*.js"
   ])
       .pipe(concat('jquery.min.js'))
       .pipe(uglify())

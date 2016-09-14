@@ -121,7 +121,5 @@
       "log4net >= 2.0.5"
     ],
     ".NETFramework,Version=v4.6": []
-  },
-  "tools": {},
-  "projectFileToolGroups": {}
+  }
 }
