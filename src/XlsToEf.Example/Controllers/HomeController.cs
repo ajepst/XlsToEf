@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using XlsToEf.Example.ExampleBaseClassIdField;
 using XlsToEf.Example.ExampleCustomMapperField;
 using XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles;
+using XlsToEf.Example.Infrastructure;
 using XlsToEf.Example.SheetGetterExample;
 using XlsToEf.Import;
 
@@ -39,14 +42,18 @@ namespace XlsToEf.Example.Controllers
             return View("ImportModal", importInfoModel);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> UploadXlsx(HttpPostedFileBase uploadFile)
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public async Task<ActionResult> UploadXlsx(IFormFile uploadFile)
         {
-            if (uploadFile == null || uploadFile.ContentLength <= 0)
+            if (uploadFile == null || uploadFile.Length <= 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR: No file found");
+                throw new HttpResponseException(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR: No file found",
+                });
             }
-            var sheetInfo = await _mediator.SendAsync(new SaveAndGetSheetsForFileUpload {File = uploadFile.InputStream});
+            var sheetInfo = await _mediator.SendAsync(new SaveAndGetSheetsForFileUpload {File = uploadFile.OpenReadStream()});
 
 
             sheetInfo.Destinations = new List<UploadDestinationInformation>
@@ -76,7 +83,7 @@ namespace XlsToEf.Example.Controllers
 
         }
 
-        public async Task<ActionResult> SelectSheetAndDestinationForProduct(XlsProductColumnMatcherQuery selectedInfo)
+        public async Task<ActionResult> SelectSheetAndDestinationForProduct([FromBody]XlsProductColumnMatcherQuery selectedInfo)
         {
             try
             {
@@ -85,18 +92,47 @@ namespace XlsToEf.Example.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR:" + ex.Message.ToString());
+                throw new HttpResponseException(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR:" + ex.Message.ToString(),
+                });
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult> SubmitProductColumnMatches(ImportMatchingProductData data)
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public async Task<ActionResult> SubmitProductColumnMatches([FromBody]ImportMatchingProductData data)
+        {
+        //    var c = new DbContext("XlsToEf");
+            var result = await _mediator.SendAsync(data);
+            return Json(result);
+        }
+        public async Task<ActionResult> SelectSheetAndDestinationForProductCategory([FromBody]XlsxProductCategoryColumnMatcherQuery selectedInfo)
+        {
+            try
+            {
+                var data = await _mediator.SendAsync(selectedInfo);
+                return Json(data);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR:" + ex.Message.ToString(),
+                });
+            }
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public async Task<ActionResult> SubmitProductCategoryColumnMatches([FromBody]ImportMatchingProductCategoryData data)
         {
             var c = new DbContext("XlsToEf");
             var result = await _mediator.SendAsync(data);
             return Json(result);
         }
-        public async Task<ActionResult> SelectSheetAndDestinationForProductCategory(XlsxProductCategoryColumnMatcherQuery selectedInfo)
+
+        public async Task<ActionResult> SelectSheetAndDestinationForOrder([FromBody]XlsxOrderColumnMatcherQuery selectedInfo)
         {
             try
             {
@@ -105,32 +141,15 @@ namespace XlsToEf.Example.Controllers
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR:" + ex.Message.ToString());
+                throw new HttpResponseException(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ReasonPhrase = "ERROR:" + ex.Message.ToString(),
+                });
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult> SubmitProductCategoryColumnMatches(ImportMatchingProductCategoryData data)
-        {
-            var c = new DbContext("XlsToEf");
-            var result = await _mediator.SendAsync(data);
-            return Json(result);
-        }
-
-        public async Task<ActionResult> SelectSheetAndDestinationForOrder(XlsxOrderColumnMatcherQuery selectedInfo)
-        {
-            try
-            {
-                var data = await _mediator.SendAsync(selectedInfo);
-                return Json(data);
-            }
-            catch (Exception ex)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "ERROR:" + ex.Message.ToString());
-            }
-        }
-
-        public async Task<JsonResult> SubmitOrderColumnMatches(ImportMatchingOrderData data)
+        public async Task<JsonResult> SubmitOrderColumnMatches([FromBody]ImportMatchingOrderData data)
         {
             var result = await _mediator.SendAsync(data);
             return Json(result);

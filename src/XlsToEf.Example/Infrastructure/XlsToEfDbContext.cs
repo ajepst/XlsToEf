@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 
 namespace XlsToEf.Example.Infrastructure
 {
+    [DbConfigurationType(typeof(CodeConfig))]
     public class XlsToEfDbContext : DbContext
     {
         private DbContextTransaction _currentTransaction;
@@ -125,7 +126,8 @@ namespace XlsToEf.Example.Infrastructure
                 System.Diagnostics.Trace.WriteLine(closeTransactionEx);
                 try
                 {
-                    if (_currentTransaction != null && _currentTransaction.UnderlyingTransaction.Connection != null)
+                   // if (_currentTransaction != null && _currentTransaction.UnderlyingTransaction.Connection != null)
+                    if (_currentTransaction != null)
                     {
                         _currentTransaction.Rollback();
                     }
@@ -145,6 +147,15 @@ namespace XlsToEf.Example.Infrastructure
                     _currentTransaction = null;
                 }
             }
+        }
+    }
+
+    public class CodeConfig : DbConfiguration
+    {
+        public CodeConfig()
+        {
+            SetProviderServices("System.Data.SqlClient",
+                System.Data.Entity.SqlServer.SqlProviderServices.Instance);
         }
     }
 }
