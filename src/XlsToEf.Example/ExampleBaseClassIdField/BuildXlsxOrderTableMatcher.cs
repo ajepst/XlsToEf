@@ -26,10 +26,10 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
             {
                 XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
                 FileName = message.FileName,
-                TableColumns = new Dictionary<string, SingleColumnData>
+                TableColumns = new List<TableColumnConfiguration>
                 {
-                    {PropertyNameHelper.GetPropertyName(() => order.Id), new SingleColumnData("Order ID")},
-                    {PropertyNameHelper.GetPropertyName(() => order.OrderDate), new SingleColumnData("Order Date", required: false)},
+                    TableColumnConfiguration.Create(() => order.Id, new SingleColumnData("Order ID")),
+                    TableColumnConfiguration.Create(() => order.OrderDate, new SingleColumnData("Order Date", required: false)),
                 }
             };
 

@@ -26,11 +26,11 @@ namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
             {
                 XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
                 FileName = message.FileName,
-                TableColumns = new Dictionary<string, SingleColumnData>
+                TableColumns = new List<TableColumnConfiguration>
                 {
-                    {PropertyNameHelper.GetPropertyName(() => cat.Id), new SingleColumnData("Category Id")},
-                    {PropertyNameHelper.GetPropertyName(() => cat.CategoryName), new SingleColumnData("Category Name")},
-                    {PropertyNameHelper.GetPropertyName(() => cat.CategoryCode), new SingleColumnData("Category Code")},
+                    TableColumnConfiguration.Create(() => cat.Id, new SingleColumnData("Category Id")),
+                    TableColumnConfiguration.Create(() => cat.CategoryName, new SingleColumnData("Category Name")),
+                    TableColumnConfiguration.Create(() => cat.CategoryCode, new SingleColumnData("Category Code")),
                 }
             };
 

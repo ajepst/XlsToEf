@@ -275,8 +275,7 @@ function global:create_directory($directory_name) {
 function global:run_fixie ($test_assembly) {
    $assembly_to_test = $test_dir + "\" + $test_assembly
    $results_output = $result_dir + "\" + $test_assembly + ".xml"
-    write-host "Running Fixie Tests in: $test_assembly"
-    exec { & tools\fixie\Fixie.Console.exe $assembly_to_test }
+    exec { & tools\fixie\Fixie.Console.exe $assembly_to_test --xUnitXml $results_output }
 }
 
 function global:Copy_and_flatten ($source,$include,$dest) {

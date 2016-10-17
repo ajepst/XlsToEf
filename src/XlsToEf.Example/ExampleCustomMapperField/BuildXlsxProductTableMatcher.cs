@@ -26,10 +26,10 @@ namespace XlsToEf.Example.ExampleCustomMapperField
             {
                 XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
                 FileName = message.FileName,
-                TableColumns = new Dictionary<string, SingleColumnData>
+                TableColumns = new List<TableColumnConfiguration>
                 {
-                    {"ProductCategoryCode", new SingleColumnData("Category Code")},
-                    {PropertyNameHelper.GetPropertyName(() => product.ProductName), new SingleColumnData("Product Name", required:false)},
+                    TableColumnConfiguration.Create("ProductCategoryCode", new SingleColumnData("Category Code")),
+                    TableColumnConfiguration.Create(() => product.ProductName, new SingleColumnData("Product Name", required:false)),
                 }
             };
 
