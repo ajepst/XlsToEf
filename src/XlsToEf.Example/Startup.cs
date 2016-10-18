@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Scrutor;
 using XlsToEf.Example.Controllers;
 using XlsToEf.Example.Domain;
+using XlsToEf.Example.ExampleCustomMapperField;
 using XlsToEf.Example.Infrastructure;
 using XlsToEf.Import;
 
@@ -49,7 +50,7 @@ namespace XlsToEf.Example
                       services.AddScoped<DbContext, XlsToEfDbContext>(m => m.GetService<XlsToEfDbContext>());
             services.AddScoped(m => new XlsToEfDbContext(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddMediatR(typeof (HomeController).GetTypeInfo().Assembly);
-
+            services.AddScoped<ProductPropertyOverrider<Product>>();
             services.Scan(scan => scan
                 .FromAssemblyOf<Address>()
                 .AddClasses(x => x.Where(y => !y.IsAssignableFrom(typeof (XlsToEfDbContext))))
