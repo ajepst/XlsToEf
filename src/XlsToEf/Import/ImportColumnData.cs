@@ -12,7 +12,6 @@ namespace XlsToEf.Import
         }
 
         public string[] XlsxColumns { get; set; }
-        //public Dictionary<string, SingleColumnData> TableColumns { get; set; }
         public List<TableColumnConfiguration> TableColumns { get; set; }
         public string FileName { get; set; }
         public string[][] RequiredTogether { get; set; }
