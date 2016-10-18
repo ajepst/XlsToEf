@@ -52,7 +52,7 @@ var importMatchingData = new ImportMatchingOrderData
 return await _xlsxToTableImporter.ImportColumnData<Order>(importMatchingData); 
 
 ```
-Note: if you don't want to use a "magic string" for your property (which you probably shouldn't if you're not using the custom mapping method below) you can use an expression with a provided helper: 
+The Key in the dictionary above matches the destination field name in your EF entity, and the dictionary value is the source column in your excel sheet. The "magic" string key as shown above going to what you'll use when the dictionary is being built client side using a matching UI (the dictionary key string wouldn't actually be magic as it would be generated earlier via the ImportColumnData.TableColumns collection and sent to the UI, dicussed below in the Additional Tools section) However if you are implementing a backend-only import with no user input, then you may be handcoding the Selected collection.  In that case, I'd avoid the "magic strings" by using an expression via a provided helper: 
 
 ```
 var cat = new ProductCategory();
@@ -65,8 +65,8 @@ var cat = new ProductCategory();
             {PropertyNameHelper.GetPropertyName(() => ProductName, "xlsCol2"},
         }
 ```
+There is an existing open issue to work out a way to use a lambda without the helper (like the related *TableColumnConfiguration* object)... so that should improve at some point.
 
-There is an existing open issue to work out a way to use a lambda without the hack of using the helper (while still allowing a string in some way for custom scenarios)... so that should improve at some point. 
 
 ###Advanced Usage###
 
@@ -117,4 +117,21 @@ The ExcelIoWrapper class has several useful functions that are useful in impleme
 
 *GetImportColumnData* - This returns a collection of the column names in a particular sheet in a spreadsheet.
 
+*ImportColumnData* - This is the full specification of information needed by a UI for a UI - driven excel column to table column matching tool. Usage of the below would be driven by your actual UI implementation. See BuildXlsxOrderTableMatcher in the example project for full sample usage. Items that can be specified are:
+ - *XlsxColumns* - Can hold an array of strings to represent the excel column headers for the selected sheet.
+ - *FileName* - to hold the filename so it can be available on the way back in.
+ - *TableColumns* - A specification of all columns from the destaination EF - connection object that we are mapping. Contains a list of *TableColumnConfiguration* objects.
+ - *RequiredTogether* - A collection of strings intended to be used by the UI to require pairs of fields for validation. Example usage might be: 
+ 
+ ```
+ RequiredTogether = new[]
+                {
+                    new[] { GetPropertyName(() => address.City), GetPropertyName(() => address.State) }, 
+                    new[] { GetPropertyName(() => address.IsBusiness), GetPropertyName(() => address.CompanyName) }
+                }
+ ```
+ 
+*TableColumnConfiguration* - Specification for the columns to be matched against. 
+ - First parameter is a name or lambda to uniquely identify the column in the import. If using the lambda, you're good. If you use the string, then you'll need to hand-map later on, using the overrider as described in the advanced section.
+ -  Second parameter is the *SingleColumnData* parameter, which allows you to set the display name of the field for the UI's use, as well as whether this field should be required in your UI's validation.
 
