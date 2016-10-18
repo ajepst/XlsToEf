@@ -90,7 +90,7 @@
       for (var i in data.tableColumns) {
         var name = data.tableColumns[i].name;
         var colData = data.tableColumns[i].columnData;
-        var displayText = colData.name;
+        var displayText = colData.displayName;
         var required = colData.required;
         var selectXlsNode = $('<select class="form-control" />');
         if (required) {

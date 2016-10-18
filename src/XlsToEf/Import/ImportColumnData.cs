@@ -19,13 +19,13 @@ namespace XlsToEf.Import
 
     public class SingleColumnData
     {
-        public SingleColumnData(string name, bool required = true)
+        public SingleColumnData(string displayName, bool required = true)
         {
-            Name = name;
+            DisplayName = displayName;
             Required = required;
         }
 
-        public string Name { get; private set; }
+        public string DisplayName { get; private set; }
         public bool Required { get; private set; }
     }
 
