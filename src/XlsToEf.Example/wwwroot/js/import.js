@@ -87,15 +87,16 @@
       $('#matchRows').empty();
       matcherPickerInfo = {};
       requiredTogether = data.requiredTogether;
-      for (var key in data.tableColumns) {
-        var colData = data.tableColumns[key];
+      for (var i in data.tableColumns) {
+        var name = data.tableColumns[i].name;
+        var colData = data.tableColumns[i].columnData;
         var displayText = colData.name;
         var required = colData.required;
         var selectXlsNode = $('<select class="form-control" />');
         if (required) {
           selectXlsNode.addClass("colRequired");
         }
-        matcherPickerInfo[key] = selectXlsNode;
+        matcherPickerInfo[name] = selectXlsNode;
         selectXlsNode.append($('<option />'));
         $('#matchRows').append($('<tr />').append($('<td />').append($('<span class="center-vertical" />').text(row)))
             .append($('<td class="form-group" />').append(selectXlsNode))
