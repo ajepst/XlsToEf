@@ -33,18 +33,18 @@ Take a look at the Example project- *ImportOrderMatchesFromXlsx* is an end-to-en
 
 This is how you would do an import, in the most basic usage with all the defaults. This should work for your basic field imports:
 ```
-var importer = new XlsxToTableImporter(myContext);
+var importer = new XlsxToTableImporter(myDbContext);
 
 var importMatchingData = new ImportMatchingOrderData
 {
     FileName = "c:\foo.xlsx",               // path to the uploaded file
     Sheet = "Sheet 2",                      // sheet in the excel doc you want to import
-    Selected =                              // entity fields (or just a placeholder, if you use the custom  
-        new Dictionary<string, string>      //     method below) mapping to the columns in the spreadsheet
+    Selected =                              // entity fields (or just a placeholder for the field, if you use  
+        new List<XlsToEfColumnPair>         //   the custom method below) mapping to the columns in the spreadsheet
         {
-            {"Id", "xlsCol5"},
-            {"ProductCategory", "xlsCol1"},
-            {"ProductName", "xlsCol2"},
+            new XlsToEfColumnPair{EfName="Id", XlsName="xlsCol5"},
+            new XlsToEfColumnPair{EfName="ProductCategory", XlsName="xlsCol1"},
+            new XlsToEfColumnPair{EfName="ProductName", XlsName="xlsCol2"},
         }
 };
 
@@ -52,21 +52,19 @@ var importMatchingData = new ImportMatchingOrderData
 return await _xlsxToTableImporter.ImportColumnData<Order>(importMatchingData); 
 
 ```
-The Key in the dictionary above matches the destination field name in your EF entity, and the dictionary value is the source column in your excel sheet. The "magic" string key as shown above going to what you'll use when the dictionary is being built client side using a matching UI (the dictionary key string wouldn't actually be magic as it would be generated earlier via the ImportColumnData.TableColumns collection and sent to the UI, dicussed below in the Additional Tools section) However if you are implementing a backend-only import with no user input, then you may be handcoding the Selected collection.  In that case, I'd avoid the "magic strings" by using an expression via a provided helper: 
+The *EfName* above is the destination field name in your EF entity, and the *XlsName* is the source column in your excel sheet. The "magic" string key as shown above going to what you'll use when the structure is being built client side using a matching UI and bound to your controller parameter (the EFName string wouldn't actually be magic as it would be generated earlier via the ImportColumnData.TableColumns collection and sent to the UI, dicussed below in the Additional Tools section) However if you are implementing a backend-only import with no user input, then you may be handcoding the Selected collection.  In that case, I'd avoid the "magic strings" by using an expression: 
 
 ```
 var cat = new ProductCategory();
 ...
      Selected =
-        new Dictionary<string, string>      
+        new List<XlsToEfColumnPair>    
         {
-            {PropertyNameHelper.GetPropertyName(() => cat.Id), "xlsCol5"},
-            {PropertyNameHelper.GetPropertyName(() => ProductCategory, "xlsCol1"},
-            {PropertyNameHelper.GetPropertyName(() => ProductName, "xlsCol2"},
+            XlsToEfColumnPair.Create(() => cat.Id), "xlsCol5"},
+            XlsToEfColumnPair.Create(() => ProductCategory, "xlsCol1"},
+            XlsToEfColumnPair.Create(() => ProductName, "xlsCol2"},
         }
 ```
-There is an existing open issue to work out a way to use a lambda without the helper (like the related *TableColumnConfiguration* object)... so that should improve at some point.
-
 
 ###Advanced Usage###
 
