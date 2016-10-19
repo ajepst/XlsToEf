@@ -90,9 +90,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol5", () => prod.Id),
-                    XlsToEfColumnPair.Create("xlsCol1", "ProductCategory"),
-                    XlsToEfColumnPair.Create("xlsCol2", () => prod.ProductName),
+                    XlsToEfColumnPair.Create(() => prod.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("ProductCategory", "xlsCol1"),
+                    XlsToEfColumnPair.Create(() => prod.ProductName, "xlsCol2"),
 
                 },
             };

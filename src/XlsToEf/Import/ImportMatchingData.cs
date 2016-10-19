@@ -22,18 +22,18 @@ namespace XlsToEf.Import
         {
         }
 
-        private XlsToEfColumnPair(string xlsName, string efName)
+        private XlsToEfColumnPair(string efName, string xlsName)
         {
             XlsName = xlsName;
             EfName = efName;
         }
 
-        public static XlsToEfColumnPair Create(string xlsName, string efName)
+        public static XlsToEfColumnPair Create(string efName, string xlsName)
         {
-            return new XlsToEfColumnPair(xlsName, efName);
+            return new XlsToEfColumnPair(efName, xlsName);
         }
 
-        public static XlsToEfColumnPair Create<T>(string xlsName, Expression<Func<T>> propertyLambda)
+        public static XlsToEfColumnPair Create<T>(Expression<Func<T>> propertyLambda, string xlsName)
         {
             var me = propertyLambda.Body as MemberExpression;
 
@@ -43,7 +43,7 @@ namespace XlsToEf.Import
             }
 
             var name = me.Member.Name;
-            return new XlsToEfColumnPair(xlsName, name);
+            return new XlsToEfColumnPair(name, xlsName);
         }
     }
 }

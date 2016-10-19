@@ -31,9 +31,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol5", () => order.Id),
-                    XlsToEfColumnPair.Create("xlsCol2", "OrderDate"),
-                    XlsToEfColumnPair.Create("xlsCol4", () => order.DeliveryDate),
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
 
                 },
             };
@@ -56,9 +56,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol5", () => order.Id),
-                    XlsToEfColumnPair.Create("xlsCol2", "OrderDate"),
-                    XlsToEfColumnPair.Create("xlsCol4", () => order.DeliveryDate),
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
 
                 },
             };
@@ -98,9 +98,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol5", () => order.Id),
-                    XlsToEfColumnPair.Create("xlsCol2", "OrderDate"),
-                    XlsToEfColumnPair.Create("xlsCol4", () => order.DeliveryDate),
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
 
                 },
             };
@@ -144,9 +144,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol5", () => order.Id),
-                    XlsToEfColumnPair.Create("xlsCol2", "OrderDate"),
-                    XlsToEfColumnPair.Create("xlsCol4", () => order.DeliveryDate),
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
 
                 },
             };
@@ -198,9 +198,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol5", () => order.Id),
-                    XlsToEfColumnPair.Create("xlsCol2", "OrderDate"),
-                    XlsToEfColumnPair.Create("xlsCol4", () => order.DeliveryDate),
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
 
                 },
             };
@@ -243,8 +243,8 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol5", () => order.Id),
-                    XlsToEfColumnPair.Create("xlsCol2", () => order.DeliveryDate),
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol2"),
 
                 },
             };
@@ -273,8 +273,8 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol6", () => addr.AddrId),
-                    XlsToEfColumnPair.Create("xlsCol2", () => addr.AddressLine1),
+                    XlsToEfColumnPair.Create(() => addr.AddrId, "xlsCol6"),
+                    XlsToEfColumnPair.Create(() => addr.AddressLine1, "xlsCol2"),
 
                 },
             };
@@ -296,8 +296,8 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol8", () => cat.CategoryCode),
-                    XlsToEfColumnPair.Create("xlsCol7", "CategoryName"),
+                    XlsToEfColumnPair.Create(() => cat.CategoryCode, "xlsCol8"),
+                    XlsToEfColumnPair.Create("CategoryName", "xlsCol7"),
                 },
             };
             Func<string, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == int.Parse(y);
@@ -326,9 +326,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol6", () => cat.Id),
-                    XlsToEfColumnPair.Create("xlsCol8", "CategoryCode"),
-                    XlsToEfColumnPair.Create("xlsCol7", () => cat.CategoryName),
+                    XlsToEfColumnPair.Create(() => cat.Id, "xlsCol6"),
+                    XlsToEfColumnPair.Create("CategoryCode", "xlsCol8"),
+                    XlsToEfColumnPair.Create(() => cat.CategoryName, "xlsCol7"),
 
                 },
             };
@@ -376,9 +376,9 @@ namespace XlsToEf.Tests
                 Sheet = "mysheet",
                 Selected = new List<XlsToEfColumnPair>
                 {
-                    XlsToEfColumnPair.Create("xlsCol6", () => cat.Id),
-                    XlsToEfColumnPair.Create("xlsCol8", "CategoryCode"),
-                    XlsToEfColumnPair.Create("xlsCol7", () => cat.CategoryName),
+                    XlsToEfColumnPair.Create(() => cat.Id, "xlsCol6"),
+                    XlsToEfColumnPair.Create("CategoryCode", "xlsCol8"),
+                    XlsToEfColumnPair.Create(() => cat.CategoryName, "xlsCol7"),
 
                 },
             };
