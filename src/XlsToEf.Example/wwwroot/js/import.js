@@ -150,10 +150,10 @@
       return;
     } 
 
-    var matcherSubmissionValues = { FileName: uploadedFile, Selected: {}, Sheet: $('#sheetPicker').val() };
+    var matcherSubmissionValues = { FileName: uploadedFile, Selected: [], Sheet: $('#sheetPicker').val() };
     for (var key in matcherPickerInfo) {
       if (!!matcherPickerInfo[key].val()) { // Do not send unselected cols
-        matcherSubmissionValues.Selected[key] = matcherPickerInfo[key].val();
+        matcherSubmissionValues.Selected.push({ EfName:key, XlsName:matcherPickerInfo[key].val() });
       }
     }
 

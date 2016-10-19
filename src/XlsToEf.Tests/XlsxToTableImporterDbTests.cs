@@ -24,17 +24,18 @@ namespace XlsToEf.Tests
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var order = new Order();
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol5"},
-                        {"OrderDate", "xlsCol2"},
-                        {"DeliveryDate", "xlsCol4"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
+
+                },
             };
             await importer.ImportColumnData<Order>(importMatchingData);
 
@@ -48,17 +49,18 @@ namespace XlsToEf.Tests
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var order = new Order();
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol5"},
-                        {"OrderDate", "xlsCol2"},
-                        {"DeliveryDate", "xlsCol4"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
+
+                },
             };
             await importer.ImportColumnData<Order>(importMatchingData, saveBehavior:new ImportSaveBehavior { RecordMode = RecordMode.Upsert});
 
@@ -89,17 +91,18 @@ namespace XlsToEf.Tests
 
             var dbContext = GetDb();
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+            var order = new Order();
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol5"},
-                        {"OrderDate", "xlsCol2"},
-                        {"DeliveryDate", "xlsCol4"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
+
+                },
             };
             var results = await importer.ImportColumnData<Order>(importMatchingData, new ImportSaveBehavior { RecordMode= RecordMode.UpdateOnly});
 
@@ -134,17 +137,18 @@ namespace XlsToEf.Tests
 
             var dbContext = GetDb();
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+            var order = new Order();
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol5"},
-                        {"OrderDate", "xlsCol2"},
-                        {"DeliveryDate", "xlsCol4"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
+
+                },
             };
             var results =
                 await
@@ -187,17 +191,18 @@ namespace XlsToEf.Tests
 
             var dbContext = GetDb();
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+            var order = new Order();
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol5"},
-                        {"OrderDate", "xlsCol2"},
-                        {"DeliveryDate", "xlsCol4"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
+
+                },
             };
             var results =
                 await
@@ -231,16 +236,17 @@ namespace XlsToEf.Tests
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var order = new Order();
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol5"},
-                        {"DeliveryDate", "xlsCol2"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol2"),
+
+                },
             };
             await importer.ImportColumnData<Order>(importMatchingData);
 
@@ -260,16 +266,17 @@ namespace XlsToEf.Tests
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var addr = new Address();
             var importMatchingData = new ImportMatchingAddressData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"AddrId", "xlsCol6"},
-                        {"AddressLine1", "xlsCol2"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => addr.AddrId, "xlsCol6"),
+                    XlsToEfColumnPair.Create(() => addr.AddressLine1, "xlsCol2"),
+
+                },
             };
             await importer.ImportColumnData<Address>(importMatchingData);
 
@@ -282,16 +289,16 @@ namespace XlsToEf.Tests
         {
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var cat = new ProductCategory();
             var importMatchingData = new ImportMatchingProductData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"CategoryCode", "xlsCol8"},
-                        {"CategoryName", "xlsCol7"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => cat.CategoryCode, "xlsCol8"),
+                    XlsToEfColumnPair.Create("CategoryName", "xlsCol7"),
+                },
             };
             Func<string, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == int.Parse(y);
             await importer.ImportColumnData(importMatchingData, finder: selectorFinder, saveBehavior: new ImportSaveBehavior { RecordMode=RecordMode.CreateOnly});
@@ -312,17 +319,18 @@ namespace XlsToEf.Tests
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var cat = new ProductCategory();
             var importMatchingData = new ImportMatchingProductData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol6"},
-                        {"CategoryCode", "xlsCol8"},
-                        {"CategoryName", "xlsCol7"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => cat.Id, "xlsCol6"),
+                    XlsToEfColumnPair.Create("CategoryCode", "xlsCol8"),
+                    XlsToEfColumnPair.Create(() => cat.CategoryName, "xlsCol7"),
+
+                },
             };
             var id = objectToUpdate.Id;
             excelIoWrapper.Rows[0]["xlsCol6"] = id.ToString(); // change the id to the autogenerated one so we can update it.
@@ -361,17 +369,18 @@ namespace XlsToEf.Tests
 
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var cat = new ProductCategory();
             var importMatchingData = new ImportMatchingProductData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol6"},
-                        {"CategoryCode", "xlsCol8"},
-                        {"CategoryName", "xlsCol7"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => cat.Id, "xlsCol6"),
+                    XlsToEfColumnPair.Create("CategoryCode", "xlsCol8"),
+                    XlsToEfColumnPair.Create(() => cat.CategoryName, "xlsCol7"),
+
+                },
             };
             var id = objectToUpdate.Id;
             excelIoWrapper.Rows[0]["xlsCol6"] = id.ToString(); // change the id to the autogenerated one so we can update it.

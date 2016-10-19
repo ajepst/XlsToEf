@@ -64,6 +64,8 @@ namespace XlsToEf.Import
                 saveBehavior = new ImportSaveBehavior();
             }
 
+            var selctedDict = BuildDictionaryFromSelected(matchingData.Selected);
+
             var keyInfo =  GetEntityKeys(typeof (TEntity));
             EnsureImportingEntityHasSingleKey(keyInfo);
             var pk = keyInfo[0];
@@ -75,7 +77,7 @@ namespace XlsToEf.Import
                 idPropertyName = pk.Name;
             }
 
-            var isImportingEntityId = matchingData.Selected.ContainsKey(idPropertyName);
+            var isImportingEntityId = selctedDict.ContainsKey(idPropertyName);
             var isAutoIncrementingId = IsIdAutoIncrementing(typeof(TEntity));
 
             EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(saveBehavior.RecordMode, isAutoIncrementingId, isImportingEntityId);
@@ -100,7 +102,7 @@ namespace XlsToEf.Import
                     string idValue = null;
                     if (isImportingEntityId)
                     {
-                        var xlsxIdColName = matchingData.Selected[idPropertyName];
+                        var xlsxIdColName = selctedDict[idPropertyName];
                         var idStringValue = excelRow[xlsxIdColName];
                         entityToUpdate = await GetMatchedDbObject(finder, idStringValue, idType);
 
@@ -114,7 +116,7 @@ namespace XlsToEf.Import
                         _dbContext.Set<TEntity>().Add(entityToUpdate);
                     }
 
-                    await MapIntoEntity(matchingData, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId, saveBehavior.RecordMode);
+                    await MapIntoEntity(selctedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId, saveBehavior.RecordMode);
                     importResult.SuccessCount++;
                 }
                 catch (RowParseException e)
@@ -143,6 +145,20 @@ namespace XlsToEf.Import
             return importResult;
         }
 
+        private Dictionary<string, string> BuildDictionaryFromSelected(List<XlsToEfColumnPair> selected)
+        {
+            var hasDups = selected.GroupBy(x => x.EfName)
+                .Select(group => new {Name = group.Key, Count = group.Count()})
+                .Any(x => x.Count > 1);
+            if (hasDups)
+            {
+                throw new Exception("Destination targets must be unique");
+            }
+            var dict = selected.ToDictionary(x => x.EfName, x => x.XlsName);
+            return dict;
+
+        }
+
         private void HandleError<TEntity>(IDictionary<string, string> rowErrorDetails, int rowNumber, TEntity entityToRollBack, string message)
             where TEntity : class, new()
         {
@@ -165,17 +181,17 @@ namespace XlsToEf.Import
             }
         }
 
-        private static async Task MapIntoEntity<TEntity>(ImportMatchingData matchingData, string idPropertyName,
+        private static async Task MapIntoEntity<TEntity>(Dictionary<string, string> matchingData, string idPropertyName,
             UpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode)
             
         {
             if (overridingMapper != null)
             {
-                await overridingMapper.UpdateProperties(entityToUpdate, matchingData.Selected, excelRow, recordMode);
+                await overridingMapper.UpdateProperties(entityToUpdate, matchingData, excelRow, recordMode);
             }
             else
             {
-                UpdateProperties(entityToUpdate, matchingData.Selected, excelRow, idPropertyName, isAutoIncrementingId);
+                UpdateProperties(entityToUpdate, matchingData, excelRow, idPropertyName, isAutoIncrementingId);
             }
         }
 
@@ -314,7 +330,6 @@ namespace XlsToEf.Import
                 if ((entityPropertyName == selectorColName) && shouldSkipIdInsert) continue;
                 var xlsxColumnName = matches[entityPropertyName];
                 var xlsxItemData = excelRow[xlsxColumnName];
-
 
                 Type matchedObjectType = matchedObject.GetType();
                 PropertyInfo propToSet = matchedObjectType.GetProperty(entityPropertyName);

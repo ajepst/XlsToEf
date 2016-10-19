@@ -127,7 +127,6 @@ namespace XlsToEf.Example.Controllers
         [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<ActionResult> SubmitProductCategoryColumnMatches([FromBody]ImportMatchingProductCategoryData data)
         {
-            var c = new DbContext("XlsToEf");
             var result = await _mediator.SendAsync(data);
             return Json(result);
         }
