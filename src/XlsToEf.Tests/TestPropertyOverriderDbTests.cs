@@ -83,17 +83,18 @@ namespace XlsToEf.Tests
 
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
 
+            var prod = new Product();
             var importMatchingData = new ImportMatchingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
-                Selected =
-                    new Dictionary<string, string>
-                    {
-                        {"Id", "xlsCol5"},
-                        {"ProductCategory", "xlsCol1"},
-                        {"ProductName", "xlsCol2"},
-                    }
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create("xlsCol5", () => prod.Id),
+                    XlsToEfColumnPair.Create("xlsCol1", "ProductCategory"),
+                    XlsToEfColumnPair.Create("xlsCol2", () => prod.ProductName),
+
+                },
             };
 
 
