@@ -5,7 +5,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleBaseClassIdField
 {
-    public class ImportOrderMatchesFromXlsx : IAsyncRequestHandler<ImportMatchingOrderData, ImportResult>
+    public class ImportOrderMatchesFromXlsx : IAsyncRequestHandler<DataMatchesForImportingOrderData, ImportResult>
     {
         private readonly XlsxToTableImporter _xlsxToTableImporter;
 
@@ -14,7 +14,7 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
             _xlsxToTableImporter = xlsxToTableImporter;
         }
 
-        public async Task<ImportResult> Handle(ImportMatchingOrderData message)
+        public async Task<ImportResult> Handle(DataMatchesForImportingOrderData message)
         {
             return await _xlsxToTableImporter.ImportColumnData<Order>(message);
         }

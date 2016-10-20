@@ -101,7 +101,7 @@ namespace XlsToEf.Example.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<ActionResult> SubmitProductColumnMatches([FromBody]ImportMatchingProductData data)
+        public async Task<ActionResult> SubmitProductColumnMatches([FromBody]DataMatchesForImportingProductData data)
         {
         //    var c = new DbContext("XlsToEf");
             var result = await _mediator.SendAsync(data);
@@ -125,7 +125,7 @@ namespace XlsToEf.Example.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<ActionResult> SubmitProductCategoryColumnMatches([FromBody]ImportMatchingProductCategoryData data)
+        public async Task<ActionResult> SubmitProductCategoryColumnMatches([FromBody]DataMatchesForImportingProductCategoryData data)
         {
             var result = await _mediator.SendAsync(data);
             return Json(result);
@@ -148,7 +148,7 @@ namespace XlsToEf.Example.Controllers
             }
         }
 
-        public async Task<JsonResult> SubmitOrderColumnMatches([FromBody]ImportMatchingOrderData data)
+        public async Task<JsonResult> SubmitOrderColumnMatches([FromBody]DataMatchesForImportingOrderData data)
         {
             var result = await _mediator.SendAsync(data);
             return Json(result);

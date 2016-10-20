@@ -3,7 +3,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleBaseClassIdField
 {
-    public class XlsxOrderColumnMatcherQuery : XlsxColumnMatcherQuery, IAsyncRequest<ImportColumnData>
+    public class XlsxOrderColumnMatcherQuery : XlsxColumnMatcherQuery, IAsyncRequest<DataForMatcherUi>
     {
     }
 }

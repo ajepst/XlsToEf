@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq.Expressions;
 
 namespace XlsToEf.Import
 {
-    public class ImportMatchingData
+    [Obsolete("ImportMatchingData obsolete, please use DataMatchesForImport", true)]
+    public class ImportMatchingData : DataMatchesForImport
+    {
+        
+    }
+
+    public class DataMatchesForImport
     {
         public string FileName { get; set; }
         public string Sheet { get; set; }

@@ -4,9 +4,15 @@ using System.Linq.Expressions;
 
 namespace XlsToEf.Import
 {
-    public class ImportColumnData
+    [Obsolete("ImportColumnData Obsolete, please use DataForMatcherUi", true)]
+    public class ImportColumnData : DataForMatcherUi
     {
-        public ImportColumnData()
+        
+    }
+
+    public class DataForMatcherUi
+    {
+        public DataForMatcherUi()
         {
             RequiredTogether = new string[0][];
         }

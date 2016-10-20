@@ -5,7 +5,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
 {
-    public class ImportProductCategoryMatchesFromXlsx : IAsyncRequestHandler<ImportMatchingProductCategoryData, ImportResult>
+    public class ImportProductCategoryMatchesFromXlsx : IAsyncRequestHandler<DataMatchesForImportingProductCategoryData, ImportResult>
     {
         private readonly XlsxToTableImporter _xlsxToTableImporter;
 
@@ -14,7 +14,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
             _xlsxToTableImporter = xlsxToTableImporter;
         }
 
-        public async Task<ImportResult> Handle(ImportMatchingProductCategoryData message)
+        public async Task<ImportResult> Handle(DataMatchesForImportingProductCategoryData message)
         {
             return await _xlsxToTableImporter.ImportColumnData<ProductCategory>(message);
         }
