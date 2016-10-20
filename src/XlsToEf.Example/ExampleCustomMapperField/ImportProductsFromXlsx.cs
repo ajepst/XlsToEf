@@ -11,7 +11,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField
 {
-    public class ImportProductsFromXlsx : IAsyncRequestHandler<ImportMatchingProductData, ImportResult>
+    public class ImportProductsFromXlsx : IAsyncRequestHandler<DataMatchesForImportingProductData, ImportResult>
     {
         private readonly XlsxToTableImporter _xlsxToTableImporter;
         private readonly ProductPropertyOverrider<Product> _productOverrider;
@@ -22,7 +22,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
             _productOverrider = productOverrider;
         }
 
-        public async Task<ImportResult> Handle(ImportMatchingProductData message)
+        public async Task<ImportResult> Handle(DataMatchesForImportingProductData message)
         {
             Func<int, Expression<Func<Product, bool>>> finderExpression = selectorValue => prod => prod.Id == selectorValue;
             return await _xlsxToTableImporter.ImportColumnData(message, finderExpression, overridingMapper:_productOverrider, saveBehavior: new ImportSaveBehavior {RecordMode = RecordMode.CreateOnly});

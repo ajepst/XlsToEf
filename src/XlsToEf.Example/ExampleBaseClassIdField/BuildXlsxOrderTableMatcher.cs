@@ -8,7 +8,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleBaseClassIdField
 {
-    public class BuildXlsxOrderTableMatcher : IAsyncRequestHandler<XlsxOrderColumnMatcherQuery, ImportColumnData>
+    public class BuildXlsxOrderTableMatcher : IAsyncRequestHandler<XlsxOrderColumnMatcherQuery, DataForMatcherUi>
     {
         private readonly IExcelIoWrapper _excelIoWrapper;
 
@@ -17,12 +17,12 @@ namespace XlsToEf.Example.ExampleBaseClassIdField
             _excelIoWrapper = excelIoWrapper;
         }
 
-        public async Task<ImportColumnData> Handle(XlsxOrderColumnMatcherQuery message)
+        public async Task<DataForMatcherUi> Handle(XlsxOrderColumnMatcherQuery message)
         {
             message.FilePath = Path.GetTempPath() + message.FileName;
             var order = new Order();
 
-            var columnData = new ImportColumnData
+            var columnData = new DataForMatcherUi
             {
                 XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
                 FileName = message.FileName,

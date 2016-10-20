@@ -38,7 +38,7 @@ namespace XlsToEf.Import
         /// <param name="matchingData">Specification for how to match spreadsheet to entity</param>
         /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity>(ImportMatchingData matchingData, ImportSaveBehavior saveBehavior = null)
+        public async Task<ImportResult> ImportColumnData<TEntity>(DataMatchesForImport matchingData, ImportSaveBehavior saveBehavior = null)
             where TEntity : class, new()
         {
             return await ImportColumnData<TEntity, string>(matchingData, null, null, null, saveBehavior);
@@ -56,7 +56,7 @@ namespace XlsToEf.Import
         /// <param name="overridingMapper">A custom mapper for mapping between excel columns and an entity. </param>
         /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity, TId>(ImportMatchingData matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null)
+        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null)
            where TEntity : class, new()
         {
             if (saveBehavior == null)

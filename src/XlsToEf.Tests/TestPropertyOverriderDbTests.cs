@@ -84,7 +84,7 @@ namespace XlsToEf.Tests
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
 
             var prod = new Product();
-            var importMatchingData = new ImportMatchingOrderData
+            var importMatchingData = new DataMatchesForImportingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",

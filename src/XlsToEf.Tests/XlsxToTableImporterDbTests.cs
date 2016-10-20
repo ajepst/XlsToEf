@@ -25,7 +25,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var order = new Order();
-            var importMatchingData = new ImportMatchingOrderData
+            var importMatchingData = new DataMatchesForImportingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -50,7 +50,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var order = new Order();
-            var importMatchingData = new ImportMatchingOrderData
+            var importMatchingData = new DataMatchesForImportingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -92,7 +92,7 @@ namespace XlsToEf.Tests
             var dbContext = GetDb();
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
             var order = new Order();
-            var importMatchingData = new ImportMatchingOrderData
+            var importMatchingData = new DataMatchesForImportingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -138,7 +138,7 @@ namespace XlsToEf.Tests
             var dbContext = GetDb();
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
             var order = new Order();
-            var importMatchingData = new ImportMatchingOrderData
+            var importMatchingData = new DataMatchesForImportingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -192,7 +192,7 @@ namespace XlsToEf.Tests
             var dbContext = GetDb();
             var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
             var order = new Order();
-            var importMatchingData = new ImportMatchingOrderData
+            var importMatchingData = new DataMatchesForImportingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -237,7 +237,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var order = new Order();
-            var importMatchingData = new ImportMatchingOrderData
+            var importMatchingData = new DataMatchesForImportingOrderData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -267,7 +267,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var addr = new Address();
-            var importMatchingData = new ImportMatchingAddressData
+            var importMatchingData = new DataMatchesForImportingAddressData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -290,7 +290,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var cat = new ProductCategory();
-            var importMatchingData = new ImportMatchingProductData
+            var importMatchingData = new DataMatchesForImportingProductData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -320,7 +320,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var cat = new ProductCategory();
-            var importMatchingData = new ImportMatchingProductData
+            var importMatchingData = new DataMatchesForImportingProductData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",
@@ -370,7 +370,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
             var cat = new ProductCategory();
-            var importMatchingData = new ImportMatchingProductData
+            var importMatchingData = new DataMatchesForImportingProductData
             {
                 FileName = "foo.xlsx",
                 Sheet = "mysheet",

@@ -3,7 +3,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField
 {
-    public class ImportMatchingProductData : ImportMatchingData, IAsyncRequest<ImportResult>
+    public class DataMatchesForImportingProductData : DataMatchesForImport, IAsyncRequest<ImportResult>
     {
     }
 }

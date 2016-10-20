@@ -8,7 +8,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
 {
-    public class BuildXlsxProductCategoryTableMatcher : IAsyncRequestHandler<XlsxProductCategoryColumnMatcherQuery, ImportColumnData>
+    public class BuildXlsxProductCategoryTableMatcher : IAsyncRequestHandler<XlsxProductCategoryColumnMatcherQuery, DataForMatcherUi>
     {
         private readonly IExcelIoWrapper _excelIoWrapper;
 
@@ -17,12 +17,12 @@ namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
             _excelIoWrapper = excelIoWrapper;
         }
 
-        public async Task<ImportColumnData> Handle(XlsxProductCategoryColumnMatcherQuery message)
+        public async Task<DataForMatcherUi> Handle(XlsxProductCategoryColumnMatcherQuery message)
         {
             message.FilePath = Path.GetTempPath() + message.FileName;
             var cat = new ProductCategory();
 
-            var columnData = new ImportColumnData
+            var columnData = new DataForMatcherUi
             {
                 XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
                 FileName = message.FileName,
