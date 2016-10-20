@@ -55,8 +55,9 @@ namespace XlsToEf.Import
         /// <param name="idPropertyName">The unique identifier property. Leave blank unless you are using an overrider to use something other than the real key.</param>
         /// <param name="overridingMapper">A custom mapper for mapping between excel columns and an entity. </param>
         /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
+        /// <param name="validator">Optional method to run custom validation on the modified entity before saving</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null)
+        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null, IEntityValidator<TEntity> validator = null)
            where TEntity : class, new()
         {
             if (saveBehavior == null)
@@ -117,9 +118,22 @@ namespace XlsToEf.Import
                     }
 
                     await MapIntoEntity(selctedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId, saveBehavior.RecordMode);
-                    importResult.SuccessCount++;
+                    if (validator != null)
+                    {
+                        var errors = validator.GetValidationErrors(entityToUpdate);
+                        throw new RowInvalidException(errors);
+                    }
+                    else
+                    {
+                        importResult.SuccessCount++;
+                    }
                 }
                 catch (RowParseException e)
+                {
+                    HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Error: " + e.Message);
+                    foundErrors = true;
+                }
+                catch (RowInvalidException e)
                 {
                     HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Error: " + e.Message);
                     foundErrors = true;

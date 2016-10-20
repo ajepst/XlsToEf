@@ -391,5 +391,58 @@ namespace XlsToEf.Tests
             updatedItem.CategoryCode.ShouldBe("FRZ");
             updatedItem.CategoryName.ShouldBe("Frozen Food");
         }
+
+        public async Task Should_Use_Validator()
+        {
+            var orderDate = DateTime.Today;
+            var objectToUpdate = new Order
+            {
+                Id = 346,
+                OrderDate = orderDate,
+            };
+            PersistToDatabase(objectToUpdate);
+
+            var excelIoWrapper = new FakeExcelIo();
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var order = new Order();
+            var importMatchingData = new DataMatchesForImportingOrderData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => order.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("OrderDate", "xlsCol2"),
+                    XlsToEfColumnPair.Create(() => order.DeliveryDate, "xlsCol4"),
+
+                },
+            };
+
+            var orderValidator = new TestValidator();
+            var result = await importer.ImportColumnData<Order, int>(importMatchingData, validator: orderValidator);
+
+
+            var valueCollection = result.RowErrorDetails.Values;
+            valueCollection.Count.ShouldBe(1);
+            valueCollection.First().ShouldContain("Order Date");
+
+
+            var updatedItem = GetDb().Set<Order>().First();
+            updatedItem.OrderDate.ShouldBe(orderDate);
+            updatedItem.DeliveryDate.ShouldBeNull();
+        }
+
+        private class TestValidator : IEntityValidator<Order>
+        {
+            public Dictionary<string, string> GetValidationErrors(Order entity)
+            {
+                var errors = new Dictionary<string, string>();
+                if (entity.OrderDate == new DateTime(2014, 8, 15))
+                {
+                    errors.Add("Order Date", "That is not a valid date in the system");
+                }
+                return errors;
+            }
+        }
     }
 }
