@@ -35,7 +35,7 @@ This is how you would do an import, in the most basic usage with all the default
 ```
 var importer = new XlsxToTableImporter(myDbContext);
 
-var importMatchingData = new ImportMatchingOrderData
+var importMatchingData = new DataMatchesForImport
 {
     FileName = "c:\foo.xlsx",               // path to the uploaded file
     Sheet = "Sheet 2",                      // sheet in the excel doc you want to import
@@ -115,16 +115,32 @@ The ExcelIoWrapper class has several useful functions that are useful in impleme
 
 *GetImportColumnData* - This returns a collection of the column names in a particular sheet in a spreadsheet.
 
-*ImportColumnData* - This is the full specification of information needed by a UI for a UI - driven excel column to table column matching tool. Usage of the below would be driven by your actual UI implementation. See BuildXlsxOrderTableMatcher in the example project for full sample usage. Items that can be specified are:
- - *XlsxColumns* - Can hold an array of strings to represent the excel column headers for the selected sheet.
+*DataForMatcherUi* - This is the full specification of information needed by a UI for a UI - driven excel column to table column matching tool. Usage of the below would be driven by your actual UI implementation. See BuildXlsxOrderTableMatcher in the example project for full sample usage. Example Usage:
+
+```
+var columnData = new DataForMatcherUi
+{
+    XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
+    FileName = message.FileName,
+    TableColumns = new List<TableColumnConfiguration>
+    {
+        TableColumnConfiguration.Create(() => order.Id, new SingleColumnData("Order ID")),
+        TableColumnConfiguration.Create(() => order.OrderDate, new SingleColumnData("Order Date", required: false)),
+    },
+    RequiredThogether = new string[0][] // this is the default, so you can leave it off
+};
+```
+
+Items that can be specified are:
+ - *XlsxColumns* - Can hold an array of strings to represent the excel column headers for the selected sheet. You can build this like the example above using the *GetImportColumnData* method, or just build up a hardcoded string array if your incoming spreadsheet always has the same columns.
  - *FileName* - to hold the filename so it can be available on the way back in.
- - *TableColumns* - A specification of all columns from the destaination EF - connection object that we are mapping. Contains a list of *TableColumnConfiguration* objects.
- - *RequiredTogether* - A collection of strings intended to be used by the UI to require pairs of fields for validation. Example usage might be: 
+ - *TableColumns* - A specification of all columns from the destaination EF - connection object that we want to map into. Contains a list of *TableColumnConfiguration* objects.
+ - *RequiredTogether* - A collection of strings intended to be used by the UI to require pairs of fields for validation. Above is the empty case - you can just leave RequiredTogether completely if you don't need it. Example usage would be like the following-note the use of the optional provided reflection helper for the second property: 
  
  ```
  RequiredTogether = new[]
                 {
-                    new[] { GetPropertyName(() => address.City), GetPropertyName(() => address.State) }, 
+                    new[] { "City", GetPropertyName(() => address.State) }, 
                     new[] { GetPropertyName(() => address.IsBusiness), GetPropertyName(() => address.CompanyName) }
                 }
  ```
