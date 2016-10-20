@@ -138,7 +138,7 @@ namespace XlsToEf.Import
                     HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Error: " + e.Message);
                     foundErrors = true;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Cannot be updated - error importing");
                     foundErrors = true;
