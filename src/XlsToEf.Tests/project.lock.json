@@ -252,7 +252,7 @@
           "lib/net45/_._": {}
         }
       },
-      "XlsToEf/1.0.0": {
+      "XlsToEf/0.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -1234,7 +1234,7 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "XlsToEf/1.0.0": {
+    "XlsToEf/0.0.0": {
       "type": "project",
       "path": "../XlsToEf/project.json",
       "msbuildProject": "../XlsToEf/XlsToEf.xproj"
@@ -1257,5 +1257,7 @@
       "System.Data >= 4.0.0",
       "System.Runtime >= 4.0.20"
     ]
-  }
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
 }

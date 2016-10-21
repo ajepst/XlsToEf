@@ -2380,7 +2380,7 @@
           "lib/net46/System.Xml.XPath.XDocument.dll": {}
         }
       },
-      "XlsToEf/1.0.0": {
+      "XlsToEf/0.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -6610,7 +6610,7 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "XlsToEf/1.0.0": {
+    "XlsToEf/0.0.0": {
       "type": "project",
       "path": "../XlsToEf/project.json",
       "msbuildProject": "../XlsToEf/XlsToEf.xproj"
@@ -6639,7 +6639,7 @@
       "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.0.0",
       "Scrutor >= 1.10.0",
       "System.Reflection >= 4.0.10",
-      "XlsToEf >= 1.0.0-*",
+      "XlsToEf >= 0.0.0-*",
       "log4net >= 2.0.5"
     ],
     ".NETFramework,Version=v4.6": [
