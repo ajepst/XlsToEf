@@ -17,6 +17,15 @@
           "lib/net45/EntityFramework.dll": {}
         }
       },
+      "EPPlus/4.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/EPPlus.dll": {}
+        },
+        "runtime": {
+          "lib/net40/EPPlus.dll": {}
+        }
+      },
       "Fixie/1.0.2": {
         "type": "package",
         "compile": {
@@ -24,33 +33,6 @@
         },
         "runtime": {
           "lib/net45/Fixie.dll": {}
-        }
-      },
-      "LinqToExcel_x64/1.10.1": {
-        "type": "package",
-        "dependencies": {
-          "log4net": "(, )"
-        },
-        "compile": {
-          "lib/LinqToExcel.dll": {},
-          "lib/Remotion.Data.Linq.dll": {},
-          "lib/Remotion.Interfaces.dll": {},
-          "lib/Remotion.dll": {}
-        },
-        "runtime": {
-          "lib/LinqToExcel.dll": {},
-          "lib/Remotion.Data.Linq.dll": {},
-          "lib/Remotion.Interfaces.dll": {},
-          "lib/Remotion.dll": {}
-        }
-      },
-      "log4net/2.0.5": {
-        "type": "package",
-        "compile": {
-          "lib/net45-full/log4net.dll": {}
-        },
-        "runtime": {
-          "lib/net45-full/log4net.dll": {}
         }
       },
       "MediatR/2.1.0": {
@@ -256,9 +238,8 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "EntityFramework": "6.1.3",
-          "LinqToExcel_x64": "1.10.1",
-          "log4net": "2.0.5"
+          "EPPlus": "4.1.0",
+          "EntityFramework": "6.1.3"
         },
         "compile": {
           "net46/XlsToEf.dll": {}
@@ -297,6 +278,20 @@
         "tools/migrate.exe"
       ]
     },
+    "EPPlus/4.1.0": {
+      "sha512": "HP6B2Df/CnCLM6pBqexCpGH+oj4oa5WcU8miaw7SkwIlDcGf1FiL1u/tH6kwwHKxlQXnksNJSPjTXR9Cp86QRw==",
+      "type": "package",
+      "path": "EPPlus/4.1.0",
+      "files": [
+        "EPPlus.4.1.0.nupkg.sha512",
+        "EPPlus.nuspec",
+        "lib/net35/EPPlus.XML",
+        "lib/net35/EPPlus.dll",
+        "lib/net40/EPPlus.XML",
+        "lib/net40/EPPlus.dll",
+        "lib/readme.txt"
+      ]
+    },
     "Fixie/1.0.2": {
       "sha512": "bqm0Z5mmpgAubU4PjGRQtBeYF5r4L1ypxu0lz5Da314Uv0kX/+OJ5F+NQSdBRTlgrLqIDrrhygmtk3lktJaumQ==",
       "type": "package",
@@ -316,45 +311,6 @@
         "lib/net45/Mono.Cecil.Rocks.dll",
         "lib/net45/Mono.Cecil.dll",
         "lib/net45/TestDriven.Framework.dll"
-      ]
-    },
-    "LinqToExcel_x64/1.10.1": {
-      "sha512": "MssAn6qr/nem5gBYQxVHPDdE6upHvRGw+rmL4HzGTC6auYVEaX4VR6r0/4UOcz6Mcgv9oqJbbbeXgRg4QfAjzA==",
-      "type": "package",
-      "path": "LinqToExcel_x64/1.10.1",
-      "files": [
-        "LinqToExcel_x64.1.10.1.nupkg.sha512",
-        "LinqToExcel_x64.nuspec",
-        "lib/LinqToExcel.dll",
-        "lib/LinqToExcel.xml",
-        "lib/Remotion.Data.Linq.dll",
-        "lib/Remotion.Interfaces.dll",
-        "lib/Remotion.dll"
-      ]
-    },
-    "log4net/2.0.5": {
-      "sha512": "AEqPZz+v+OikfnR2SqRVdQPnSaLq5y9Iz1CfRQZ9kTKPYCXHG6zYmDHb7wJotICpDLMr/JqokyjiqKAjUKp0ng==",
-      "type": "package",
-      "path": "log4net/2.0.5",
-      "files": [
-        "lib/net10-full/log4net.dll",
-        "lib/net10-full/log4net.xml",
-        "lib/net11-full/log4net.dll",
-        "lib/net11-full/log4net.xml",
-        "lib/net20-full/log4net.dll",
-        "lib/net20-full/log4net.xml",
-        "lib/net35-client/log4net.dll",
-        "lib/net35-client/log4net.xml",
-        "lib/net35-full/log4net.dll",
-        "lib/net35-full/log4net.xml",
-        "lib/net40-client/log4net.dll",
-        "lib/net40-client/log4net.xml",
-        "lib/net40-full/log4net.dll",
-        "lib/net40-full/log4net.xml",
-        "lib/net45-full/log4net.dll",
-        "lib/net45-full/log4net.xml",
-        "log4net.2.0.5.nupkg.sha512",
-        "log4net.nuspec"
       ]
     },
     "MediatR/2.1.0": {
@@ -1244,7 +1200,6 @@
     "": [
       "EntityFramework >= 6.1.3",
       "Fixie >= 1.0.2",
-      "LinqToExcel_x64 >= 1.10.1",
       "MediatR >= 2.1.0",
       "Microsoft.Extensions.DependencyInjection >= 1.0.0",
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 1.0.0",
