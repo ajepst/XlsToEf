@@ -92,7 +92,7 @@ task help {
 
 task InitialPrivateBuild -depends Clean, Compile, UpdateExampleDatabase, UpdateTestDatabase, RunAllTests
 
-task CIBuild -depends InstallAceDriver, SetBuildDb, Clean, Compile, UpdateTestDatabase, RunAllTests
+task CIBuild -depends SetBuildDb, Clean, Compile, UpdateTestDatabase, RunAllTests
 
 task DeveloperBuild -depends Clean, SetDebugBuild, Compile, UpdateExampleDatabase, UpdateTestDatabase, RunAllTests
 
@@ -158,12 +158,6 @@ task Compile -depends Clean, CommonAssemblyInfo {
     exec { dotnet restore }
     exec { msbuild.exe /t:build /v:q /p:Configuration=$project_config /p:Platform="Any CPU" /nologo $source_dir\$project_name.sln }
 }
-
-task InstallAceDriver {
-    exec { choco install msaccess2010-redist-x64 }
-
-}
-
 
 task Clean {
     delete_file $package_file
