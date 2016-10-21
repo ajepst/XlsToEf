@@ -92,7 +92,7 @@ var saveInfo = new ImportSaveBehavior
 };
 
 return await _xlsxToTableImporter.ImportColumnData(importMatchingData, finderExpression, 
-    overridingMapper:_productOverrider, saveBehavior: saveInfo);
+    overridingMapper:_productOverrider, saveBehavior: saveInfo, validator: _entityValidator);
 ```
 
 More on the optional arguments:
@@ -106,6 +106,7 @@ More on the optional arguments:
 * saveBehavior - A save behavior configuration object that has two items:
   * A switch to select Update Only, Create only, or Upsert behavior. Upsert behavior is the default.
   * A switch to select the commit mode. Options are AnySuccessfulOneAtATime, AnySuccessfulAtEndAsBulk, CommitAllAtEndIfAllGoodOrRejectAll, and NoCommit. AnySuccessfulAtEndAsBulk is the default.
+* validator - implements interface IEntityValidator<Entity> Optional implementation written by you for your own domain validation logic. If provided, XlsToEf will run the validator's GetValidationErrors(T entity) method for each entity after popultion, and if the returned dictionary is empty, XlsToEf will save the entity. If the dictionary is not empty, XlsToEf will roll back entity changes and return an error. Returned dictionary with error details should be in the form *Key: Field Name, Value: specific field error message*.  XlsToEf will bundle up and return out error.
 
 ###Additional Tools:###
 
