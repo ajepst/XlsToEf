@@ -1,1 +1,5 @@
 * text=auto
+
+# Declare files that will always have CRLF line endings on checkout.
+TestCsvDoc.csv text eol=crlf
+TestTabDoc.txt text eol=crlf
