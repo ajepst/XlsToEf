@@ -4,24 +4,32 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using OfficeOpenXml;
+using OfficeOpenXml.Table;
 
 namespace XlsToEf.Import
 {
     public interface IExcelIoWrapper
     {
         Task<IList<string>> GetSheets(string filePath);
-        Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName);
+        Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName, char? delimiter = null);
         Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery);
     }
 
     public class ExcelIoWrapper : IExcelIoWrapper
     {
+        private const string DefaultSheetName = "Sheet1";
+
         public async Task<IList<string>> GetSheets(string filePath)
         {
             var sheetNames = await Task.Run(() =>
             {
                 using (var excel = new ExcelPackage(new FileInfo(filePath)))
                 {
+                    if (IsCsvFile(filePath))
+                    {
+                        return new List<string> {DefaultSheetName}; 
+                    }
+  
                     return excel.Workbook.Worksheets.Select(x => x.Name).ToList();
                 }
             });
@@ -29,12 +37,23 @@ namespace XlsToEf.Import
             return sheetNames;
         }
 
-        private async Task<IList<string>> GetColumns(string filePath, string sheetName)
+        private async Task<IList<string>> GetColumns(string filePath, string sheetName, char? delimter = null)
         {
             var colNames = await Task.Run(() =>
             {
-                using (var excel = new ExcelPackage(new FileInfo(filePath)))
+                using (var excel = new ExcelPackage())
                 {
+                    if (IsCsvFile(filePath) || delimter != null)
+                    {
+                        PopulateSheetFromCsv(filePath, excel, delimter);
+                        sheetName = DefaultSheetName;
+                    }
+                    else
+                    {
+                        excel.Load(File.OpenRead(filePath));
+                    }
+
+
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
                     var headerCells =
                         sheet.Cells[
@@ -46,17 +65,34 @@ namespace XlsToEf.Import
             return colNames;
         }
 
-        public async Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
+        protected static void PopulateSheetFromCsv(string filePath, ExcelPackage excel, char? delimter)
         {
-            return await GetColumns(matcherQuery.FilePath, matcherQuery.Sheet);
+            var sheet1 = excel.Workbook.Worksheets.Add(DefaultSheetName);
+            var excelTextFormat = new ExcelTextFormat {Delimiter = delimter ?? ',', };
+            sheet1.Cells["A1"].LoadFromText(new FileInfo(filePath), excelTextFormat, TableStyles.Medium27, true);
         }
 
-        public async Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)
+        public async Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
+        {
+            return await GetColumns(matcherQuery.FilePath, matcherQuery.Sheet, matcherQuery.Delimiter);
+        }
+
+        public async Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName, char? delimiter = null)
         {
             var worksheetRows = await Task.Run(() =>
             {
-                using (var excel = new ExcelPackage(new FileInfo(filePath)))
+                using (var excel = new ExcelPackage())
                 {
+                    if (IsCsvFile(filePath)|| delimiter != null)
+                    {
+                        PopulateSheetFromCsv(filePath, excel, delimiter);
+                        sheetName = DefaultSheetName;
+                    }
+                    else
+                    {
+                        excel.Load(File.OpenRead(filePath));
+                    }
+                
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
 
 
@@ -71,7 +107,7 @@ namespace XlsToEf.Import
                         for (var colIndex = 0; colIndex < sheet.Dimension.Columns; colIndex++)
                         {
                             var cell = rowCells[colIndex];
-                            rowDict.Add(sheet.Cells[1, colIndex+1].Text, cell.Text);
+                            rowDict.Add(sheet.Cells[1, colIndex + 1].Text, cell.Text);
                         }
                         rows.Add(rowDict);
                     }
@@ -80,6 +116,12 @@ namespace XlsToEf.Import
                 }
             });
             return worksheetRows;
+        }
+
+        protected bool IsCsvFile(string filePath )
+        {
+            var extension = Path.GetExtension(filePath);
+            return extension != ".xlsx";
         }
     }
 }

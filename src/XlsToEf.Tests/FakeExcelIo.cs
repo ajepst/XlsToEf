@@ -29,7 +29,8 @@ namespace XlsToEf.Tests
             return Task.FromResult(Sheets);
         }
 
-        public Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)
+
+        public Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName, char? delimiter = null)
         {
             return Task.FromResult(Rows);
         }
