@@ -121,7 +121,7 @@ namespace XlsToEf.Import
         protected bool IsCsvFile(string filePath )
         {
             var extension = Path.GetExtension(filePath);
-            return extension != ".xlsx";
+            return extension != ".xlsx" && extension != ".xlsm";
         }
     }
 }
