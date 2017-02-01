@@ -285,7 +285,7 @@ function global:copy_all_assemblies_for_console_app($destination) {
 function global:copy_all_assemblies_for_test($destination){
    $bin_dir_match_pattern = "$source_dir\**\bin\$project_config"
    create_directory $destination
-   Copy_and_flatten $bin_dir_match_pattern @("*.exe","*.dll","*.config","*.pdb","*.sql","*.xlsx","*.csv") $destination
+   Copy_and_flatten $bin_dir_match_pattern @("*.exe","*.dll","*.config","*.pdb","*.sql","*.xlsx","*.csv","*.txt") $destination
 }
 
 function global:copy_website_files($source,$destination){
