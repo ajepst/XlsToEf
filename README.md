@@ -4,7 +4,7 @@
 
 ###What is XlsToEf?###
 
-XlsToEf is a library you can use to help you import rows from excel files and then save right to the database with Entity Framework.  It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.
+XlsToEf is a library you can use to help you import rows from excel or text-delimited files(tab, csv, etc) and then save right to the database with Entity Framework.  It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.
 
 ### Where can I get it? ###
 It's available on nuget at https://www.nuget.org/packages/XlsToEf and you can install it from the package manager console:
@@ -39,10 +39,10 @@ var importMatchingData = new DataMatchesForImport
 };
 
 // does the mapping, returns success, or information about failures
-return await _xlsxToTableImporter.ImportColumnData<Order>(importMatchingData); 
+return await _xlsxToTableImporter.ImportColumnData<Order>(importMatchingData);
 
 ```
-The *EfName* above is the destination field name in your EF entity, and the *XlsName* is the source column in your excel sheet. The "magic" string key as shown above going to what you'll use when the structure is being built client side using a matching UI and bound to your controller parameter (the EFName string wouldn't actually be magic as it would be generated earlier via the ImportColumnData.TableColumns collection and sent to the UI, dicussed below in the Additional Tools section) However if you are implementing a backend-only import with no user input, then you may be handcoding the Selected collection.  In that case, I'd avoid the "magic strings" by using an expression: 
+The *EfName* above is the destination field name in your EF entity, and the *XlsName* is the source column in your excel sheet. The "magic" string key as shown above going to what you'll use when the structure is being built client side using a matching UI and bound to your controller parameter (the EFName string wouldn't actually be magic as it would be generated earlier via the ImportColumnData.TableColumns collection and sent to the UI, dicussed below in the Additional Tools section) However if you are implementing a backend-only import with no user input, then you may be handcoding the Selected collection.  In that case, I'd avoid the "magic strings" by using an expression:
 
 ```
 var cat = new ProductCategory();
@@ -65,9 +65,9 @@ Here's a snippet that uses many of the advanced features:
 ```
 // The importMatchData is the same as in the basic snippet above
 
-// finder: maybe you want to check for a existing record/locate for updating by something other than the object Id, or maybe 
-// you want to concatenate two columns to match against your selector key. Implementing your own find expression lets 
-// you do that. In this example, all the database Ids need a "Z" appended to get matched.  It is run via EF, so 
+// finder: maybe you want to check for a existing record/locate for updating by something other than the object Id, or maybe
+// you want to concatenate two columns to match against your selector key. Implementing your own find expression lets
+// you do that. In this example, all the database Ids need a "Z" appended to get matched.  It is run via EF, so
 // keep that in mind-not all C# code will work in here.
 Func<int, Expression<Func<Product, bool>>> finderExpression = xlsValue => prod => prod.Id == xlsValue + "Z";
 
@@ -75,13 +75,13 @@ Func<int, Expression<Func<Product, bool>>> finderExpression = xlsValue => prod =
 var _productOverrider = new ProductOverrider(myContext);
 
 // This allows you to set a custom behavior behavior for commits and for error handling.
-var saveInfo = new ImportSaveBehavior 
+var saveInfo = new ImportSaveBehavior
 {
-    RecordMode = RecordMode.CreateOnly, 
+    RecordMode = RecordMode.CreateOnly,
     CommitMode = CommitMode.CommitAllAtEndIfAllGoodOrRejectAll,
 };
 
-return await _xlsxToTableImporter.ImportColumnData(importMatchingData, finderExpression, 
+return await _xlsxToTableImporter.ImportColumnData(importMatchingData, finderExpression,
     overridingMapper:_productOverrider, saveBehavior: saveInfo, validator: _entityValidator);
 ```
 
@@ -126,17 +126,25 @@ Items that can be specified are:
  - *XlsxColumns* - Can hold an array of strings to represent the excel column headers for the selected sheet. You can build this like the example above using the *GetImportColumnData* method, or just build up a hardcoded string array if your incoming spreadsheet always has the same columns.
  - *FileName* - to hold the filename so it can be available on the way back in.
  - *TableColumns* - A specification of all columns from the destaination EF - connection object that we want to map into. Contains a list of *TableColumnConfiguration* objects.
- - *RequiredTogether* - A collection of strings intended to be used by the UI to require pairs of fields for validation. Above is the empty case - you can just leave RequiredTogether completely if you don't need it. Example usage would be like the following-note the use of the optional provided reflection helper for the second property: 
- 
+ - *RequiredTogether* - A collection of strings intended to be used by the UI to require pairs of fields for validation. Above is the empty case - you can just leave RequiredTogether completely if you don't need it. Example usage would be like the following-note the use of the optional provided reflection helper for the second property:
+
  ```
  RequiredTogether = new[]
                 {
-                    new[] { "City", GetPropertyName(() => address.State) }, 
+                    new[] { "City", GetPropertyName(() => address.State) },
                     new[] { GetPropertyName(() => address.IsBusiness), GetPropertyName(() => address.CompanyName) }
                 }
  ```
- 
-*TableColumnConfiguration* - Specification for the columns to be matched against. 
+
+*TableColumnConfiguration* - Specification for the columns to be matched against.
  - First parameter is a name or lambda to uniquely identify the column in the import. If using the lambda, you're good. If you use the string, then you'll need to hand-map later on, using the overrider as described in the advanced section.
  -  Second parameter is the *SingleColumnData* parameter, which allows you to set the display name of the field for the UI's use, as well as whether this field should be required in your UI's validation.
 
+###CSV/Text File processing:###
+
+Reading a text file is almost the same process as reading from an excel file. *A note: due to the nature of this tool, the first row of your text file must be column headers.*
+ * This tool will assume your file is a text file if your file extension is not ".xlsx".
+ * In that case, you can just pass null or anything into any parameters that requires a sheet-the sheet will be ignored.
+ * Beyond that, the default expected format is comma-delimited. If you would like to use some other delimiter character, such as tab, you can specify it:
+  * *GetImportColumnData*  takes a *XlsxColumnMatcherQuery* - one of the fields you can optionally specify is Delimiter.
+  * *GetRows* - takes an optional delimiter character parameter.
