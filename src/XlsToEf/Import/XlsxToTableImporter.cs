@@ -359,6 +359,16 @@ namespace XlsToEf.Import
     {
         public static object Convert(string xlsxItemData, Type propertyType)
         {
+            if (propertyType == typeof (string))
+            {
+                return xlsxItemData;
+            }
+
+            if (propertyType == typeof (Guid))
+            {
+                return new Guid(xlsxItemData);
+            }
+
             object converted;
             if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof (Nullable<>))
             {
