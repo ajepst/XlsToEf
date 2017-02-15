@@ -23,6 +23,19 @@ namespace XlsToEf.Tests
             guid5.ShouldBe(refGuid);
         }
 
+        public void Should_Fail_Converting_Null_Guid_on_Non_Nullable()
+        {
+            Should.Throw<Exception>(() => StringToTypeConverter.Convert(null, typeof (Guid)));
+        }
+
+        public void Should_Return_Null_When_Converting_Null_Guid_For_Nullable()
+        {
+            var guid = StringToTypeConverter.Convert(null, typeof(Guid?));
+            guid.ShouldBe(null);
+        }
+   
+
+
         public void Should_Not_Convert_Strings()
         {
             const string refStr = "A string";

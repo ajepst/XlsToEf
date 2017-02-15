@@ -364,11 +364,6 @@ namespace XlsToEf.Import
                 return xlsxItemData;
             }
 
-            if (propertyType == typeof (Guid))
-            {
-                return new Guid(xlsxItemData);
-            }
-
             object converted;
             if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof (Nullable<>))
             {
@@ -384,6 +379,11 @@ namespace XlsToEf.Import
 
         private static object ConvertString(string xlsxItemData, Type propertyType)
         {
+            if (propertyType == typeof(Guid))
+            {
+                return new Guid(xlsxItemData);
+            }
+
             if (propertyType == typeof (short))
                 return short.Parse(xlsxItemData, NumberStyles.AllowThousands);
 
