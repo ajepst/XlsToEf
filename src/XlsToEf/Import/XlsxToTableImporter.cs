@@ -121,7 +121,9 @@ namespace XlsToEf.Import
                     if (validator != null)
                     {
                         var errors = validator.GetValidationErrors(entityToUpdate);
-                        throw new RowInvalidException(errors);
+
+                        if(errors.Any())
+                            throw new RowInvalidException(errors);
                     }
                     else
                     {
