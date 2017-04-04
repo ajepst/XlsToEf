@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "XlsToEf", "XlsToEf\XlsToEf.xproj", "{0AEC28D8-5486-4C56-98A5-07E6C1380860}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf", "XlsToEf\XlsToEf.csproj", "{0AEC28D8-5486-4C56-98A5-07E6C1380860}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "XlsToEf.Tests", "XlsToEf.Tests\XlsToEf.Tests.xproj", "{69C176A1-3A9C-484B-A613-FF83BEB416A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf.Tests", "XlsToEf.Tests\XlsToEf.Tests.csproj", "{69C176A1-3A9C-484B-A613-FF83BEB416A4}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "XlsToEf.Example", "XlsToEf.Example\XlsToEf.Example.xproj", "{FE405C2F-6F3B-4822-8FF4-A8750D36B672}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf.Example", "XlsToEf.Example\XlsToEf.Example.csproj", "{FE405C2F-6F3B-4822-8FF4-A8750D36B672}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
