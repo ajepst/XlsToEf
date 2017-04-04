@@ -154,9 +154,8 @@ task RunAllTests -Depends CopyAssembliesForTest {
 }
 
 task Compile -depends Clean, CommonAssemblyInfo {
-    exec { & $nuget_exe restore $source_dir\$project_name.sln }
-    exec { dotnet restore }
-    exec { msbuild.exe /t:build /v:q /p:Configuration=$project_config /p:Platform="Any CPU" /nologo $source_dir\$project_name.sln }
+    exec { dotnet restore $source_dir\$project_name.sln }
+    exec { dotnet build -v q --configuration $project_config $source_dir\$project_name.sln }
 }
 
 task Clean {
@@ -165,7 +164,7 @@ task Clean {
     create_directory $test_dir
     create_directory $result_dir
 
-    exec { msbuild /t:clean /v:q /p:Configuration=$project_config /p:Platform="Any CPU" $source_dir\$project_name.sln }
+    exec { dotnet clean -v q --configuration $project_config $source_dir\$project_name.sln }
 }
 
 task Package -depends SetReleaseBuild {
@@ -269,7 +268,7 @@ function global:create_directory($directory_name) {
 function global:run_fixie ($test_assembly) {
    $assembly_to_test = $test_dir + "\" + $test_assembly
    $results_output = $result_dir + "\" + $test_assembly + ".xml"
-    exec { & tools\fixie\Fixie.Console.exe $assembly_to_test --xUnitXml $results_output }
+    exec { & tools\fixie\dotnet-test-fixie.exe $assembly_to_test --xUnitXml $results_output }
 }
 
 function global:Copy_and_flatten ($source,$include,$dest) {
