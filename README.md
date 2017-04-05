@@ -2,18 +2,19 @@
 
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/ajepst/XlstoEf?branch=master&svg=true)](https://ci.appveyor.com/project/ajepst/xlstoef)
 
-###What is XlsToEf?###
+### What is XlsToEf? ###
 
 XlsToEf is a library you can use to help you import rows from excel files and then save right to the database with Entity Framework.  It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.
 
 ### Where can I get it? ###
+
 It's available on nuget at https://www.nuget.org/packages/XlsToEf and you can install it from the package manager console:
 
 ```
 PM> Install-package XlsToEF
 ```
 
-###How Do I Get Started? (Basic usage)###
+### How Do I Get Started? (Basic usage) ###
 
 The core of doing the import happens through the XlsxToTableImporter class, which depends on EF's DbContext class - (you can send it your own wrapped version of it if you like, so long as it inherits from the standard EF DbContext). The key method on there you're going to want to call is ImportColumnData. You must pass it at least one thing:
 
@@ -56,7 +57,7 @@ var cat = new ProductCategory();
         }
 ```
 
-###Advanced Usage###
+### Advanced Usage ###
 
 If you have a more complicated scenario than just simple fields going into an entity (for instance you have to do some lookups or need to do some manual data modification) then you'll want to use the optional advanced features of XlsToEf. *ImportProductsFromXlsx* in the example project is an example of advanced usage. It uses a custom mapping overrider, *ProductPropertyOverrider*.
 
@@ -98,7 +99,7 @@ More on the optional arguments:
   * A switch to select the commit mode. Options are AnySuccessfulOneAtATime, AnySuccessfulAtEndAsBulk, CommitAllAtEndIfAllGoodOrRejectAll, and NoCommit. AnySuccessfulAtEndAsBulk is the default.
 * validator - implements interface IEntityValidator<Entity> Optional implementation written by you for your own domain validation logic. If provided, XlsToEf will run the validator's GetValidationErrors(T entity) method for each entity after popultion, and if the returned dictionary is empty, XlsToEf will save the entity. If the dictionary is not empty, XlsToEf will roll back entity changes and return an error. Returned dictionary with error details should be in the form *Key: Field Name, Value: specific field error message*.  XlsToEf will bundle up and return out error.
 
-###Additional Tools:###
+### Additional Tools: ###
 
 The ExcelIoWrapper class has several useful functions that are useful in implementing a column-matching UI like in the example project:
 
