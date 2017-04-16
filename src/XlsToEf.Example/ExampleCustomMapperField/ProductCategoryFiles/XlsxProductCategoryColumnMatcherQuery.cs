@@ -3,7 +3,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
 {
-    public class XlsxProductCategoryColumnMatcherQuery : XlsxColumnMatcherQuery, IAsyncRequest<DataForMatcherUi>
+    public class XlsxProductCategoryColumnMatcherQuery : XlsxColumnMatcherQuery, IRequest<DataForMatcherUi>
     {
     }
 }

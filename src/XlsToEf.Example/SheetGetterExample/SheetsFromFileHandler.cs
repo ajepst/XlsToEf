@@ -20,7 +20,7 @@ namespace XlsToEf.Example.SheetGetterExample
         }
     }
 
-    public class SaveAndGetSheetsForFileUpload : IAsyncRequest<SheetPickerInformation>
+    public class SaveAndGetSheetsForFileUpload : IRequest<SheetPickerInformation>
     {
         public Stream File { get; set; }
     }

@@ -3,7 +3,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Tests.ImportHelperFiles
 {
-    public class DataMatchesForImportingAddressData : DataMatchesForImport, IAsyncRequest<ImportResult>
+    public class DataMatchesForImportingAddressData : DataMatchesForImport, IRequest<ImportResult>
     {
     }
 }

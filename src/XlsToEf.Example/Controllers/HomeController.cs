@@ -53,7 +53,7 @@ namespace XlsToEf.Example.Controllers
                     ReasonPhrase = "ERROR: No file found",
                 });
             }
-            var sheetInfo = await _mediator.SendAsync(new SaveAndGetSheetsForFileUpload {File = uploadFile.OpenReadStream()});
+            var sheetInfo = await _mediator.Send(new SaveAndGetSheetsForFileUpload {File = uploadFile.OpenReadStream()});
 
 
             sheetInfo.Destinations = new List<UploadDestinationInformation>
@@ -87,7 +87,7 @@ namespace XlsToEf.Example.Controllers
         {
             try
             {
-                var data = await _mediator.SendAsync(selectedInfo);
+                var data = await _mediator.Send(selectedInfo);
                 return Json(data);
             }
             catch (Exception ex)
@@ -104,14 +104,14 @@ namespace XlsToEf.Example.Controllers
         public async Task<ActionResult> SubmitProductColumnMatches([FromBody]DataMatchesForImportingProductData data)
         {
         //    var c = new DbContext("XlsToEf");
-            var result = await _mediator.SendAsync(data);
+            var result = await _mediator.Send(data);
             return Json(result);
         }
         public async Task<ActionResult> SelectSheetAndDestinationForProductCategory([FromBody]XlsxProductCategoryColumnMatcherQuery selectedInfo)
         {
             try
             {
-                var data = await _mediator.SendAsync(selectedInfo);
+                var data = await _mediator.Send(selectedInfo);
                 return Json(data);
             }
             catch (Exception ex)
@@ -127,7 +127,7 @@ namespace XlsToEf.Example.Controllers
         [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<ActionResult> SubmitProductCategoryColumnMatches([FromBody]DataMatchesForImportingProductCategoryData data)
         {
-            var result = await _mediator.SendAsync(data);
+            var result = await _mediator.Send(data);
             return Json(result);
         }
 
@@ -135,7 +135,7 @@ namespace XlsToEf.Example.Controllers
         {
             try
             {
-                var data = await _mediator.SendAsync(selectedInfo);
+                var data = await _mediator.Send(selectedInfo);
                 return Json(data);
             }
             catch (Exception ex)
@@ -150,7 +150,7 @@ namespace XlsToEf.Example.Controllers
 
         public async Task<JsonResult> SubmitOrderColumnMatches([FromBody]DataMatchesForImportingOrderData data)
         {
-            var result = await _mediator.SendAsync(data);
+            var result = await _mediator.Send(data);
             return Json(result);
         }
     }

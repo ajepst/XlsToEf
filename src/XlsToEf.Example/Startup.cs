@@ -57,8 +57,13 @@ namespace XlsToEf.Example
             services.Scan(scan => scan
                 .FromAssemblyOf<XlsxToTableImporter>()
                 .AddClasses()
-                .AsSelf()
                 .AsImplementedInterfaces()
+                .WithTransientLifetime()
+                );
+            services.Scan(scan => scan
+                .FromAssemblyOf<XlsxToTableImporter>()
+                .AddClasses()
+                .AsSelf()
                 .WithTransientLifetime()
                 );
 
@@ -74,8 +79,6 @@ namespace XlsToEf.Example
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseApplicationInsightsRequestTelemetry();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -85,8 +88,6 @@ namespace XlsToEf.Example
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
 
