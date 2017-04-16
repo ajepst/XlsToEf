@@ -57,8 +57,13 @@ namespace XlsToEf.Example
             services.Scan(scan => scan
                 .FromAssemblyOf<XlsxToTableImporter>()
                 .AddClasses()
-                .AsSelf()
                 .AsImplementedInterfaces()
+                .WithTransientLifetime()
+                );
+            services.Scan(scan => scan
+                .FromAssemblyOf<XlsxToTableImporter>()
+                .AddClasses()
+                .AsSelf()
                 .WithTransientLifetime()
                 );
 
