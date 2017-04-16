@@ -67,11 +67,10 @@ namespace XlsToEf.Import
                         var rowDict = new Dictionary<string, string>();
                         var row = sheet.Cells[string.Format("{0}:{0}", rowNum)];
 
-                        var rowCells = row.ToList();
-                        for (var colIndex = 0; colIndex < sheet.Dimension.Columns; colIndex++)
-                        {
-                            var cell = rowCells[colIndex];
-                            rowDict.Add(sheet.Cells[1, colIndex+1].Text, cell.Text);
+                        for (int colIndex = sheet.Dimension.Start.Column; colIndex <= sheet.Dimension.End.Column; colIndex++)
+                        { // ... Cell by cell...
+                            string cellValue = sheet.Cells[rowNum, colIndex].Text; // This got me the actual value I needed.
+                            rowDict.Add(sheet.Cells[1, colIndex].Text, cellValue);
                         }
                         rows.Add(rowDict);
                     }
