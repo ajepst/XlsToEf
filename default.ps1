@@ -2,7 +2,7 @@ $script:project_config = "Release"
 
 properties {
 
-  Framework '4.5.1'
+  Framework '4.6'
 
   $project_name = "XlsToEf"
 
