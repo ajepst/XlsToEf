@@ -5,6 +5,7 @@ namespace XlsToEf.Import
         AnySuccessfulOneAtATime,
         AnySuccessfulAtEndAsBulk,   
         CommitAllAtEndIfAllGoodOrRejectAll,
-        NoCommit
+        NoCommit,
+        CustomImplementationBulk,
     }
 }

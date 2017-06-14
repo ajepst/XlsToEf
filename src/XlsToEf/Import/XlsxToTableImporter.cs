@@ -15,16 +15,28 @@ namespace XlsToEf.Import
 {
     public class XlsxToTableImporter
     {
-        private readonly DbContext _dbContext;
+        private readonly IBulkBaseDbContext _dbContext;
         private readonly IExcelIoWrapper _excelIoWrapper;
 
         public XlsxToTableImporter(DbContext dbContext, IExcelIoWrapper excelIoWrapper)
+        {
+            _dbContext = new NoBulkImplementation( dbContext);
+            _excelIoWrapper = excelIoWrapper;
+        }
+
+        public XlsxToTableImporter(DbContext dbContext)
+        {
+            _dbContext = new NoBulkImplementation(dbContext);
+            _excelIoWrapper = new ExcelIoWrapper();
+        }
+
+        public XlsxToTableImporter(IBulkBaseDbContext dbContext, IExcelIoWrapper excelIoWrapper)
         {
             _dbContext = dbContext;
             _excelIoWrapper = excelIoWrapper;
         }
 
-        public XlsxToTableImporter(DbContext dbContext)
+        public XlsxToTableImporter(IBulkBaseDbContext dbContext)
         {
             _dbContext = dbContext;
             _excelIoWrapper = new ExcelIoWrapper();
@@ -156,6 +168,19 @@ namespace XlsToEf.Import
                 (saveBehavior.CommitMode == CommitMode.CommitAllAtEndIfAllGoodOrRejectAll && !foundErrors))
             {
                 await _dbContext.SaveChangesAsync();
+            }
+            if (saveBehavior.CommitMode == CommitMode.CustomImplementationBulk && saveBehavior.RecordMode == RecordMode.CreateOnly)
+            {
+                await _dbContext.InsertBulk();
+            }
+
+            if (saveBehavior.CommitMode == CommitMode.CustomImplementationBulk && saveBehavior.RecordMode == RecordMode.UpdateOnly)
+            {
+                await _dbContext.UpdateBulk();
+            }
+            if (saveBehavior.CommitMode == CommitMode.CustomImplementationBulk && saveBehavior.RecordMode == RecordMode.Upsert)
+            {
+                await _dbContext.UpsertBulk();
             }
 
             return importResult;
