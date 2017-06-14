@@ -126,7 +126,7 @@ namespace XlsToEf.Import
                     {
                         EnsureNoEntityCreationWithIdWhenAutoIncrementIdType(idPropertyName, isAutoIncrementingId, idValue);
                         entityToUpdate = new TEntity();
-                        _dbContext.Set<TEntity>().Add(entityToUpdate);
+                        _dbContext.Add(entityToUpdate);
                     }
 
                     await MapIntoEntity(selctedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId, saveBehavior.RecordMode);
@@ -257,12 +257,12 @@ namespace XlsToEf.Import
             {
                 var finderInputType = (TId) Convert.ChangeType(idStringValue,typeof(TId));
                 var getExp = finder(finderInputType);
-                matchedDbObject = await _dbContext.Set<TEntity>().FirstOrDefaultAsync(getExp);
+                matchedDbObject = await _dbContext.FirstOrDefaultAsync(getExp);
             }
             else
             {
                 var idData = Convert.ChangeType(idStringValue, idType);
-                matchedDbObject = await _dbContext.Set<TEntity>().FindAsync(idData);
+                matchedDbObject = await _dbContext.FindAsync<TEntity>(idData);
             }
 
             return matchedDbObject;
@@ -313,7 +313,7 @@ namespace XlsToEf.Import
 
         private ReadOnlyMetadataCollection<EdmMember> GetEntityKeys(Type eType)
         {
-            var metadata = ((IObjectContextAdapter)_dbContext).ObjectContext.MetadataWorkspace;
+            var metadata = ((IObjectContextAdapter)_dbContext.InnerContext).ObjectContext.MetadataWorkspace;
 
             // Get the part of the model that contains info about the actual CLR types
             var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
@@ -330,7 +330,7 @@ namespace XlsToEf.Import
 
         private EdmMember GetMappedKeyInformation(Type eType)
         {
-            var metadata = ((IObjectContextAdapter) _dbContext).ObjectContext.MetadataWorkspace;
+            var metadata = ((IObjectContextAdapter) _dbContext.InnerContext).ObjectContext.MetadataWorkspace;
 
             // Get the part of the model that contains info about the actual CLR types
             var objectItemCollection = ((ObjectItemCollection) metadata.GetItemCollection(DataSpace.OSpace));

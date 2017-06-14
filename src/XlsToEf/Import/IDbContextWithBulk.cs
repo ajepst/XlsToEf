@@ -2,19 +2,22 @@
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Linq.Expressions;
 
 namespace XlsToEf.Import
 {
 
-    public interface IBulkBaseDbContext 
+    public interface IBulkBaseDbContext
     {
         Task InsertBulk();
         Task UpsertBulk();
         Task UpdateBulk();
         Task<int> SaveChangesAsync();
-        DbSet<TEntity> Set<TEntity>() where TEntity : class;
         DbEntityEntry<TEntity> Entry<TEntity>(TEntity entityToUpdate) where TEntity : class;
-
+        Task<TEntity> FirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> expr) where TEntity : class;
+        Task<TEntity> FindAsync<TEntity>(object idData) where TEntity : class;
+        TEntity Add<TEntity>(TEntity entity) where TEntity : class;
+        DbContext InnerContext {get;}
     }
 
     public class NoBulkImplementation : IBulkBaseDbContext
@@ -24,6 +27,11 @@ namespace XlsToEf.Import
         public NoBulkImplementation(DbContext context)
         {
             _context = context;
+        }
+
+        public DbContext InnerContext
+        {
+            get { return _context; }
         }
 
         public Task InsertBulk()
@@ -46,14 +54,24 @@ namespace XlsToEf.Import
             return await _context.SaveChangesAsync();
         }
 
-        public DbSet<TEntity> Set<TEntity>() where TEntity : class
-        {
-            return _context.Set<TEntity>();
-        }
-
         public DbEntityEntry<TEntity> Entry<TEntity>(TEntity entityToUpdate) where TEntity : class
         {
             return _context.Entry(entityToUpdate);
         }
+
+        public async Task<TEntity> FirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> expr) where TEntity : class
+        {
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(expr);
+        }
+
+        public async Task<TEntity> FindAsync<TEntity>(object idData) where TEntity : class
+        {
+            return await _context.Set<TEntity>().FindAsync(idData);
+        }
+
+        public TEntity Add<TEntity>(TEntity entity) where TEntity : class
+        {
+            return _context.Set<TEntity>().Add(entity);
+        } 
     }
 }
