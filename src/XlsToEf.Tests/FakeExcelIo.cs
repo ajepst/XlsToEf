@@ -4,6 +4,8 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Tests
 {
+    using System.IO;
+
     public class FakeExcelIo : IExcelIoWrapper
     {
         public IList<string> Sheets = new List<string> {"sheet1", "sheet2"};
@@ -29,7 +31,17 @@ namespace XlsToEf.Tests
             return Task.FromResult(Sheets);
         }
 
+        public Task<IList<string>> GetSheets(Stream fileStream)
+        {
+            return Task.FromResult(Sheets);
+        }
+
         public Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)
+        {
+            return Task.FromResult(Rows);
+        }
+
+        public Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName)
         {
             return Task.FromResult(Rows);
         }
