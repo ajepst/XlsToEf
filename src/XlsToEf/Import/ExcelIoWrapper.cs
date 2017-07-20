@@ -10,7 +10,9 @@ namespace XlsToEf.Import
     public interface IExcelIoWrapper
     {
         Task<IList<string>> GetSheets(string filePath);
+        Task<IList<string>> GetSheets(Stream fileStream);
         Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName);
+        Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName);
         Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery);
     }
 
@@ -18,22 +20,39 @@ namespace XlsToEf.Import
     {
         public async Task<IList<string>> GetSheets(string filePath)
         {
+            using (var stream = new FileInfo(filePath).OpenRead())
+            {
+                return await GetSheets(stream);
+            }
+        }
+
+        public async Task<IList<string>> GetSheets(Stream fileStream)
+        {
             var sheetNames = await Task.Run(() =>
             {
-                using (var excel = new ExcelPackage(new FileInfo(filePath)))
+                using (var excel = new ExcelPackage(fileStream))
                 {
                     return excel.Workbook.Worksheets.Select(x => x.Name).ToList();
                 }
             });
 
             return sheetNames;
+
         }
 
         private async Task<IList<string>> GetColumns(string filePath, string sheetName)
         {
+            using (var stream = new FileInfo(filePath).OpenRead())
+            {
+                return await GetColumns(stream, sheetName);
+            }
+        }
+
+        private async Task<IList<string>> GetColumns(Stream fileStream, string sheetName)
+        {
             var colNames = await Task.Run(() =>
             {
-                using (var excel = new ExcelPackage(new FileInfo(filePath)))
+                using (var excel = new ExcelPackage(fileStream))
                 {
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
                     var headerCells =
@@ -48,14 +67,25 @@ namespace XlsToEf.Import
 
         public async Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
         {
-            return await GetColumns(matcherQuery.FilePath, matcherQuery.Sheet);
+            if(matcherQuery.FileStream == null)
+                return await GetColumns(matcherQuery.FilePath, matcherQuery.Sheet);
+
+            return await GetColumns(matcherQuery.FileStream, matcherQuery.Sheet);
         }
 
         public async Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)
         {
+            using (var stream = new FileInfo(filePath).OpenRead())
+            {
+                return await GetRows(stream, sheetName);
+            }
+        }
+
+        public async Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName)
+        {
             var worksheetRows = await Task.Run(() =>
             {
-                using (var excel = new ExcelPackage(new FileInfo(filePath)))
+                using (var excel = new ExcelPackage(fileStream))
                 {
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
 
