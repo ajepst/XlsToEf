@@ -60,6 +60,7 @@ var cat = new ProductCategory();
 ### Using Streams ###
 In some cases you may not want (or have) access to the filesystem in order to read the file.  In these cases you can use the overload that supports a System.IO.Stream instance in place of a file path.
 
+```
 using(var stream = new FileInfo( "c:\foo.xlsx"))
 {
 	var importMatchingData = new DataMatchesForImport
@@ -68,8 +69,9 @@ using(var stream = new FileInfo( "c:\foo.xlsx"))
 		...
 	};
 }
+```
 
-*Note:* If you supply an instance to FileStream, the !FilePath! value will be ignored.
+*Note:* If you supply an instance to FileStream, the FilePath value will be ignored.
 
 ### Advanced Usage ###
 
