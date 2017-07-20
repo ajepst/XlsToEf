@@ -57,6 +57,20 @@ var cat = new ProductCategory();
         }
 ```
 
+### Using Streams ###
+In some cases you may not want (or have) access to the filesystem in order to read the file.  In these cases you can use the overload that supports a System.IO.Stream instance in place of a file path.
+
+using(var stream = new FileInfo( "c:\foo.xlsx"))
+{
+	var importMatchingData = new DataMatchesForImport
+	{
+		FileStream = stream,               // an open file stream
+		...
+	};
+}
+
+*Note:* If you supply an instance to FileStream, the !FilePath! value will be ignored.
+
 ### Advanced Usage ###
 
 If you have a more complicated scenario than just simple fields going into an entity (for instance you have to do some lookups or need to do some manual data modification) then you'll want to use the optional advanced features of XlsToEf. *ImportProductsFromXlsx* in the example project is an example of advanced usage. It uses a custom mapping overrider, *ProductPropertyOverrider*.

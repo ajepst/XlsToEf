@@ -85,9 +85,7 @@ namespace XlsToEf.Import
             
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
 
-            var filePath  = Path.GetTempPath() + matchingData.FileName;
-
-            var excelRows = await _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
+            var excelRows = await GetExcelRows(matchingData);
 
             var foundErrors = false;
             for (var index = 0; index < excelRows.Count; index++)
@@ -159,6 +157,16 @@ namespace XlsToEf.Import
             }
 
             return importResult;
+        }
+
+        private async Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData)
+        {
+            if(matchingData.FileStream != null)
+                return await _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet);
+
+            var filePath = Path.Combine(Path.GetTempPath(), matchingData.FileName);
+
+            return await _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
         }
 
         private Dictionary<string, string> BuildDictionaryFromSelected(List<XlsToEfColumnPair> selected)
