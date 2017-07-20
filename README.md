@@ -71,7 +71,7 @@ using(var stream = new FileInfo( "c:\foo.xlsx"))
 }
 ```
 
-*Note:* If you supply an instance to FileStream, the !FilePath! value will be ignored.
+*Note:* If you supply an instance to FileStream, the FilePath value will be ignored.
 
 ### Advanced Usage ###
 
