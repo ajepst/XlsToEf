@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using XlsToEf.Example.Domain;
@@ -8,7 +9,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
 {
-    public class BuildXlsxProductCategoryTableMatcher : IAsyncRequestHandler<XlsxProductCategoryColumnMatcherQuery, DataForMatcherUi>
+    public class BuildXlsxProductCategoryTableMatcher : IRequestHandler<XlsxProductCategoryColumnMatcherQuery, DataForMatcherUi>
     {
         private readonly IExcelIoWrapper _excelIoWrapper;
 
@@ -17,7 +18,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
             _excelIoWrapper = excelIoWrapper;
         }
 
-        public async Task<DataForMatcherUi> Handle(XlsxProductCategoryColumnMatcherQuery message)
+        public async Task<DataForMatcherUi> Handle(XlsxProductCategoryColumnMatcherQuery message, CancellationToken cancellationToken)
         {
             message.FilePath = Path.GetTempPath() + message.FileName;
             var cat = new ProductCategory();
