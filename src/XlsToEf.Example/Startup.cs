@@ -67,6 +67,13 @@ namespace XlsToEf.Example
                 .WithTransientLifetime()
                 );
 
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
+
             foreach (var service in services)
             {
                 Debug.WriteLine(service.ServiceType + " - " + service.ImplementationType);
@@ -76,9 +83,6 @@ namespace XlsToEf.Example
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
