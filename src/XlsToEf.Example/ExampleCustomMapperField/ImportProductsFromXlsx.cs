@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using XlsToEf.Example.Domain;
@@ -11,7 +12,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField
 {
-    public class ImportProductsFromXlsx : IAsyncRequestHandler<DataMatchesForImportingProductData, ImportResult>
+    public class ImportProductsFromXlsx : IRequestHandler<DataMatchesForImportingProductData, ImportResult>
     {
         private readonly XlsxToTableImporter _xlsxToTableImporter;
         private readonly ProductPropertyOverrider<Product> _productOverrider;
@@ -22,7 +23,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
             _productOverrider = productOverrider;
         }
 
-        public async Task<ImportResult> Handle(DataMatchesForImportingProductData message)
+        public async Task<ImportResult> Handle(DataMatchesForImportingProductData message, CancellationToken cancellationToken)
         {
             Func<int, Expression<Func<Product, bool>>> finderExpression = selectorValue => prod => prod.Id == selectorValue;
             return await _xlsxToTableImporter.ImportColumnData(message, finderExpression, overridingMapper:_productOverrider, saveBehavior: new ImportSaveBehavior {RecordMode = RecordMode.CreateOnly});

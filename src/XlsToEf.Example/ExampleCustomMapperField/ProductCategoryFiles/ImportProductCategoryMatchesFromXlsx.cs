@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using XlsToEf.Example.Domain;
@@ -5,7 +6,7 @@ using XlsToEf.Import;
 
 namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
 {
-    public class ImportProductCategoryMatchesFromXlsx : IAsyncRequestHandler<DataMatchesForImportingProductCategoryData, ImportResult>
+    public class ImportProductCategoryMatchesFromXlsx : IRequestHandler<DataMatchesForImportingProductCategoryData, ImportResult>
     {
         private readonly XlsxToTableImporter _xlsxToTableImporter;
 
@@ -14,7 +15,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField.ProductCategoryFiles
             _xlsxToTableImporter = xlsxToTableImporter;
         }
 
-        public async Task<ImportResult> Handle(DataMatchesForImportingProductCategoryData message)
+        public async Task<ImportResult> Handle(DataMatchesForImportingProductCategoryData message, CancellationToken cancellationToken)
         {
             return await _xlsxToTableImporter.ImportColumnData<ProductCategory>(message);
         }
