@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>XlsToEf.Tests</AssemblyName>
     <PackageId>XlsToEf.Tests</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fixie" Version="2.0.0-alpha-0001" />
+    <PackageReference Include="Fixie" Version="2.0.3" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="MediatR" Version="6.0.0" />
     <PackageReference Include="Respawn" Version="3.1.0" />

@@ -268,7 +268,7 @@ function global:create_directory($directory_name) {
 function global:run_fixie ($test_assembly) {
    $assembly_to_test = $test_dir + "\" + $test_assembly
    $results_output = $result_dir + "\" + $test_assembly + ".xml"
-    exec { & tools\fixie\dotnet-test-fixie.exe $assembly_to_test --xUnitXml $results_output }
+    exec { & dotnet fixie $assembly_to_test --xUnitXml $results_output }
 }
 
 function global:Copy_and_flatten ($source,$include,$dest) {
