@@ -1,14 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\..\..\..\Users\anneepstein\.nuget\packages\fixie\2.0.3\build\Fixie.Program.cs" Link="Fixie.Program.cs">
-      <Visible>false</Visible>
-    </Compile>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Fixie" Version="2.0.3" />
@@ -33,6 +27,10 @@
     <None Update="TestExcelDoc.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Fixie.Console" Version="2.0.3" />
   </ItemGroup>
 
 </Project>

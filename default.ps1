@@ -32,7 +32,7 @@ properties {
   $result_dir = "$build_dir\results"
   $octopus_nuget_repo = "$build_dir\packages"
 
-  $test_assembly_patterns_unit = @("*Tests.dll")
+  $test_assembly_patterns_unit = @("*Tests")
 
   $nuget_exe = "$base_dir\tools\nuget\nuget.exe"
 
@@ -149,7 +149,11 @@ task CopyAssembliesForTest -Depends Compile {
     copy_all_assemblies_for_test $test_dir
 }
 
-task RunAllTests -Depends CopyAssembliesForTest {
+#task RunAllTests -Depends CopyAssembliesForTest {
+#    $test_assembly_patterns_unit | %{ run_fixie_tests $_ }
+#}
+task RunAllTests  {
+    cd $source_dir
     $test_assembly_patterns_unit | %{ run_fixie_tests $_ }
 }
 
@@ -241,7 +245,7 @@ function deploy-database($action, $connectionString, $scripts_dir, $env, $indexe
 }
 
 function run_fixie_tests([string]$pattern) {
-    $items = Get-ChildItem -Path $test_dir $pattern
+    $items = Get-ChildItem -Path . $pattern
     $items | %{ run_fixie $_.Name }
 }
 
@@ -265,10 +269,12 @@ function global:create_directory($directory_name) {
   mkdir $directory_name  -ErrorAction SilentlyContinue  | out-null
 }
 
-function global:run_fixie ($test_assembly) {
-   $assembly_to_test = $test_dir + "\" + $test_assembly
-   $results_output = $result_dir + "\" + $test_assembly + ".xml"
-    exec { & dotnet fixie $assembly_to_test --xUnitXml $results_output }
+function global:run_fixie ($test_projdir) {
+   write-host "running for $source_dir\$test_projdir "
+   cd $source_dir\$test_projdir
+   $results_output = $result_dir + "\" + $test_projdir + ".xml"
+   write-host "results to: $results_output "
+    exec { & dotnet fixie --report $results_output --no-build }
 }
 
 function global:Copy_and_flatten ($source,$include,$dest) {
