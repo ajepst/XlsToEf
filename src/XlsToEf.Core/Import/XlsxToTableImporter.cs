@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace XlsToEf.Core.Import
 {
@@ -37,10 +36,10 @@ namespace XlsToEf.Core.Import
         /// <param name="matchingData">Specification for how to match spreadsheet to entity</param>
         /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity>(DataMatchesForImport matchingData, ImportSaveBehavior saveBehavior = null)
+        public Task<ImportResult> ImportColumnData<TEntity>(DataMatchesForImport matchingData, ImportSaveBehavior saveBehavior = null)
             where TEntity : class, new()
         {
-            return await ImportColumnData<TEntity, string>(matchingData, null, null, null, saveBehavior);
+            return ImportColumnData<TEntity, string>(matchingData, null, null, null, saveBehavior);
         }
 
 
@@ -78,7 +77,7 @@ namespace XlsToEf.Core.Import
             }
 
             var isImportingEntityId = selctedDict.ContainsKey(idPropertyName);
-            var isDbGeneratedId = IsIdAutoIncrementing(typeof(TEntity));
+            var isDbGeneratedId = IsIdDbGenerated(typeof(TEntity));
 
             EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(saveBehavior.RecordMode, isDbGeneratedId, isImportingEntityId);
             
@@ -111,7 +110,7 @@ namespace XlsToEf.Core.Import
                     {
                         EnsureNoEntityCreationWithIdWhenAutoIncrementIdType(idPropertyName, isDbGeneratedId, idValue);
                         entityToUpdate = new TEntity();
-                        _dbContext.Set<TEntity>().Add(entityToUpdate);
+                        await _dbContext.Set<TEntity>().AddAsync(entityToUpdate);
                     }
 
                     await MapIntoEntity(selctedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isDbGeneratedId, saveBehavior.RecordMode);
@@ -158,14 +157,14 @@ namespace XlsToEf.Core.Import
             return importResult;
         }
 
-        private async Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData)
+        private Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData)
         {
             if(matchingData.FileStream != null)
-                return await _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet);
+                return _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet);
 
             var filePath = Path.Combine(Path.GetTempPath(), matchingData.FileName);
 
-            return await _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
+            return _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
         }
 
         private Dictionary<string, string> BuildDictionaryFromSelected(List<XlsToEfColumnPair> selected)
@@ -287,12 +286,16 @@ namespace XlsToEf.Core.Import
             }
         }
 
-        private bool IsIdAutoIncrementing(Type eType)
+        private bool IsIdDbGenerated(Type eType)
         {
             var key = GetMappedKeyInformation(eType);
             var identity =  key.FindAnnotation("Identity");
-            var computed =  key.FindAnnotation("Computed");
-            return (identity != null) || (computed != null);
+            var computed = key.FindAnnotation("Computed");
+            var isGeneratedOnAdd = key.Properties[0]?.ValueGenerated == ValueGenerated.OnAdd;
+            //var storeGenerated = key.Properties[0].
+            //var valuegeneratedonAdd = key.Properties
+
+            return (identity != null) || (computed != null) || (isGeneratedOnAdd);
             //  return key.Properties[0].IsStoreGeneratedAlways; says is obsolete
 
 //            EdmMember key = GetMappedKeyInformation(eType);
