@@ -1,6 +1,8 @@
+using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using XlsToEf.Core.Tests.Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 namespace XlsToEf.Core.Tests
 {
@@ -8,8 +10,11 @@ namespace XlsToEf.Core.Tests
     {
         protected DbContext GetDb()
         {
+            var configBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json");
+
             var optionsBuilder = new DbContextOptionsBuilder<XlsToEfDbContext>();
-            optionsBuilder.UseSqlServer("XlsToEfTestDatabase");
+            optionsBuilder.UseSqlServer(configBuilder.Build().GetConnectionString( "XlsToEfTestDatabase"));
             return new XlsToEfDbContext(optionsBuilder.Options);
         }
 

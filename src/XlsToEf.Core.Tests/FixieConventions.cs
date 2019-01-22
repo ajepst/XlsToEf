@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Fixie;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 
@@ -95,7 +96,9 @@ namespace XlsToEf.Core.Tests
 
         private static Task ResetDatabases()
         {
-            var testDb = ConfigurationManager.ConnectionStrings["XlsToEfTestDatabase"].ToString();
+            var configBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json");
+            var testDb = configBuilder.Build().GetConnectionString("XlsToEfTestDatabase");
 
             return DatabaseTestCheckpoint.DbCheckpoint.Reset(testDb);
         }
