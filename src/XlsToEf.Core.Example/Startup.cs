@@ -35,7 +35,7 @@ namespace XlsToEf.Core.Example
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<DbContext, XlsToEfDbContext>(m => m.GetService<XlsToEfDbContext>());
-            services.AddDbContext<XlsToEfDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Data:DefaultConnection:ConnectionString")));
+            services.AddDbContext<XlsToEfDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMediatR(typeof(Startup));
             services.AddScoped<ProductPropertyOverrider<Product>>();
             services.Scan(scan => scan
