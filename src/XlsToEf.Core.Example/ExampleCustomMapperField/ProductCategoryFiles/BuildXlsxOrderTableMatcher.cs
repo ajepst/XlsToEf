@@ -1,0 +1,41 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using XlsToEf.Core.Example.Domain;
+using XlsToEf.Core.Import;
+
+namespace XlsToEf.Core.Example.ExampleCustomMapperField.ProductCategoryFiles
+{
+    public class BuildXlsxProductCategoryTableMatcher : IRequestHandler<XlsxProductCategoryColumnMatcherQuery, DataForMatcherUi>
+    {
+        private readonly IExcelIoWrapper _excelIoWrapper;
+
+        public BuildXlsxProductCategoryTableMatcher(IExcelIoWrapper excelIoWrapper)
+        {
+            _excelIoWrapper = excelIoWrapper;
+        }
+
+        public async Task<DataForMatcherUi> Handle(XlsxProductCategoryColumnMatcherQuery message, CancellationToken cancellationToken)
+        {
+            message.FilePath = Path.GetTempPath() + message.FileName;
+            var cat = new ProductCategory();
+
+            var columnData = new DataForMatcherUi
+            {
+                XlsxColumns = (await _excelIoWrapper.GetImportColumnData(message)).ToArray(),
+                FileName = message.FileName,
+                TableColumns = new List<TableColumnConfiguration>
+                {
+                    TableColumnConfiguration.Create(() => cat.Id, new SingleColumnData("Category Id")),
+                    TableColumnConfiguration.Create(() => cat.CategoryName, new SingleColumnData("Category Name")),
+                    TableColumnConfiguration.Create(() => cat.CategoryCode, new SingleColumnData("Category Code")),
+                }
+            };
+
+            return columnData;
+        }
+    }
+}

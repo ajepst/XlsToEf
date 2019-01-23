@@ -65,12 +65,12 @@ namespace XlsToEf.Core.Import
             return colNames;
         }
 
-        public async Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
+        public Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
         {
             if(matcherQuery.FileStream == null)
-                return await GetColumns(matcherQuery.FilePath, matcherQuery.Sheet);
+                return GetColumns(matcherQuery.FilePath, matcherQuery.Sheet);
 
-            return await GetColumns(matcherQuery.FileStream, matcherQuery.Sheet);
+            return GetColumns(matcherQuery.FileStream, matcherQuery.Sheet);
         }
 
         public async Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)

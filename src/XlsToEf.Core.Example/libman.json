@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "toastr.js@2.1.4",
+      "destination": "wwwroot/lib/toastr.js/"
+    },
+    {
+      "library": "bootstrap-modal@2.2.6",
+      "destination": "wwwroot/lib/bootstrap-modal/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "blueimp-file-upload@9.28.0",
+      "destination": "wwwroot/lib/blueimp-file-upload/"
+    }
+  ]
+}
