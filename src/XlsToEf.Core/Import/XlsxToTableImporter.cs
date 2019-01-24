@@ -136,7 +136,7 @@ namespace XlsToEf.Core.Import
                     HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Error: " + e.Message);
                     foundErrors = true;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     HandleError(importResult.RowErrorDetails, rowNumber, entityToUpdate, "Cannot be updated - error importing");
                     foundErrors = true;
@@ -203,9 +203,9 @@ namespace XlsToEf.Core.Import
             }
         }
 
-        private static async Task MapIntoEntity<TEntity>(Dictionary<string, string> matchingData, string idPropertyName,
-            UpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode)
-            
+        private async Task MapIntoEntity<TEntity>(Dictionary<string, string> matchingData, string idPropertyName,
+            UpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode) where TEntity : class
+
         {
             if (overridingMapper != null)
             {
@@ -289,13 +289,15 @@ namespace XlsToEf.Core.Import
         private bool IsIdDbGenerated(Type eType)
         {
             var key = GetMappedKeyInformation(eType);
-            var identity =  key.FindAnnotation("Identity");
-            var computed = key.FindAnnotation("Computed");
+            var keyProperty = key.Properties[0];
+            var idkeyAnnotation = keyProperty.FindAnnotation("SqlServer:ValueGenerationStrategy");
             var isGeneratedOnAdd = key.Properties[0]?.ValueGenerated == ValueGenerated.OnAdd;
             //var storeGenerated = key.Properties[0].
             //var valuegeneratedonAdd = key.Properties
 
-            return (identity != null) || (computed != null) || (isGeneratedOnAdd);
+            return (idkeyAnnotation != null && (idkeyAnnotation.Value.ToString().Contains("Identity") ||
+                                               idkeyAnnotation.Value.ToString().Contains("Computed"))) ||
+                   (isGeneratedOnAdd);
             //  return key.Properties[0].IsStoreGeneratedAlways; says is obsolete
 
 //            EdmMember key = GetMappedKeyInformation(eType);
@@ -359,8 +361,8 @@ namespace XlsToEf.Core.Import
 //            return readOnlyMetadataCollection[0];
         }
 
-        private static void UpdateProperties<TSelector>(TSelector matchedObject, Dictionary<string, string> matches,
-            Dictionary<string, string> excelRow, string selectorColName, bool shouldSkipIdInsert) 
+        private void UpdateProperties<TSelector>(TSelector matchedObject, Dictionary<string, string> matches,
+            Dictionary<string, string> excelRow, string selectorColName, bool shouldSkipIdInsert) where TSelector : class
         {
             foreach (var entityPropertyName in matches.Keys)
             {
@@ -370,10 +372,19 @@ namespace XlsToEf.Core.Import
 
                 Type matchedObjectType = matchedObject.GetType();
                 PropertyInfo propToSet = matchedObjectType.GetProperty(entityPropertyName);
+                if (propToSet is null)
+                {
+                    var shadow = _dbContext.Entry(matchedObject).Property(entityPropertyName);
+                    var shadowType = shadow.Metadata.ClrType;
+                    var converted = StringToTypeConverter.Convert(xlsxItemData,shadowType);
+                    shadow.CurrentValue = converted;
+                }
+                else
+                {
+                    var converted = StringToTypeConverter.Convert(xlsxItemData, propToSet.PropertyType);
 
-                var converted = StringToTypeConverter.Convert(xlsxItemData, propToSet.PropertyType);
-
-                propToSet.SetValue(matchedObject, converted, null);
+                    propToSet.SetValue(matchedObject, converted, null);
+                }
             }
         }
     }

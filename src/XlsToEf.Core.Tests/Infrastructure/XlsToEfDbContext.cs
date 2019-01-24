@@ -53,6 +53,8 @@ namespace XlsToEf.Core.Tests.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof (XlsToEfDbContext).Assembly);
+            modelBuilder.Entity<ProductColorOption>();
+            modelBuilder.Entity<ProductSizeOption>();
         }
 
         public void BeginTransaction()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using XlsToEf.Core.Import;
 using XlsToEf.Core.Tests.ImportHelperFiles;
@@ -306,6 +307,83 @@ namespace XlsToEf.Core.Tests
             var updatedItem = GetDb().Set<ProductCategory>().First();
             updatedItem.CategoryCode.ShouldBe("FRZ");
             updatedItem.CategoryName.ShouldBe("Frozen Food");
+        }
+
+
+        public async Task Should_Import_new_rows_with_generated_id_entity_with_annotations_createonly()
+        {
+            var referencedCategory = new ProductCategory
+            {
+                CategoryName = "Pets",
+                CategoryCode = "PET"
+            };
+            await PersistToDatabase(referencedCategory);
+            var referencedProduct = new Product
+            {
+                ProductName = "Kitten",
+                ProductCategoryId = referencedCategory.Id
+            };
+            await PersistToDatabase(referencedProduct);
+
+            var excelIoWrapper = new FakeExcelIo();
+            excelIoWrapper.Rows[0]["xlsCol5"] = referencedProduct.Id.ToString();
+            excelIoWrapper.Rows[0]["xlsCol8"] = "Orange";
+
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var cat = new ProductColorOption();
+            var importMatchingData = new DataMatchesForImportingProductData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create("Color", "xlsCol8"),
+                },
+            };
+            Func<string, Expression<Func<ProductColorOption, bool>>> selectorFinder = (y) => z => z.Id == int.Parse(y);
+            await importer.ImportColumnData(importMatchingData, finder: selectorFinder, saveBehavior: new ImportSaveBehavior { RecordMode = RecordMode.CreateOnly });
+
+            var updatedItem = GetDb().Set<ProductColorOption>().First();
+            updatedItem.Color.ShouldBe("Orange");
+        }
+
+        public async Task Should_Import_new_rows_with_generated_id_entity_with_shadow_ref_createonly()
+        {
+            var referencedCategory = new ProductCategory
+            {
+                CategoryName = "Pets",
+                CategoryCode = "PET"
+            };
+            await PersistToDatabase(referencedCategory);
+            var referencedProduct = new Product
+            {
+                ProductName = "Kitten",
+                ProductCategoryId = referencedCategory.Id
+            };
+            await PersistToDatabase(referencedProduct);
+
+            var excelIoWrapper = new FakeExcelIo();
+            excelIoWrapper.Rows[0]["xlsCol5"] = referencedProduct.Id.ToString();
+            excelIoWrapper.Rows[0]["xlsCol8"] = "Large";
+
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var cat = new ProductSizeOption();
+            var importMatchingData = new DataMatchesForImportingProductData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create("ProductId", "xlsCol5"),
+                    XlsToEfColumnPair.Create(() => cat.Size, "xlsCol8"),
+                },
+            };
+            Func<string, Expression<Func<ProductSizeOption, bool>>> selectorFinder = (y) => z => z.Id == int.Parse(y);
+            await importer.ImportColumnData(importMatchingData, finder: selectorFinder, saveBehavior: new ImportSaveBehavior { RecordMode = RecordMode.CreateOnly });
+
+            var updatedItem = GetDb().Set<ProductSizeOption>().Include(size => size.Product).First();
+            updatedItem.Size.ShouldBe("Large");
+            updatedItem.Product.Id.ShouldBe(referencedProduct.Id);
         }
 
         public async Task Should_Import_new_and_update_rows_with_generated_id_entity_upsert()
