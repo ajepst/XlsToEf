@@ -135,9 +135,19 @@ task CommonAssemblyInfo {
     create-commonAssemblyInfo "$ReleaseNumber" $project_name "$source_dir\SharedAssemblyInfo.cs"
 }
 
+
+
+
 task SetBuildDb {
-  poke-xml "$app_test_dir\app.config" "configuration/connectionStrings/add[@name='XlsToEfTestDatabase']/@connectionString" $testConnectionString
+  $matchedJson = Get-ChildItem  -Filter appsettings.json -Recurse -ErrorAction SilentlyContinue -Force | Where-Object {$_.FullName.Contains("Tests")}
+  $matchedConfig = Get-ChildItem  -Filter app.config -Recurse -ErrorAction SilentlyContinue -Force  | Where-Object {$_.FullName.Contains("Tests")}
+
+  $matchedJson | %{ swap-connection-string $_.FullName }
+  $matchedConfig | %{ swap-connection-string $_.FullName }
+  
 }
+
+
 
 task ApplicationConfiguration {
   poke-xml "$app_dir\web.config" "configuration/system.web/authentication/@mode" $auth_mode
@@ -149,12 +159,11 @@ task CopyAssembliesForTest -Depends Compile {
     copy_all_assemblies_for_test $test_dir
 }
 
-#task RunAllTests -Depends CopyAssembliesForTest {
-#    $test_assembly_patterns_unit | %{ run_fixie_tests $_ }
-#}
+
 task RunAllTests  {
-    cd $source_dir
+    Push-Location -Path $source_dir
     $test_assembly_patterns_unit | %{ run_fixie_tests $_ }
+    Pop-Location
 }
 
 task Compile -depends Clean, CommonAssemblyInfo {
@@ -219,6 +228,21 @@ function Write-Help-For-Alias($alias,$description) {
 # -------------------------------------------------------------------------------------------------------------
 # generalized functions
 # --------------------------------------------------------------------------------------------------------------
+function swap-connection-string($path) {
+  $fileName = Split-Path $path -leaf
+  $pathToJson = "appsettings.json"
+  if ($fileName -eq "app.config") {
+  Write-Host "found appconfig $path"
+    poke-xml $path "configuration/connectionStrings/add[@name='XlsToEfTestDatabase']/@connectionString" $testConnectionString
+  } elseif($fileName -eq "appsettings.json") {
+    Write-Host "found appsettings $path"
+    $a = Get-Content $path | ConvertFrom-Json
+    $a.ConnectionStrings.XlsToEfTestDatabase = $testConnectionString
+    $a | ConvertTo-Json | set-content $path
+  }
+}
+
+
 function deploy-database($action, $connectionString, $scripts_dir, $env, $indexes) {
 
     write-host "action: $action"
@@ -270,11 +294,9 @@ function global:create_directory($directory_name) {
 }
 
 function global:run_fixie ($test_projdir) {
-   write-host "running for $source_dir\$test_projdir "
-   cd $source_dir\$test_projdir
+   Push-Location -Path $source_dir\$test_projdir
    $results_output = $result_dir + "\" + $test_projdir + ".xml"
-   write-host "results to: $results_output "
-    exec { & dotnet fixie --report $results_output --no-build }
+    exec { & dotnet fixie --report $results_output }
 }
 
 function global:Copy_and_flatten ($source,$include,$dest) {
