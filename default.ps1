@@ -174,7 +174,6 @@ task Compile -depends Clean, CommonAssemblyInfo {
 task Clean {
     delete_file $package_file
     delete_directory $build_dir
-    create_directory $test_dir
     create_directory $result_dir
 
     exec { dotnet clean -v q --configuration $project_config $source_dir\$project_name.sln }
