@@ -34,8 +34,6 @@ properties {
 
   $test_assembly_patterns_unit = @("*Tests")
 
-  $nuget_exe = "$base_dir\tools\nuget\nuget.exe"
-
   $roundhouse_dir = "$base_dir\tools\roundhouse"
   $roundhouse_output_dir = "$roundhouse_dir\output"
   $roundhouse_exe_path = "$roundhouse_dir\rh.exe"
