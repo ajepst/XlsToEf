@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fixie" Version="2.0.3" />
+    <PackageReference Include="Fixie" Version="2.1.1" />
     <PackageReference Include="MediatR" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.1" />
