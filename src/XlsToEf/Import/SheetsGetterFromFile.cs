@@ -27,5 +27,11 @@ namespace XlsToEf.Import
             var sheets = await _excelIoWrapper.GetSheets(filePath);
             return new SheetPickerInformation {Sheets = sheets, File = Path.GetFileName(filePath) };
         }
+
+        public async Task<SheetPickerInformation> Handle(string filePath)
+        {
+            var sheets = await _excelIoWrapper.GetSheets(filePath);
+            return new SheetPickerInformation { Sheets = sheets, File = Path.GetFileName(filePath), };
+        }
     }
 }

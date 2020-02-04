@@ -56,8 +56,9 @@ namespace XlsToEf.Import
         /// <param name="overridingMapper">A custom mapper for mapping between excel columns and an entity. </param>
         /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
         /// <param name="validator">Optional method to run custom validation on the modified entity before saving</param>
+        /// <param name="fileLocation">Directory of source xlsx file. Defaults to temp dir</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null, IEntityValidator<TEntity> validator = null)
+        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null, IEntityValidator<TEntity> validator = null, string fileLocation = null)
            where TEntity : class, new()
         {
             if (saveBehavior == null)
@@ -85,7 +86,7 @@ namespace XlsToEf.Import
             
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
 
-            var excelRows = await GetExcelRows(matchingData);
+            var excelRows = await GetExcelRows(matchingData, fileLocation);
 
             var foundErrors = false;
             for (var index = 0; index < excelRows.Count; index++)
@@ -159,12 +160,12 @@ namespace XlsToEf.Import
             return importResult;
         }
 
-        private async Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData)
+        private async Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData, string fileLocation)
         {
             if(matchingData.FileStream != null)
                 return await _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet);
 
-            var filePath = Path.Combine(Path.GetTempPath(), matchingData.FileName);
+            var filePath = Path.Combine((fileLocation ?? Path.GetTempPath()), matchingData.FileName);
 
             return await _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
         }
