@@ -509,7 +509,31 @@ namespace XlsToEf.Core.Tests
             updatedItem.OrderDate.ShouldBe(orderDate);
             updatedItem.DeliveryDate.ShouldBeNull();
         }
+        public async Task Should_Import_from_non_tempfile_new_rows_with_generated_id_entity_createonly()
+        {
+            var excelIoWrapper = new FakeExcelIo();
+            var importer = new XlsxToTableImporter(GetDb(), excelIoWrapper);
+            var cat = new ProductCategory();
+            var importMatchingData = new DataMatchesForImportingProductData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => cat.CategoryCode, "xlsCol8"),
+                    XlsToEfColumnPair.Create("CategoryName", "xlsCol7"),
+                },
+            };
+            Func<string, Expression<Func<ProductCategory, bool>>> selectorFinder = (y) => z => z.Id == int.Parse(y);
+            var fileLocation = @"c:\myfiles\";
+            await importer.ImportColumnData(importMatchingData, finder: selectorFinder, saveBehavior: new ImportSaveBehavior { RecordMode = RecordMode.CreateOnly }, fileLocation: fileLocation);
 
+            var updatedItem = GetDb().Set<ProductCategory>().First();
+            updatedItem.CategoryCode.ShouldBe("FRZ");
+            updatedItem.CategoryName.ShouldBe("Frozen Food");
+
+            excelIoWrapper.FileName.ShouldBe(fileLocation + importMatchingData.FileName);
+        }
         private class TestValidator : IEntityValidator<Order>
         {
             public Dictionary<string, string> GetValidationErrors(Order entity)
