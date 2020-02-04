@@ -10,7 +10,7 @@ namespace XlsToEf.Core.Example.Infrastructure
         {
             builder.ToTable("Products");
             builder.HasKey(m => m.Id);
-            builder.Property(m => m.Id).UseSqlServerIdentityColumn();
+            builder.Property(m => m.Id).ValueGeneratedOnAdd();
             builder.HasOne(x => x.ProductCategory).WithMany().HasForeignKey(x => x.ProductCategoryId);
             builder.Property(x => x.ProductCategoryId);
         }

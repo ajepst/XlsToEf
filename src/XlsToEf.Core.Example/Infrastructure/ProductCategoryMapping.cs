@@ -10,7 +10,7 @@ namespace XlsToEf.Core.Example.Infrastructure
         {
             builder.ToTable("ProductCategories");
             builder.HasKey(m => m.Id);
-            builder.Property(m => m.Id).UseSqlServerIdentityColumn();
+            builder.Property(m => m.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.CategoryCode);
             builder.Property(x => x.CategoryName);
         }
