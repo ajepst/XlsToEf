@@ -37,11 +37,12 @@ namespace XlsToEf.Import
         /// <typeparam name="TEntity">The type of EF Entity</typeparam>
         /// <param name="matchingData">Specification for how to match spreadsheet to entity</param>
         /// <param name="saveBehavior">Optional configuration to change the save behavior. See ImportSaveBehavior</param>
+        /// <param name="fileLocation">Optional directory of source xlsx file. Defaults to temp dir</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity>(DataMatchesForImport matchingData, ImportSaveBehavior saveBehavior = null)
+        public async Task<ImportResult> ImportColumnData<TEntity>(DataMatchesForImport matchingData, ImportSaveBehavior saveBehavior = null, string fileLocation = null)
             where TEntity : class, new()
         {
-            return await ImportColumnData<TEntity, string>(matchingData, null, null, null, saveBehavior);
+            return await ImportColumnData<TEntity, string>(matchingData, null, null, null, saveBehavior, fileLocation:fileLocation);
         }
 
 
