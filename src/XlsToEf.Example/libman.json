@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [{
+  "library": "toastr.js@2.1.4",
+  "destination": "wwwroot/lib/toastr.js/"
+}
+,
+{
+  "library": "blueimp-file-upload@10.7.0",
+  "destination": "wwwroot/lib/blueimp-file-upload/"
+}
+,
+{
+  "library": "jquery-validation-unobtrusive@3.2.11",
+  "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+}
+,
+{
+  "library": "twitter-bootstrap@4.4.1",
+  "destination": "wwwroot/lib/twitter-bootstrap/"
+}
+]
+}

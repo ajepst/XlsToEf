@@ -95,6 +95,7 @@ namespace XlsToEf.Example
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
