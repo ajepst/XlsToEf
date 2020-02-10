@@ -32,9 +32,7 @@ properties {
   $result_dir = "$build_dir\results"
   $octopus_nuget_repo = "$build_dir\packages"
 
-  $test_assembly_patterns_unit = @("*Tests.dll")
-
-  $nuget_exe = "$base_dir\tools\nuget\nuget.exe"
+  $test_assembly_patterns_unit = @("*Tests")
 
   $roundhouse_dir = "$base_dir\tools\roundhouse"
   $roundhouse_output_dir = "$roundhouse_dir\output"
@@ -135,9 +133,19 @@ task CommonAssemblyInfo {
     create-commonAssemblyInfo "$ReleaseNumber" $project_name "$source_dir\SharedAssemblyInfo.cs"
 }
 
+
+
+
 task SetBuildDb {
-  poke-xml "$app_test_dir\app.config" "configuration/connectionStrings/add[@name='XlsToEfTestDatabase']/@connectionString" $testConnectionString
+  $matchedJson = Get-ChildItem  -Filter appsettings.json -Recurse -ErrorAction SilentlyContinue -Force | Where-Object {$_.FullName.Contains("Tests")}
+  $matchedConfig = Get-ChildItem  -Filter app.config -Recurse -ErrorAction SilentlyContinue -Force  | Where-Object {$_.FullName.Contains("Tests")}
+
+  $matchedJson | %{ swap-connection-string $_.FullName }
+  $matchedConfig | %{ swap-connection-string $_.FullName }
+  
 }
+
+
 
 task ApplicationConfiguration {
   poke-xml "$app_dir\web.config" "configuration/system.web/authentication/@mode" $auth_mode
@@ -149,8 +157,11 @@ task CopyAssembliesForTest -Depends Compile {
     copy_all_assemblies_for_test $test_dir
 }
 
-task RunAllTests -Depends CopyAssembliesForTest {
+
+task RunAllTests  {
+    Push-Location -Path $source_dir
     $test_assembly_patterns_unit | %{ run_fixie_tests $_ }
+    Pop-Location
 }
 
 task Compile -depends Clean, CommonAssemblyInfo {
@@ -161,7 +172,6 @@ task Compile -depends Clean, CommonAssemblyInfo {
 task Clean {
     delete_file $package_file
     delete_directory $build_dir
-    create_directory $test_dir
     create_directory $result_dir
 
     exec { dotnet clean -v q --configuration $project_config $source_dir\$project_name.sln }
@@ -215,6 +225,21 @@ function Write-Help-For-Alias($alias,$description) {
 # -------------------------------------------------------------------------------------------------------------
 # generalized functions
 # --------------------------------------------------------------------------------------------------------------
+function swap-connection-string($path) {
+  $fileName = Split-Path $path -leaf
+  $pathToJson = "appsettings.json"
+  if ($fileName -eq "app.config") {
+  Write-Host "found appconfig $path"
+    poke-xml $path "configuration/connectionStrings/add[@name='XlsToEfTestDatabase']/@connectionString" $testConnectionString
+  } elseif($fileName -eq "appsettings.json") {
+    Write-Host "found appsettings $path"
+    $a = Get-Content $path | ConvertFrom-Json
+    $a.ConnectionStrings.XlsToEfTestDatabase = $testConnectionString
+    $a | ConvertTo-Json | set-content $path
+  }
+}
+
+
 function deploy-database($action, $connectionString, $scripts_dir, $env, $indexes) {
 
     write-host "action: $action"
@@ -241,7 +266,7 @@ function deploy-database($action, $connectionString, $scripts_dir, $env, $indexe
 }
 
 function run_fixie_tests([string]$pattern) {
-    $items = Get-ChildItem -Path $test_dir $pattern
+    $items = Get-ChildItem -Path . $pattern
     $items | %{ run_fixie $_.Name }
 }
 
@@ -265,10 +290,10 @@ function global:create_directory($directory_name) {
   mkdir $directory_name  -ErrorAction SilentlyContinue  | out-null
 }
 
-function global:run_fixie ($test_assembly) {
-   $assembly_to_test = $test_dir + "\" + $test_assembly
-   $results_output = $result_dir + "\" + $test_assembly + ".xml"
-    exec { & tools\fixie\dotnet-test-fixie.exe $assembly_to_test --xUnitXml $results_output }
+function global:run_fixie ($test_projdir) {
+   Push-Location -Path $source_dir\$test_projdir
+   $results_output = $result_dir + "\" + $test_projdir + ".xml"
+    exec { & dotnet fixie --report $results_output }
 }
 
 function global:Copy_and_flatten ($source,$include,$dest) {

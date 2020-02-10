@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+  
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Anne Epstein</Authors>
+    <Product />
+    <Description>XlsToEfCore is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework Core. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</Description>
+    <Company />
+    <PackageId>XlsToEfCore</PackageId>
+    <Copyright>Copyright © 2020 Anne Epstein</Copyright>
+    <PackageProjectUrl>https://github.com/ajepst/XlsToEf</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ajepst/XlsToEf</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/ajepst/XlsToEf/blob/master/license.txt</PackageLicenseUrl>
+    <PackageTags>EF EfCore EntityFramework Excel xlsx Core</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="4.5.3.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+  </ItemGroup>
+
+</Project>

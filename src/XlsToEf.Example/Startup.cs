@@ -1,11 +1,13 @@
 ﻿using System.Data.Entity;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Scrutor;
 using XlsToEf.Example.Controllers;
@@ -94,6 +96,12 @@ namespace XlsToEf.Example
             }
 
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Content")),
+                RequestPath = "/Content"
+            });
 
             app.UseMvc(routes =>
             {

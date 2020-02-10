@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Fixie;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
@@ -54,68 +55,55 @@ namespace XlsToEf.Tests
         }
     }
 
-    public class TestingConvention : Convention
+    public class TestingConvention : Discovery, Execution
     {
         public TestingConvention()
         {
             Classes
-                .NameEndsWith("Tests");
+                .Where(x => x.Name.EndsWith("Tests"));
 
             Methods
-                .Where(method => method.IsVoid() || method.IsAsync());
-
-            ClassExecution
-                .CreateInstancePerCase();
-
-            CaseExecution
-                .Wrap<DbTestBehavior>()
-                .Wrap<NestedContainerBehavior>()
-                .Skip(@case => @case.Method.HasOrInherits<SkipAttribute>());
+                .Where(method => method.IsVoid() || method.IsAsync())
+                .Where(method => !method.Has<SkipAttribute>());
 
             Parameters
                 .Add<FromInputAttributes>();
         }
-    }
 
-    public class NestedContainerBehavior : CaseBehavior
-    {
-        public void Execute(Case context, Action next)
+        public void Execute(TestClass testClass)
         {
-            TestDependencyScope.Begin();
-            next();
-            TestDependencyScope.End();
-        }
-    }
-
-    public class DbTestBehavior : CaseBehavior
-    {
-        public void Execute(Case context, Action next)
-        {
-            if (context.Class.IsSubclassOf(typeof (DbTestBase)))
-                ResetDatabases();
-
-            next();
-
-            foreach (var ex in context.Exceptions.OfType<DbEntityValidationException>())
+            testClass.RunCases(@case =>
             {
-                foreach (var err in ex.EntityValidationErrors)
+                if (@case.Class.IsSubclassOf(typeof(DbTestBase)))
+                    ResetDatabases();
+                TestDependencyScope.Begin();
+                var instance = testClass.Construct();
+
+                @case.Execute(instance);
+                instance.Dispose();
+                TestDependencyScope.End();
+
+                if(@case.Exception != null && (@case.Exception.GetType() == typeof(DbEntityValidationException)))
                 {
-                    Console.WriteLine("Error on {0} entity: {1}", err.IsValid ? "valid" : "invalid", err.Entry);
-                    foreach (var ve in err.ValidationErrors)
+                    var ex = @case.Exception as DbEntityValidationException;
+                    foreach (var err in ex.EntityValidationErrors)
                     {
-                        Console.WriteLine("  {0}: {1}", ve.PropertyName, ve.ErrorMessage);
+                        Console.WriteLine("Error on {0} entity: {1}", err.IsValid ? "valid" : "invalid", err.Entry);
+                        foreach (var ve in err.ValidationErrors)
+                        {
+                            Console.WriteLine("  {0}: {1}", ve.PropertyName, ve.ErrorMessage);
+                        }
                     }
                 }
-            }
+            });
         }
 
-        private static void ResetDatabases()
+        private static Task ResetDatabases()
         {
             var testDb = ConfigurationManager.ConnectionStrings["XlsToEfTestDatabase"].ToString();
 
-            DatabaseTestCheckpoint.DbCheckpoint.Reset(testDb);
+            return DatabaseTestCheckpoint.DbCheckpoint.Reset(testDb);
         }
-
 
         private static class DatabaseTestCheckpoint
         {
@@ -133,27 +121,28 @@ namespace XlsToEf.Tests
         }
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class InputAttribute : Attribute
-    {
-        public InputAttribute(params object[] parameters)
+
+        [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+        public class InputAttribute : Attribute
         {
-            Parameters = parameters;
+            public InputAttribute(params object[] parameters)
+            {
+                Parameters = parameters;
+            }
+
+            public object[] Parameters { get; private set; }
         }
 
-        public object[] Parameters { get; private set; }
-    }
-
-    internal class FromInputAttributes : ParameterSource
-    {
-        public IEnumerable<object[]> GetParameters(MethodInfo method)
+        internal class FromInputAttributes : ParameterSource
         {
-            return method.GetCustomAttributes<InputAttribute>(true).Select(input => input.Parameters);
+            public IEnumerable<object[]> GetParameters(MethodInfo method)
+            {
+                return method.GetCustomAttributes<InputAttribute>(true).Select(input => input.Parameters);
+            }
+        }
+
+        [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+        public class SkipAttribute : Attribute
+        {
         }
     }
-
-    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public class SkipAttribute : Attribute
-    {
-    }
-}
