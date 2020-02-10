@@ -1,4 +1,4 @@
-#XlsToEF#
+# XlsToEF
 
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/ajepst/XlstoEf?branch=master&svg=true)](https://ci.appveyor.com/project/ajepst/xlstoef)
 
