@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>XlsToEfCore</id>
+    <version>2.0.0</version>
+    <title>XlsToEfCore</title>
+    <authors>Anne Epstein</authors>
+    <owners>Anne Epstein</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>XlsToEfCore is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework Core. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</description>
+    <copyright>Copyright © 2020 Anne Epstein</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.EntityFrameworkCore" version="3.1.1" />
+        <dependency id="EPPlus" version="4.5.3.3" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\release\netstandard2.0\XlsToEfCore.dll" target="lib\netstandard2.0\XlsToEfCore.dll" />
+  </files>
+</package>
