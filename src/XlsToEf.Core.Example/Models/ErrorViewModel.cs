@@ -1,6 +1,6 @@
 using System;
 
-namespace XlsToEf.Core.Example.Models
+namespace XlsToEfCore.Example.Models
 {
     public class ErrorViewModel
     {

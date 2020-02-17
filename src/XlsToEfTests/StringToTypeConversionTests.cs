@@ -2,7 +2,7 @@
 using Shouldly;
 using XlsToEf.Import;
 
-namespace XlsToEf.Tests
+namespace XlsToEfTests
 {
     public class StringToTypeConversionTests
     {

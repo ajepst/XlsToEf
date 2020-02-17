@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     public abstract class UpdatePropertyOverrider<TSelector>
     {

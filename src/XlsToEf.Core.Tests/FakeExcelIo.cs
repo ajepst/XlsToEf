@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Tests
+namespace XlsToEfCore.Tests
 {
     using System.IO;
 

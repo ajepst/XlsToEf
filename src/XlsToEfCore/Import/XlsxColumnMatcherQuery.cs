@@ -1,4 +1,4 @@
-﻿namespace XlsToEf.Core.Import
+﻿namespace XlsToEfCore.Import
 {
     using System.IO;
 

@@ -1,7 +1,7 @@
 using MediatR;
 using XlsToEf.Import;
 
-namespace XlsToEf.Tests.ImportHelperFiles
+namespace XlsToEfTests.ImportHelperFiles
 {
     public class DataMatchesForImportingOrderData : DataMatchesForImport, IRequest<ImportResult>
     {

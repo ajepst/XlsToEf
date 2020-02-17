@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace XlsToEf.Core.Example.Infrastructure
+namespace XlsToEfCore.Example.Infrastructure
 {
     public class XlsToEfDbContext : DbContext
     {

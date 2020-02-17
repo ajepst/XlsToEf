@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using XlsToEf.Core.Example.Domain;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Example.Domain;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Example.ExampleCustomMapperField.ProductCategoryFiles
+namespace XlsToEfCore.Example.ExampleCustomMapperField.ProductCategoryFiles
 {
     public class ImportProductCategoryMatchesFromXlsx : IRequestHandler<DataMatchesForImportingProductCategoryData, ImportResult>
     {

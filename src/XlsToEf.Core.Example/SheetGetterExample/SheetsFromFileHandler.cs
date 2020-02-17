@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Example.SheetGetterExample
+namespace XlsToEfCore.Example.SheetGetterExample
 {
     public class SheetsFromFileHandler : IRequestHandler<SaveAndGetSheetsForFileUpload, SheetPickerInformation>
     {

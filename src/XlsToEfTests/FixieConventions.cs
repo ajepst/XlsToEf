@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Fixie;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
-using XlsToEf.Tests;
+using XlsToEfTests;
 
-namespace XlsToEf.Tests
+namespace XlsToEfTests
 {
     public class TestDependencyScope
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     public class PropertyNameHelper
     {

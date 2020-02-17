@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     public class RowParseException : Exception
 

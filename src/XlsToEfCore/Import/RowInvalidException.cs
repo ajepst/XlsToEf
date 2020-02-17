@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     public class RowInvalidException : Exception
 

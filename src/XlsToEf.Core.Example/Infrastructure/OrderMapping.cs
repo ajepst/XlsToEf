@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using XlsToEf.Core.Example.Domain;
+using XlsToEfCore.Example.Domain;
 
-namespace XlsToEf.Core.Example.Infrastructure
+namespace XlsToEfCore.Example.Infrastructure
 {
     public class OrderMapping : IEntityTypeConfiguration<Order>
     {

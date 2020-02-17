@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace XlsToEf.Core.Example.Infrastructure
+namespace XlsToEfCore.Example.Infrastructure
 {
     public class UnitOfWork : ActionFilterAttribute
     {

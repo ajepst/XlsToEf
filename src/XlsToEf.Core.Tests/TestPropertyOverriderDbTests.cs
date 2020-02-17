@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
-using XlsToEf.Core.Import;
-using XlsToEf.Core.Tests.ImportHelperFiles;
-using XlsToEf.Core.Tests.Models;
+using XlsToEfCore.Import;
+using XlsToEfCore.Tests.ImportHelperFiles;
+using XlsToEfCore.Tests.Models;
 
-namespace XlsToEf.Core.Tests
+namespace XlsToEfCore.Tests
 {
     public class TestPropertyOverriderDbTests : DbTestBase
     {

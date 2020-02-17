@@ -1,8 +1,8 @@
 using System.Data.Entity;
-using XlsToEf.Tests.Infrastructure;
-using XlsToEf.Tests.Models;
+using XlsToEfTests.Infrastructure;
+using XlsToEfTests.Models;
 
-namespace XlsToEf.Tests
+namespace XlsToEfTests
 {
     public class DbTestBase
     {

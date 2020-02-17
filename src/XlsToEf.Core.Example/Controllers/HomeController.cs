@@ -7,13 +7,13 @@ using System.Web.Http;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using XlsToEf.Core.Example.ExampleBaseClassIdField;
-using XlsToEf.Core.Example.ExampleCustomMapperField;
-using XlsToEf.Core.Example.ExampleCustomMapperField.ProductCategoryFiles;
-using XlsToEf.Core.Example.SheetGetterExample;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Example.ExampleBaseClassIdField;
+using XlsToEfCore.Example.ExampleCustomMapperField;
+using XlsToEfCore.Example.ExampleCustomMapperField.ProductCategoryFiles;
+using XlsToEfCore.Example.SheetGetterExample;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Example.Controllers
+namespace XlsToEfCore.Example.Controllers
 {
     public class HomeController : Controller
     {

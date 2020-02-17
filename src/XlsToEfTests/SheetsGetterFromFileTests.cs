@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using XlsToEf.Import;
 
-namespace XlsToEf.Tests
+namespace XlsToEfTests
 {
     public class SheetsGetterFromFileTests
     {

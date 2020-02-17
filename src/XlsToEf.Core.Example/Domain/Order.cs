@@ -1,6 +1,6 @@
 using System;
 
-namespace XlsToEf.Core.Example.Domain
+namespace XlsToEfCore.Example.Domain
 {
     public class Order : Entity<int>
     {

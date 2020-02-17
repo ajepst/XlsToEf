@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     public class SheetsGetterFromFile
     {

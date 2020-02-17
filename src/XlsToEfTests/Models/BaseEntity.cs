@@ -1,4 +1,4 @@
-﻿namespace XlsToEf.Tests.Models
+﻿namespace XlsToEfTests.Models
 {
     public abstract class BaseEntity
     {

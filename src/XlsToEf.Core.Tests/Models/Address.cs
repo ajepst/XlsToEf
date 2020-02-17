@@ -1,4 +1,4 @@
-namespace XlsToEf.Core.Tests.Models
+namespace XlsToEfCore.Tests.Models
 {
     public class Address
     {

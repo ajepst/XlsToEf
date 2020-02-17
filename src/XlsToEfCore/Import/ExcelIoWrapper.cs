@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     public interface IExcelIoWrapper
     {

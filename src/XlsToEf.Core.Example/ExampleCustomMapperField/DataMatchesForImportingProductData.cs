@@ -1,7 +1,7 @@
 using MediatR;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Example.ExampleCustomMapperField
+namespace XlsToEfCore.Example.ExampleCustomMapperField
 {
     public class DataMatchesForImportingProductData : DataMatchesForImport, IRequest<ImportResult>
     {

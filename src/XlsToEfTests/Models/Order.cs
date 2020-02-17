@@ -1,6 +1,6 @@
 using System;
 
-namespace XlsToEf.Tests.Models
+namespace XlsToEfTests.Models
 {
     public class Order : Entity<int>
     {

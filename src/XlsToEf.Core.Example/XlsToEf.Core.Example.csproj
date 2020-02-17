@@ -34,4 +34,9 @@
     <None Include="wwwroot\Content\SampleSpreadsheet.xlsx" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\XlsToEfCore\XlsToEfCore.csproj" />
+  </ItemGroup>
+
 </Project>

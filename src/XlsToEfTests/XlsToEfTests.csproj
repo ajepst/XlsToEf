@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net471</TargetFramework>
-    <AssemblyName>XlsToEf.Tests</AssemblyName>
-    <PackageId>XlsToEf.Tests</PackageId>
+    <AssemblyName>XlsToEfTests</AssemblyName>
+    <PackageId>XlsToEfTests</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

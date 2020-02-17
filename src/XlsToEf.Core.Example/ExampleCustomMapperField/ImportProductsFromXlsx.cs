@@ -6,11 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using XlsToEf.Core.Example.Domain;
-using XlsToEf.Core.Example.Infrastructure;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Example.Domain;
+using XlsToEfCore.Example.Infrastructure;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Example.ExampleCustomMapperField
+namespace XlsToEfCore.Example.ExampleCustomMapperField
 {
     public class ImportProductsFromXlsx : IRequestHandler<DataMatchesForImportingProductData, ImportResult>
     {

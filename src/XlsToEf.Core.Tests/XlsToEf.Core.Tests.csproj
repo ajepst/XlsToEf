@@ -29,4 +29,8 @@
     <DotNetCliToolReference Include="Fixie.Console" Version="2.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\XlsToEfCore\XlsToEfCore.csproj" />
+  </ItemGroup>
+
 </Project>

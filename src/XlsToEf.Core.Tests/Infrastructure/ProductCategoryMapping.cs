@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using XlsToEf.Core.Tests.Models;
+using XlsToEfCore.Tests.Models;
 
-namespace XlsToEf.Core.Tests.Infrastructure
+namespace XlsToEfCore.Tests.Infrastructure
 {
     public class ProductCategoryMapping : IEntityTypeConfiguration<ProductCategory>
     {

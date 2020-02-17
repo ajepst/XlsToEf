@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using XlsToEf.Import;
 
-namespace XlsToEf.Tests
+namespace XlsToEfTests
 {
     using System.IO;
 

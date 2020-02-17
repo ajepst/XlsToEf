@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace XlsToEf.Core.Example
+namespace XlsToEfCore.Example
 {
     public class Program
     {

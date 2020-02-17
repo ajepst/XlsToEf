@@ -1,4 +1,4 @@
-﻿namespace XlsToEf.Core.Example
+﻿namespace XlsToEfCore.Example
 {
     public abstract class Entity<T> : BaseEntity
     {

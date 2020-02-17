@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     public class XlsxToTableImporter
     {

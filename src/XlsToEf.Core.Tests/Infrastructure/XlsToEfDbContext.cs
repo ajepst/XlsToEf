@@ -3,9 +3,9 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using XlsToEf.Core.Tests.Models;
+using XlsToEfCore.Tests.Models;
 
-namespace XlsToEf.Core.Tests.Infrastructure
+namespace XlsToEfCore.Tests.Infrastructure
 {
     public class XlsToEfDbContext : DbContext
     {

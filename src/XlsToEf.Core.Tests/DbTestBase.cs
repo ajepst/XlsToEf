@@ -1,10 +1,10 @@
 using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using XlsToEf.Core.Tests.Infrastructure;
+using XlsToEfCore.Tests.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
-namespace XlsToEf.Core.Tests
+namespace XlsToEfCore.Tests
 {
     public class DbTestBase
     {

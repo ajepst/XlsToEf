@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace XlsToEf.Core.Tests.Models
+namespace XlsToEfCore.Tests.Models
 {
     [Table("ColorOptions")]
     public class ProductColorOption : Entity<int>

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using XlsToEf.Tests.Models;
+using XlsToEfTests.Models;
 
-namespace XlsToEf.Tests.Infrastructure
+namespace XlsToEfTests.Infrastructure
 {
     public class AddressMapping : EntityTypeConfiguration<Address>
     {

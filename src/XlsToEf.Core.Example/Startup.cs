@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using XlsToEf.Core.Example.Domain;
-using XlsToEf.Core.Example.ExampleCustomMapperField;
-using XlsToEf.Core.Example.Infrastructure;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Example.Domain;
+using XlsToEfCore.Example.ExampleCustomMapperField;
+using XlsToEfCore.Example.Infrastructure;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Example
+namespace XlsToEfCore.Example
 {
     public class Startup
     {

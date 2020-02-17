@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
-using XlsToEf.Core.Import;
+using XlsToEfCore.Import;
 
-namespace XlsToEf.Core.Tests
+namespace XlsToEfCore.Tests
 {
     using System.IO;
 

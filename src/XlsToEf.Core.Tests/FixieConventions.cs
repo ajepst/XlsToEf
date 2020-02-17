@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 
-namespace XlsToEf.Core.Tests
+namespace XlsToEfCore.Tests
 {
     public class TestDependencyScope
     {

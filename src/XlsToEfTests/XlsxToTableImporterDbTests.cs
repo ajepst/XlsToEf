@@ -5,10 +5,10 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Shouldly;
 using XlsToEf.Import;
-using XlsToEf.Tests.ImportHelperFiles;
-using XlsToEf.Tests.Models;
+using XlsToEfTests.ImportHelperFiles;
+using XlsToEfTests.Models;
 
-namespace XlsToEf.Tests
+namespace XlsToEfTests
 {
     public class XlsxToTableImporterDbTests : DbTestBase
     {

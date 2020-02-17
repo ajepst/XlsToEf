@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     using System.IO;
 

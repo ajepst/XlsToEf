@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace XlsToEf.Core.Import
+namespace XlsToEfCore.Import
 {
     [Obsolete("ImportColumnData Obsolete, please use DataForMatcherUi", true)]
     public class ImportColumnData : DataForMatcherUi

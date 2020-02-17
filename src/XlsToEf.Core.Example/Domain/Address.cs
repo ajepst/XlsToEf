@@ -1,4 +1,4 @@
-namespace XlsToEf.Core.Example.Domain
+namespace XlsToEfCore.Example.Domain
 {
     public class Address
     {
