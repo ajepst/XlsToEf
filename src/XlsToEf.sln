@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf", "XlsToEf\XlsToEf.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf.Example", "XlsToEf.Example\XlsToEf.Example.csproj", "{FE405C2F-6F3B-4822-8FF4-A8750D36B672}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf.Core.Tests", "XlsToEf.Core.Tests\XlsToEf.Core.Tests.csproj", "{BF805D0C-1F81-44C9-AD6A-CDB413A1C890}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEfCore.Tests", "XlsToEf.Core.Tests\XlsToEfCore.Tests.csproj", "{BF805D0C-1F81-44C9-AD6A-CDB413A1C890}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf.Core.Example", "XlsToEf.Core.Example\XlsToEf.Core.Example.csproj", "{E3BC77FD-15D5-49D9-ABCF-953621DB70AA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEfCore", "XlsToEfCore\XlsToEfCore.csproj", "{8AB5CCE4-945B-42F2-9D45-CC9425BCED39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEfTests", "XlsToEfTests\XlsToEfTests.csproj", "{655B689B-008A-4B4C-8408-FCA9C0889620}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XlsToEf.Tests", "XlsToEfTests\XlsToEf.Tests.csproj", "{655B689B-008A-4B4C-8408-FCA9C0889620}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
