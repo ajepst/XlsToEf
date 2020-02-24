@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>XlsToEf</id>
     <version>2.0.0</version>
@@ -7,7 +7,8 @@
     <authors>Anne Epstein</authors>
     <owners>Anne Epstein</owners>
     <license type="expression">MIT</license>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>https://github.com/ajepst/XlsToEf</projectUrl>
+    <releaseNotes>XlsToEf targets EF 6.2</releaseNotes>
     <description>XlsToEf is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</description>
     <copyright>Copyright © 2020 Anne Epstein</copyright>
     <dependencies>
