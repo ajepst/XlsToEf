@@ -6,6 +6,7 @@
     <title>XlsToEf</title>
     <authors>Anne Epstein</authors>
     <owners>Anne Epstein</owners>
+    <license type="expression">MIT</license>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>XlsToEf is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</description>
     <copyright>Copyright © 2020 Anne Epstein</copyright>
