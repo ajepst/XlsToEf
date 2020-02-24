@@ -10,7 +10,7 @@ namespace XlsToEfCore.Tests.Infrastructure
         {
             builder.ToTable("ProductCategories");
             builder.HasKey(m => m.Id);
-            builder.Property(m => m.Id).UseSqlServerIdentityColumn();
+            builder.Property(m => m.Id).UseIdentityColumn();
             builder.Property(x => x.CategoryCode);
             builder.Property(x => x.CategoryName);
         }
