@@ -6,6 +6,10 @@
 
 XlsToEf is a library you can use to help you import rows from excel files and then save right to the database with Entity Framework.  It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.
 
+### What is XlsToEfCore? ###
+
+XlsToEfCore is a version of XlsToEf set up to use with EF Core. Usage is the same, but as EF Core is a completely different dependency that works a bit differently from the original EF, there is a different Nuget. In usage, all of the below also applies to XlsToEfCore.
+
 ### Where can I get it? ###
 
 It's available on nuget at https://www.nuget.org/packages/XlsToEf and you can install it from the package manager console:
