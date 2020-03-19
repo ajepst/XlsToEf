@@ -10,8 +10,8 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <Version>2.0.0.0</Version>
     <Description>XlsToEf is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</Description>
-    <Authors>Anne Epstein</Authors>
-    <Copyright>Copyright © 2020 Anne Epstein</Copyright>
+    <Authors>Headspring</Authors>
+    <Copyright>Copyright © 2020 Headspring</Copyright>
     <PackageLicenseUrl>https://github.com/ajepst/XlsToEf/blob/master/license.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ajepst/XlsToEf</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ajepst/XlsToEf</RepositoryUrl>
