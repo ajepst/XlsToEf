@@ -1,6 +1,6 @@
 # XlsToEF
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/ajepst/XlstoEf?branch=master&svg=true)](https://ci.appveyor.com/project/ajepst/xlstoef)
+[![Build status](https://ci.appveyor.com/api/projects/status/lccta2lyiq25h5i4?svg=true)](https://ci.appveyor.com/project/headspring-internal/xlstoef)
 
 ### What is XlsToEf? ###
 
