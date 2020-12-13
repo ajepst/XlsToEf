@@ -1,0 +1,92 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+  tags:
+    include:
+    - 'v*'
+
+pr:
+- 'development'
+- 'master'
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+# -------------------
+# Install Dependencies
+# -------------------
+- task: UseDotNet@2
+  displayName: Require .NET 3.1 SDK
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.x'
+
+- task: PowerShell@2
+  displayName: Setup Required Dependencies
+  inputs:
+    filePath: 'setup.ps1'
+
+#- task: PowerShell@2
+#  displayName: Generate Version using GitVersion
+#  inputs:
+#    targetType: 'inline'
+#    script: dotnet gitversion /output buildserver
+
+# -------------------
+# RUN PSAKE SCRIPT
+# -------------------
+
+- task: PowerShell@2
+  displayName: Build and Test
+  inputs:
+    targetType: 'inline'
+    pwsh: true
+    script: |
+      invoke-psake ci 
+#   invoke-psake run-ci -properties @{'version'='$(Build.BuildNumber)'}
+# -------------------
+# PIPELINE FOLLOW-UP
+# -------------------
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '$(Build.SourcesDirectory)/src/XlsToEf.Tests/TestResults/*.xml'
+  condition: succeededOrFailed()
+  displayName: Publish XlfToEF Test Results to Pipeline
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '$(Build.SourcesDirectory)/src/XlsToEfCore.Tests/TestResults/*.xml'
+  condition: succeededOrFailed()
+  displayName: Publish XlfToEFCore Test Results to Pipeline
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: pack
+    packagesToPack: '$(Build.SourcesDirectory)/src/XlfToEF/XlsToEf.csproj'
+    configurationToPack: Release
+  displayName: Create XlsToEf Nuget Package
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: pack
+    packagesToPack: '$(Build.SourcesDirectory)/src/XlfToEF/XlsToEfCore.csproj'
+    configurationToPack: Release
+  displayName: Create XlsToEfCore Nuget Package
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)
+    artifact: 'package'
+    publishLocation: 'pipeline'
+  displayName: Publish Deployment Artifact
