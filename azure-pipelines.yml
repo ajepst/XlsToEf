@@ -38,7 +38,7 @@ steps:
   displayName: dotnet restore
   inputs:
     command: restore
-    projects: '$(serviceLocation)/src/**/*.csproj'
+    projects: '$(serviceLocation)/src'
     includeNuGetOrg: true
     
 #- task: PowerShell@2
