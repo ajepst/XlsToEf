@@ -34,6 +34,13 @@ steps:
   inputs:
     filePath: 'setup.ps1'
 
+- task: DotNetCoreCLI@2
+  displayName: dotnet restore
+  inputs:
+    command: restore
+    projects: '$(serviceLocation)/**/*.csproj'
+    includeNuGetOrg: true
+    
 #- task: PowerShell@2
 #  displayName: Generate Version using GitVersion
 #  inputs:
