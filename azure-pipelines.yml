@@ -23,6 +23,13 @@ steps:
 # -------------------
 # Install Dependencies
 # -------------------
+
+- task: UseDotNet@2
+  displayName: Require .NET 2.2.300 SDK
+  inputs:
+    packageType: 'sdk'
+    version: '2.2.300'
+
 - task: UseDotNet@2
   displayName: Require .NET 3.1 SDK
   inputs:
