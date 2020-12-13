@@ -63,7 +63,7 @@ steps:
   condition: succeededOrFailed()
   displayName: Publish XlfToEF Test Results to Pipeline
 
-  - task: PublishTestResults@2
+- task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '$(Build.SourcesDirectory)/src/XlsToEfCore.Tests/TestResults/*.xml'
