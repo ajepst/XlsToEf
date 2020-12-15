@@ -14,6 +14,7 @@ trigger:
 
 variables:
    db_server: '(localdb)\MSSQLLocalDB'
+   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 pr:
 - 'development'
