@@ -12,6 +12,9 @@ trigger:
     include:
     - 'v*'
 
+variables:
+   db_server: '(localdb)\\MSSQLLocalDB'
+
 pr:
 - 'development'
 - 'master'
@@ -40,6 +43,12 @@ steps:
   displayName: Setup Required Dependencies
   inputs:
     filePath: 'setup.ps1'
+
+- task: PowerShell@2
+  displayName: 'start mssqllocaldb'
+  inputs:
+    targetType: 'inline'
+    script: 'sqllocaldb start mssqllocaldb'
 
 - task: DotNetCoreCLI@2
   displayName: dotnet restore
