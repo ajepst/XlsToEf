@@ -50,6 +50,12 @@ steps:
     targetType: 'inline'
     script: 'sqllocaldb start mssqllocaldb'
 
+- task: PowerShell@2
+  displayName: 'create empty test db'
+  inputs:
+   targetType: inline
+   script: 'sqllocaldb create XlsToEf.Tests'
+
 - task: DotNetCoreCLI@2
   displayName: dotnet restore
   inputs:
