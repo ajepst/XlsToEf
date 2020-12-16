@@ -112,7 +112,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: pack
-    packagesToPack: '$(Build.SourcesDirectory)/src/XlsToEF/XlsToEfCore.csproj'
+    packagesToPack: '$(Build.SourcesDirectory)/src/XlsToEFCore/XlsToEfCore.csproj'
     configurationToPack: Release
   displayName: Create XlsToEfCore Nuget Package
 
