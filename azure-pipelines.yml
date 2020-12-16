@@ -81,6 +81,8 @@ steps:
     pwsh: true
     script: |
       invoke-psake ci 
+  env:
+    SYSTEM_ACCESSTOKEN: $(system.accesstoken)
 #   invoke-psake run-ci -properties @{'version'='$(Build.BuildNumber)'}
 # -------------------
 # PIPELINE FOLLOW-UP
