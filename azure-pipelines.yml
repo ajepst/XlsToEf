@@ -64,11 +64,11 @@ steps:
     projects: '$(Build.SourcesDirectory)/src/**/*.csproj'
     includeNuGetOrg: true
     
-#- task: PowerShell@2
-#  displayName: Generate Version using GitVersion
-#  inputs:
-#    targetType: 'inline'
-#    script: dotnet gitversion /output buildserver
+- task: PowerShell@2
+  displayName: Generate Version using GitVersion
+  inputs:
+    targetType: 'inline'
+    script: dotnet gitversion /output buildserver
 
 # -------------------
 # RUN PSAKE SCRIPT
@@ -80,10 +80,10 @@ steps:
     targetType: 'inline'
     pwsh: true
     script: |
-      invoke-psake ci 
+      invoke-psake ci -properties @{'version'='$(Build.BuildNumber)'}
   env:
     SYSTEM_ACCESSTOKEN: $(system.accesstoken)
-#   invoke-psake run-ci -properties @{'version'='$(Build.BuildNumber)'}
+
 # -------------------
 # PIPELINE FOLLOW-UP
 # -------------------
@@ -107,6 +107,7 @@ steps:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/src/XlsToEF/XlsToEf.csproj'
     configurationToPack: Release
+    versioningScheme: byBuildNumber
   displayName: Create XlsToEf Nuget Package
 
 - task: DotNetCoreCLI@2
@@ -114,6 +115,7 @@ steps:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/src/XlsToEFCore/XlsToEfCore.csproj'
     configurationToPack: Release
+    versioningScheme: byBuildNumber
   displayName: Create XlsToEfCore Nuget Package
 
 - task: PublishPipelineArtifact@1
