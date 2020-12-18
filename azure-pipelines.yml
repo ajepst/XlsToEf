@@ -91,16 +91,9 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '$(Build.SourcesDirectory)/src/XlsToEf.Tests/TestResults/*.xml'
+    testResultsFiles: '$(Build.SourcesDirectory)/build/results/*.xml'
   condition: succeededOrFailed()
-  displayName: Publish XlfToEF Test Results to Pipeline
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '$(Build.SourcesDirectory)/src/XlsToEfCore.Tests/TestResults/*.xml'
-  condition: succeededOrFailed()
-  displayName: Publish XlfToEFCore Test Results to Pipeline
+  displayName: Publish XlfToEF and XlfToEFCore Test Results to Pipeline
 
 - task: DotNetCoreCLI@2
   inputs:
