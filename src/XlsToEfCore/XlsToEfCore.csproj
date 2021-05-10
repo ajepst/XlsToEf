@@ -9,10 +9,10 @@
     <Description>XlsToEfCore is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework Core. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</Description>
     <Company />
     <PackageId>XlsToEfCore</PackageId>
-    <Copyright>Copyright © 2020 Headspring</Copyright>
-    <PackageProjectUrl>https://github.com/ajepst/XlsToEf</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/ajepst/XlsToEf</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/ajepst/XlsToEf/blob/master/license.txt</PackageLicenseUrl>
+    <Copyright>Copyright © 2021 Headspring</Copyright>
+    <PackageProjectUrl>https://github.com/HeadspringLabs/XlsToEf</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HeadspringLabs/XlsToEf</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/HeadspringLabs/XlsToEf/blob/master/license.txt</PackageLicenseUrl>
     <PackageTags>EF EfCore EntityFramework Excel xlsx Core</PackageTags>
   </PropertyGroup>
 

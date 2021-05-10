@@ -7,10 +7,10 @@
     <authors>Headspring</authors>
     <owners>Headspring</owners>
     <license type="expression">MIT</license>
-    <projectUrl>https://github.com/ajepst/XlsToEf</projectUrl>
+    <projectUrl>https://github.com/HeadspringLabs/XlsToEf</projectUrl>
     <releaseNotes>XlsToEf targets EF 6.2</releaseNotes>
     <description>XlsToEf is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</description>
-    <copyright>Copyright © 2020 Headspring</copyright>
+    <copyright>Copyright © 2021 Headspring</copyright>
     <dependencies>
       <group targetFramework=".NETFramework4.6.2">
         <dependency id="EntityFramework" version="6.2.0" />
