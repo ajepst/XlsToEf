@@ -166,7 +166,7 @@ task RunAllTests  {
 
 task Compile -depends Clean, CommonAssemblyInfo {
     exec { dotnet restore $source_dir\$project_name.sln }
-    exec { dotnet build -v q --configuration $project_config $source_dir\$project_name.sln }
+    exec { dotnet build -v q --configuration $project_config $source_dir\$project_name.sln /p:Version=$version }
 }
 
 task Clean {

@@ -1,0 +1,8 @@
+next-version: 3.0.0
+branches:
+  master:
+    mode: ContinuousDeployment
+    tag: ''
+ignore:
+  sha: []
+merge-message-formats: {}
