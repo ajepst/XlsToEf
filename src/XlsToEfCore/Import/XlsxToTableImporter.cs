@@ -57,7 +57,7 @@ namespace XlsToEfCore.Import
         /// <param name="validator">Optional method to run custom validation on the modified entity before saving</param>
         /// <param name="fileLocation">Directory of source xlsx file. Defaults to temp dir</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null, IEntityValidator<TEntity> validator = null, string fileLocation = null)
+        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, IUpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null, IEntityValidator<TEntity> validator = null, string fileLocation = null)
            where TEntity : class, new()
         {
             if (saveBehavior == null)
@@ -65,7 +65,7 @@ namespace XlsToEfCore.Import
                 saveBehavior = new ImportSaveBehavior();
             }
 
-            var selctedDict = BuildDictionaryFromSelected(matchingData.Selected);
+            var selectedDict = BuildDictionaryFromSelected(matchingData.Selected);
 
             var keyInfo =  GetEntityKeys(typeof (TEntity));
             EnsureImportingEntityHasSingleKey(keyInfo);
@@ -78,10 +78,10 @@ namespace XlsToEfCore.Import
                 idPropertyName = pk.Name;
             }
 
-            var isImportingEntityId = selctedDict.ContainsKey(idPropertyName);
+            var isImportingEntityId = selectedDict.ContainsKey(idPropertyName);
             var isDbGeneratedId = IsIdDbGenerated(typeof(TEntity));
 
-            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(saveBehavior.RecordMode, isDbGeneratedId, isImportingEntityId);
+            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntities(saveBehavior.RecordMode, isDbGeneratedId, isImportingEntityId);
             
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
 
@@ -101,7 +101,7 @@ namespace XlsToEfCore.Import
                     string idValue = null;
                     if (isImportingEntityId)
                     {
-                        var xlsxIdColName = selctedDict[idPropertyName];
+                        var xlsxIdColName = selectedDict[idPropertyName];
                         var idStringValue = excelRow[xlsxIdColName];
                         entityToUpdate = await GetMatchedDbObject(finder, idStringValue, idType);
 
@@ -115,7 +115,7 @@ namespace XlsToEfCore.Import
                         await _dbContext.Set<TEntity>().AddAsync(entityToUpdate);
                     }
 
-                    await MapIntoEntity(selctedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isDbGeneratedId, saveBehavior.RecordMode);
+                    await MapIntoEntity(selectedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isDbGeneratedId, saveBehavior.RecordMode);
                     if (validator != null)
                     {
                         var errors = validator.GetValidationErrors(entityToUpdate);
@@ -171,10 +171,10 @@ namespace XlsToEfCore.Import
 
         private Dictionary<string, string> BuildDictionaryFromSelected(List<XlsToEfColumnPair> selected)
         {
-            var hasDups = selected.GroupBy(x => x.EfName)
+            var hasDuplicates = selected.GroupBy(x => x.EfName)
                 .Select(group => new {Name = group.Key, Count = group.Count()})
                 .Any(x => x.Count > 1);
-            if (hasDups)
+            if (hasDuplicates)
             {
                 throw new Exception("Destination targets must be unique");
             }
@@ -195,18 +195,13 @@ namespace XlsToEfCore.Import
 
         private void MarkForNotSaving<TEntity>(TEntity entityToUpdate) where TEntity : class, new()
         {
-            if (_dbContext.Entry(entityToUpdate).State == EntityState.Added)
-            {
-                _dbContext.Entry(entityToUpdate).State = EntityState.Detached;
-            }
-            else
-            {
-                _dbContext.Entry(entityToUpdate).State = EntityState.Unchanged;
-            }
+            _dbContext.Entry(entityToUpdate).State = _dbContext.Entry(entityToUpdate).State == EntityState.Added
+                ? EntityState.Detached
+                : EntityState.Unchanged;
         }
 
         private async Task MapIntoEntity<TEntity>(Dictionary<string, string> matchingData, string idPropertyName,
-            UpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode) where TEntity : class
+            IUpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode) where TEntity : class
 
         {
             if (overridingMapper != null)
@@ -270,7 +265,7 @@ namespace XlsToEfCore.Import
             return excelRow.All(x => string.IsNullOrWhiteSpace(x.Value));
         }
 
-        private static void EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(RecordMode recordMode,
+        private static void EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntities(RecordMode recordMode,
             bool isAutoIncrementingId, bool isImportingEntityId)
         {
             if (isAutoIncrementingId && isImportingEntityId && recordMode == RecordMode.CreateOnly)
@@ -292,11 +287,11 @@ namespace XlsToEfCore.Import
         {
             var key = GetMappedKeyInformation(eType);
             var keyProperty = key.Properties[0];
-            var idkeyAnnotation = keyProperty.FindAnnotation("SqlServer:ValueGenerationStrategy");
+            var idKeyAnnotation = keyProperty.FindAnnotation("SqlServer:ValueGenerationStrategy");
             var isGeneratedOnAdd = key.Properties[0]?.ValueGenerated == ValueGenerated.OnAdd;
 
-            return ((idkeyAnnotation?.Value != null) && (idkeyAnnotation.Value.ToString().Contains("Identity") ||
-                                               idkeyAnnotation.Value.ToString().Contains("Computed"))) ||
+            return ((idKeyAnnotation?.Value != null) && (idKeyAnnotation.Value.ToString().Contains("Identity") ||
+                                               idKeyAnnotation.Value.ToString().Contains("Computed"))) ||
                    (isGeneratedOnAdd);
 
         }

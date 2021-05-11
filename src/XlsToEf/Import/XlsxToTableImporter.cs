@@ -59,7 +59,7 @@ namespace XlsToEf.Import
         /// <param name="validator">Optional method to run custom validation on the modified entity before saving</param>
         /// <param name="fileLocation">Directory of source xlsx file. Defaults to temp dir</param>
         /// <returns></returns>
-        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, UpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null, IEntityValidator<TEntity> validator = null, string fileLocation = null)
+        public async Task<ImportResult> ImportColumnData<TEntity, TId>(DataMatchesForImport matchingData, Func<TId, Expression<Func<TEntity, bool>>> finder = null, string idPropertyName = null, IUpdatePropertyOverrider<TEntity> overridingMapper = null, ImportSaveBehavior saveBehavior = null, IEntityValidator<TEntity> validator = null, string fileLocation = null)
            where TEntity : class, new()
         {
             if (saveBehavior == null)
@@ -67,7 +67,7 @@ namespace XlsToEf.Import
                 saveBehavior = new ImportSaveBehavior();
             }
 
-            var selctedDict = BuildDictionaryFromSelected(matchingData.Selected);
+            var selectedDict = BuildDictionaryFromSelected(matchingData.Selected);
 
             var keyInfo =  GetEntityKeys(typeof (TEntity));
             EnsureImportingEntityHasSingleKey(keyInfo);
@@ -80,10 +80,10 @@ namespace XlsToEf.Import
                 idPropertyName = pk.Name;
             }
 
-            var isImportingEntityId = selctedDict.ContainsKey(idPropertyName);
+            var isImportingEntityId = selectedDict.ContainsKey(idPropertyName);
             var isAutoIncrementingId = IsIdAutoIncrementing(typeof(TEntity));
 
-            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(saveBehavior.RecordMode, isAutoIncrementingId, isImportingEntityId);
+            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntities(saveBehavior.RecordMode, isAutoIncrementingId, isImportingEntityId);
             
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
 
@@ -103,7 +103,7 @@ namespace XlsToEf.Import
                     string idValue = null;
                     if (isImportingEntityId)
                     {
-                        var xlsxIdColName = selctedDict[idPropertyName];
+                        var xlsxIdColName = selectedDict[idPropertyName];
                         var idStringValue = excelRow[xlsxIdColName];
                         entityToUpdate = await GetMatchedDbObject(finder, idStringValue, idType);
 
@@ -117,7 +117,7 @@ namespace XlsToEf.Import
                         _dbContext.Set<TEntity>().Add(entityToUpdate);
                     }
 
-                    await MapIntoEntity(selctedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId, saveBehavior.RecordMode);
+                    await MapIntoEntity(selectedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isAutoIncrementingId, saveBehavior.RecordMode);
                     if (validator != null)
                     {
                         var errors = validator.GetValidationErrors(entityToUpdate);
@@ -173,10 +173,10 @@ namespace XlsToEf.Import
 
         private Dictionary<string, string> BuildDictionaryFromSelected(List<XlsToEfColumnPair> selected)
         {
-            var hasDups = selected.GroupBy(x => x.EfName)
+            var hasDuplicates = selected.GroupBy(x => x.EfName)
                 .Select(group => new {Name = group.Key, Count = group.Count()})
                 .Any(x => x.Count > 1);
-            if (hasDups)
+            if (hasDuplicates)
             {
                 throw new Exception("Destination targets must be unique");
             }
@@ -208,7 +208,7 @@ namespace XlsToEf.Import
         }
 
         private static async Task MapIntoEntity<TEntity>(Dictionary<string, string> matchingData, string idPropertyName,
-            UpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode)
+            IUpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode)
             
         {
             if (overridingMapper != null)
@@ -272,7 +272,7 @@ namespace XlsToEf.Import
             return excelRow.All(x => string.IsNullOrWhiteSpace(x.Value));
         }
 
-        private static void EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntites(RecordMode recordMode,
+        private static void EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntities(RecordMode recordMode,
             bool isAutoIncrementingId, bool isImportingEntityId)
         {
             if (isAutoIncrementingId && isImportingEntityId && recordMode == RecordMode.CreateOnly)

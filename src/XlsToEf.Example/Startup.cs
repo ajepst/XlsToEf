@@ -52,7 +52,7 @@ namespace XlsToEf.Example
             services.Scan(scan => scan
                 .FromAssemblyOf<Address>()
                 .AddClasses(x => x.Where(y => !y.IsAssignableFrom(typeof (XlsToEfDbContext))))
-                .AddClasses(classes => classes.AssignableTo(typeof (UpdatePropertyOverrider<>)))
+                .AddClasses(classes => classes.AssignableTo(typeof (IUpdatePropertyOverrider<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime()
                 );
