@@ -110,6 +110,72 @@ namespace XlsToEfCore.Tests
         }
 
 
+        public async Task ShouldImportWithOverriderUsingNonIdMatch()
+        {
+            var dbContext = GetDb();
+            var categoryName = "Cookies";
+            var categoryToSelect = new ProductCategory { CategoryCode = "CK", CategoryName = categoryName };
+            var unselectedCategory = new ProductCategory { CategoryCode = "UC", CategoryName = "Unrelated Category" };
+            var updatingCategory = new ProductCategory { CategoryCode = "NC", CategoryName = "New Category" };
+
+            await PersistToDatabase(categoryToSelect, unselectedCategory, updatingCategory);
+
+            var existingProduct = new Product { ProductCategoryId = unselectedCategory.Id, ProductName = "Vanilla Wafers" };
+            await PersistToDatabase(existingProduct);
+
+
+            var overrider = new ProductPropertyOverrider<Product>(dbContext);
+
+
+            var excelIoWrapper = new FakeExcelIo();
+            excelIoWrapper.Rows.Clear();
+            var cookieType = "Mint Cookies";
+            excelIoWrapper.Rows.Add(new Dictionary<string, string>
+            {
+                {"xlsCol1", "CK"},
+                {"xlsCol2", cookieType },
+                {"xlsCol5", "" },
+
+            });
+
+            excelIoWrapper.Rows.Add(new Dictionary<string, string>
+            {
+                {"xlsCol1", "NC"}, // updating the category, we are matching on product name
+                {"xlsCol2", existingProduct.ProductName },
+                {"xlsCol5", existingProduct.Id.ToString() },
+
+            });
+
+
+
+            var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+
+            var prod = new Product();
+            var importMatchingData = new DataMatchesForImportingOrderData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => prod.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("ProductCategory", "xlsCol1"),
+                    XlsToEfColumnPair.Create(() => prod.ProductName, "xlsCol2"),
+
+                },
+            };
+
+
+            Func<string, Expression<Func<Product, bool>>> finderExpression = selectorValue => entity => entity.ProductName.Equals(selectorValue);
+            var result = await importer.ImportColumnData(importMatchingData, finderExpression, overridingMapper: overrider, idPropertyName: "ProductName");
+
+            var newItem = GetDb().Set<Product>().Include(x => x.ProductCategory).First(x => x.ProductName == cookieType);
+            newItem.ProductCategory.CategoryName.ShouldBe("Cookies");
+            newItem.ProductName.ShouldBe(cookieType);
+
+            var updated = GetDb().Set<Product>().Include(x => x.ProductCategory).First(x => x.Id == existingProduct.Id);
+            updated.ProductCategory.CategoryName.ShouldBe("New Category");
+        }
+
         private class ProductPropertyOverrider<T> : IUpdatePropertyOverrider<T> where T : Product
         {
             private readonly DbContext _context;

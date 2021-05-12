@@ -78,7 +78,8 @@ namespace XlsToEfCore.Import
                 idPropertyName = pk.Name;
             }
 
-            var isImportingEntityId = selectedDict.ContainsKey(idPropertyName);
+            var isImportingEntityId = selectedDict.ContainsKey(pk.Name);
+            var isImportingMatchedEntities = selectedDict.ContainsKey(idPropertyName);
             var isDbGeneratedId = IsIdDbGenerated(typeof(TEntity));
 
             EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntities(saveBehavior.RecordMode, isDbGeneratedId, isImportingEntityId);
@@ -99,7 +100,7 @@ namespace XlsToEfCore.Import
                         continue;
 
                     string idValue = null;
-                    if (isImportingEntityId)
+                    if (isImportingMatchedEntities)
                     {
                         var xlsxIdColName = selectedDict[idPropertyName];
                         var idStringValue = excelRow[xlsxIdColName];
