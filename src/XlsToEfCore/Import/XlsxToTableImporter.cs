@@ -66,24 +66,25 @@ namespace XlsToEfCore.Import
             }
 
             var selectedDict = BuildDictionaryFromSelected(matchingData.Selected);
+            var isDbGeneratedId = IsIdDbGenerated(typeof(TEntity));
 
-            var keyInfo =  GetEntityKeys(typeof (TEntity));
+            var keyInfo = GetEntityKeys(typeof(TEntity));
             EnsureImportingEntityHasSingleKey(keyInfo);
             var pk = keyInfo[0];
-            Type idType = pk.PropertyInfo.PropertyType;
 
+            ValidateIdTypes<TEntity, TId>(idPropertyName, pk);
+
+            var isImportingEntityId = selectedDict.ContainsKey(pk.Name);
+            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntities(saveBehavior.RecordMode, isDbGeneratedId,
+                isImportingEntityId);
 
             if (idPropertyName == null)
             {
                 idPropertyName = pk.Name;
             }
 
-            var isImportingEntityId = selectedDict.ContainsKey(pk.Name);
-            var isImportingMatchedEntities = selectedDict.ContainsKey(idPropertyName);
-            var isDbGeneratedId = IsIdDbGenerated(typeof(TEntity));
+            var isImportingMatchableEntities = selectedDict.ContainsKey(idPropertyName);
 
-            EnsureNoIdColumnIncludedWhenCreatingAutoIncrementEntities(saveBehavior.RecordMode, isDbGeneratedId, isImportingEntityId);
-            
             var importResult = new ImportResult {RowErrorDetails = new Dictionary<string, string>()};
 
             var excelRows = await GetExcelRows(matchingData, fileLocation);
@@ -99,29 +100,29 @@ namespace XlsToEfCore.Import
                     if (ExcelRowIsBlank(excelRow))
                         continue;
 
-                    string idValue = null;
-                    if (isImportingMatchedEntities)
+                    string idStringValue = null;
+                    if (isImportingMatchableEntities)
                     {
                         var xlsxIdColName = selectedDict[idPropertyName];
-                        var idStringValue = excelRow[xlsxIdColName];
-                        entityToUpdate = await GetMatchedDbObject(finder, idStringValue, idType);
+                        idStringValue = excelRow[xlsxIdColName];
+                        entityToUpdate = await GetMatchedDbObject(finder, idStringValue, pk.ClrType);
 
                         ValidateDbResult(entityToUpdate, saveBehavior.RecordMode, xlsxIdColName, idStringValue);
                     }
 
                     if (entityToUpdate == null)
                     {
-                        EnsureNoEntityCreationWithIdWhenAutoIncrementIdType(idPropertyName, isDbGeneratedId, idValue);
+                        EnsureNoEntityCreationWithIdWhenAutoIncrementIdType(pk.Name, isDbGeneratedId, idStringValue);
                         entityToUpdate = new TEntity();
                         await _dbContext.Set<TEntity>().AddAsync(entityToUpdate);
                     }
 
-                    await MapIntoEntity(selectedDict, idPropertyName, overridingMapper, entityToUpdate, excelRow, isDbGeneratedId, saveBehavior.RecordMode);
+                    await MapIntoEntity(selectedDict, pk.Name, overridingMapper, entityToUpdate, excelRow, isDbGeneratedId, saveBehavior.RecordMode);
                     if (validator != null)
                     {
                         var errors = validator.GetValidationErrors(entityToUpdate);
 
-                        if(errors.Any())
+                        if (errors.Any())
                             throw new RowInvalidException(errors);
                     }
                     else
@@ -147,8 +148,8 @@ namespace XlsToEfCore.Import
 
                 if (saveBehavior.CommitMode == CommitMode.AnySuccessfulOneAtATime)
                 {
-                   await  _dbContext.SaveChangesAsync();
-                } 
+                    await _dbContext.SaveChangesAsync();
+                }
             }
 
             if ((saveBehavior.CommitMode == CommitMode.AnySuccessfulAtEndAsBulk) ||
@@ -158,6 +159,17 @@ namespace XlsToEfCore.Import
             }
 
             return importResult;
+        }
+
+
+        private void ValidateIdTypes<TEntity, TId>(string idPropertyName, IProperty pk) where TEntity : class, new()
+        {
+            if (idPropertyName != null){
+            var alternateCol = GetEntityProperty(typeof(TEntity), idPropertyName);
+                var idType = alternateCol.PropertyInfo.PropertyType;
+                if (idType != typeof(TId))
+                    throw new Exception("If using Surrogate ID, TId Type must be type of Surrogate ID");
+                }
         }
 
         private Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData, string fileLocation)
@@ -301,6 +313,12 @@ namespace XlsToEfCore.Import
         {
             var keys = _dbContext.Model.FindEntityType(eType).FindPrimaryKey().Properties;
             return keys;
+        }
+
+        private IProperty GetEntityProperty(Type eType, string column)
+        {
+            var prop = _dbContext.Model.FindEntityType(eType).FindProperty(column);
+            return prop;
         }
 
         private IKey GetMappedKeyInformation(Type eType)
