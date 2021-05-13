@@ -183,12 +183,29 @@ namespace XlsToEf.Import
 
         private async Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData, string fileLocation)
         {
-            if(matchingData.FileStream != null)
-                return await _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet);
+            if (matchingData.FileStream != null)
+            {
+                var streamFileFormat = matchingData.FileFormat ?? FileFormat.OpenExcel;
+                return await _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet, streamFileFormat);
+            }
 
             var filePath = Path.Combine((fileLocation ?? Path.GetTempPath()), matchingData.FileName);
+            var fileFormat = matchingData.FileFormat ?? GetFileFormatFromFile(matchingData.FileName);
 
-            return await _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
+            return await _excelIoWrapper.GetRows(filePath, matchingData.Sheet, fileFormat);
+        }
+
+        private FileFormat GetFileFormatFromFile(string filePath)
+        {
+            var fileExtension = Path.GetExtension(filePath);
+            if (fileExtension == ".csv")
+                return FileFormat.Csv;
+            else if (fileExtension == ".xlsx")
+            {
+                return FileFormat.OpenExcel;
+            }
+
+            throw new NotSupportedException("XlsToEf only supports xlsx and csv files");
         }
 
         private Dictionary<string, string> BuildDictionaryFromSelected(List<XlsToEfColumnPair> selected)

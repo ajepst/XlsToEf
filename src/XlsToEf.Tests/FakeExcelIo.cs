@@ -26,23 +26,23 @@ namespace XlsToEf.Tests
 
         };
 
-        public Task<IList<string>> GetSheets(string filePath)
+        public Task<IList<string>> GetSheets(string filePath, FileFormat fileFormat)
         {
             return Task.FromResult(Sheets);
         }
 
-        public Task<IList<string>> GetSheets(Stream fileStream)
+        public Task<IList<string>> GetSheets(Stream fileStream, FileFormat fileFormat)
         {
             return Task.FromResult(Sheets);
         }
 
-        public Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)
+        public Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName, FileFormat fileFormat)
         {
             FileName = filePath;
             return Task.FromResult(Rows);
         }
 
-        public Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName)
+        public Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName, FileFormat fileFormat)
         {
             return Task.FromResult(Rows);
         }

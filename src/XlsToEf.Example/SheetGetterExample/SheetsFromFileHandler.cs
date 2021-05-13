@@ -17,12 +17,15 @@ namespace XlsToEf.Example.SheetGetterExample
 
         public async Task<SheetPickerInformation> Handle(SaveAndGetSheetsForFileUpload uploadStream, CancellationToken cancellationToken)
         {
-            return await _getter.Handle(uploadStream.File);
+            var fileExtension = uploadStream.FileExtension;
+            var fileFormat = fileExtension == ".xlsx" ? FileFormat.OpenExcel : FileFormat.Csv;
+            return await _getter.Handle(uploadStream.File, fileFormat);
         }
     }
 
     public class SaveAndGetSheetsForFileUpload : IRequest<SheetPickerInformation>
     {
         public Stream File { get; set; }
+        public string FileExtension { get; set; }
     }
 }
