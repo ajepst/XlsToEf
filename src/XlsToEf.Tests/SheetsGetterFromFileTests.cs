@@ -12,7 +12,7 @@ namespace XlsToEf.Tests
             var excelIoWrapper = new FakeExcelIo();
             var sheetsGetterFromFile = new SheetsGetterFromFile(excelIoWrapper, new FakeXlsxFileCreator());
 
-            var result = await sheetsGetterFromFile.Handle(Stream.Null);
+            var result = await sheetsGetterFromFile.Handle(Stream.Null, FileFormat.OpenExcel);
 
             result.File.ShouldBe(FakeXlsxFileCreator.FileName);
             result.Sheets.ShouldBe(excelIoWrapper.Sheets);
@@ -25,7 +25,7 @@ namespace XlsToEf.Tests
             var sheetsGetterFromFile = new SheetsGetterFromFile(excelIoWrapper, new FakeXlsxFileCreator());
 
             var fileName = @"path.xlsx";
-            var result = await sheetsGetterFromFile.Handle(@"c:\this\" + fileName);
+            var result = await sheetsGetterFromFile.Handle(@"c:\this\" + fileName, FileFormat.OpenExcel);
 
             result.File.ShouldBe(fileName);
             result.Sheets.ShouldBe(excelIoWrapper.Sheets);

@@ -8,5 +8,6 @@
         public string FilePath  { get; set; }
         public string Sheet  { get; set; }
         public Stream FileStream { get; set; }
+        public FileFormat? FileFormat { get; set; }
     }
 }

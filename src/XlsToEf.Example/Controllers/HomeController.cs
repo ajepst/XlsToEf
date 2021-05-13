@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace XlsToEf.Example.Controllers
                     ReasonPhrase = "ERROR: No file found",
                 });
             }
-            var sheetInfo = await _mediator.Send(new SaveAndGetSheetsForFileUpload {File = uploadFile.OpenReadStream()});
+            var sheetInfo = await _mediator.Send(new SaveAndGetSheetsForFileUpload {File = uploadFile.OpenReadStream(), FileExtension = Path.GetExtension(uploadFile.FileName) });
 
 
             sheetInfo.Destinations = new List<UploadDestinationInformation>
