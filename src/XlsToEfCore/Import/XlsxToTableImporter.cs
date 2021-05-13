@@ -167,12 +167,13 @@ namespace XlsToEfCore.Import
 
         private void ValidateIdTypes<TEntity, TId>(string idPropertyName, IProperty pk) where TEntity : class, new()
         {
-            if (idPropertyName != null){
-            var alternateCol = GetEntityProperty(typeof(TEntity), idPropertyName);
+            if (idPropertyName != null)
+            {
+                var alternateCol = GetEntityProperty(typeof(TEntity), idPropertyName);
                 var idType = alternateCol.PropertyInfo.PropertyType;
                 if (idType != typeof(TId))
                     throw new Exception("If using Surrogate ID, TId Type must be type of Surrogate ID");
-                }
+            }
         }
 
         private Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData, string fileLocation)
@@ -316,9 +317,9 @@ namespace XlsToEfCore.Import
             return keys;
         }
 
-        private IProperty GetEntityProperty(Type eType, string column)
+        private IProperty GetEntityProperty(Type eType, string propName)
         {
-            var prop = _dbContext.Model.FindEntityType(eType).FindProperty(column);
+            var prop = _dbContext.Model.FindEntityType(eType).FindProperty(propName);
             return prop;
         }
 

@@ -40,7 +40,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
             _context = context;
         }
 
-        public async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
+        public async Task<IList<string>> UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
         {
             {
                 var product = new Product();
@@ -64,6 +64,9 @@ namespace XlsToEf.Example.ExampleCustomMapperField
                         destination1.ProductName = value;
                     }
                 }
+
+                var handledProps = new List<string> { productCategoryPropertyName, productPropertyName };
+                return handledProps;
             }
         }
     }
