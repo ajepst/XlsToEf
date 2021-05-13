@@ -5,7 +5,6 @@ using System.Linq;
 namespace XlsToEfCore.Import
 {
     public class RowInvalidException : Exception
-
     {
         public RowInvalidException(Dictionary<string, string> details) : base(MakeString(details))
         {

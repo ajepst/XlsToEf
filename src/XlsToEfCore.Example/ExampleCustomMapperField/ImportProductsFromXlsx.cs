@@ -31,7 +31,7 @@ namespace XlsToEfCore.Example.ExampleCustomMapperField
 
     }
 
-    public class ProductPropertyOverrider<T> : UpdatePropertyOverrider<T> where T : Product
+    public class ProductPropertyOverrider<T> : IUpdatePropertyOverrider<T> where T : Product
     {
         private readonly DbContext _context;
 
@@ -40,31 +40,33 @@ namespace XlsToEfCore.Example.ExampleCustomMapperField
             _context = context;
         }
 
-        public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
+        public async Task<IList<string>> UpdateProperties(T destination1, Dictionary<string, string> matches,
+            Dictionary<string, string> excelRow, RecordMode recordMode)
         {
-            {
-                var product = new Product();
-                var productCategoryPropertyName = "ProductCategoryCode";
-                var productPropertyName = PropertyNameHelper.GetPropertyName(() => product.ProductName);
+            var product = new Product();
+            var productCategoryPropertyName = "ProductCategoryCode";
+            var productPropertyName = PropertyNameHelper.GetPropertyName(() => product.ProductName);
 
-                foreach (var destinationProperty in matches.Keys)
+            foreach (var destinationProperty in matches.Keys)
+            {
+                var xlsxColumnName = matches[destinationProperty];
+                var value = excelRow[xlsxColumnName];
+                if (destinationProperty == productCategoryPropertyName)
                 {
-                    var xlsxColumnName = matches[destinationProperty];
-                    var value = excelRow[xlsxColumnName];
-                    if (destinationProperty == productCategoryPropertyName)
-                    {
-                        var newCategory =
-                            await _context.Set<ProductCategory>().Where(x => x.CategoryCode == value).FirstOrDefaultAsync();
-                        if (newCategory == null)
-                            throw new RowParseException("Category Code does not match a category");
-                        destination1.ProductCategory = newCategory;
-                    }
-                    else if (destinationProperty == productPropertyName)
-                    {
-                        destination1.ProductName = value;
-                    }
+                    var newCategory =
+                        await _context.Set<ProductCategory>().Where(x => x.CategoryCode == value).FirstOrDefaultAsync();
+                    if (newCategory == null)
+                        throw new RowParseException("Category Code does not match a category");
+                    destination1.ProductCategory = newCategory;
+                }
+                else if (destinationProperty == productPropertyName)
+                {
+                    destination1.ProductName = value;
                 }
             }
+
+            var handledProps = new List<string> {productCategoryPropertyName, productPropertyName};
+            return handledProps;
         }
     }
 }

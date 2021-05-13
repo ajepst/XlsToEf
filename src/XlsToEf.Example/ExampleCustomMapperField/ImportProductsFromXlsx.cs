@@ -31,7 +31,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
 
     }
 
-    public class ProductPropertyOverrider<T> : UpdatePropertyOverrider<T> where T : Product
+    public class ProductPropertyOverrider<T> : IUpdatePropertyOverrider<T> where T : Product
     {
         private readonly DbContext _context;
 
@@ -40,7 +40,7 @@ namespace XlsToEf.Example.ExampleCustomMapperField
             _context = context;
         }
 
-        public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
+        public async Task<IList<string>> UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
         {
             {
                 var product = new Product();
@@ -64,6 +64,9 @@ namespace XlsToEf.Example.ExampleCustomMapperField
                         destination1.ProductName = value;
                     }
                 }
+
+                var handledProps = new List<string> { productCategoryPropertyName, productPropertyName };
+                return handledProps;
             }
         }
     }

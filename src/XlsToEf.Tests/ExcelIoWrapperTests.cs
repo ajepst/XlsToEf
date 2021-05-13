@@ -49,5 +49,22 @@ namespace XlsToEf.Tests
                 persianRow["Quantity"].ShouldBe("2");
             }
         }
+
+        public async Task ShouldThrowHelpfulErrorOnMissingSheet()
+        {
+            var excel = new ExcelIoWrapper();
+            var cols =
+                await excel.GetImportColumnData(new XlsxColumnMatcherQuery
+                {
+                    FilePath = AppDomain.CurrentDomain.BaseDirectory + @"\TestExcelDoc.xlsx",
+                    Sheet = "Sheet2"
+                });
+            cols.Count.ShouldBe(2);
+            cols[0].ShouldBe("Cat");
+            cols[1].ShouldBe("Quantity");
+
+            await Should.ThrowAsync<SheetNotFoundException>(async () =>
+                await excel.GetRows("TestExcelDoc.xlsx", "MissingSheet"));
+        }
     }
 }

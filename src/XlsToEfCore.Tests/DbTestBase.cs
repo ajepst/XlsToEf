@@ -1,6 +1,7 @@
 using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using XlsToEfCore.Tests.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
@@ -18,13 +19,13 @@ namespace XlsToEfCore.Tests
             return new XlsToEfDbContext(optionsBuilder.Options);
         }
 
-        protected async Task PersistToDatabase<T>(T entity)
+        protected async Task PersistToDatabase<T>(params T[] entity)
         where T: class
         {
             using (var db = GetDb())
             {
-
-                await db.Set<T>().AddAsync(entity);
+                foreach (var e in entity)
+                    await db.Set<T>().AddAsync(e);
 
                 await db.SaveChangesAsync();
             }

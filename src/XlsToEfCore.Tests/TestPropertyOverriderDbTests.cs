@@ -110,7 +110,73 @@ namespace XlsToEfCore.Tests
         }
 
 
-        private class ProductPropertyOverrider<T> : UpdatePropertyOverrider<T> where T : Product
+        public async Task ShouldImportWithOverriderUsingNonIdMatch()
+        {
+            var dbContext = GetDb();
+            var categoryName = "Cookies";
+            var categoryToSelect = new ProductCategory { CategoryCode = "CK", CategoryName = categoryName };
+            var unselectedCategory = new ProductCategory { CategoryCode = "UC", CategoryName = "Unrelated Category" };
+            var updatingCategory = new ProductCategory { CategoryCode = "NC", CategoryName = "New Category" };
+
+            await PersistToDatabase(categoryToSelect, unselectedCategory, updatingCategory);
+
+            var existingProduct = new Product { ProductCategoryId = unselectedCategory.Id, ProductName = "Vanilla Wafers" };
+            await PersistToDatabase(existingProduct);
+
+
+            var overrider = new ProductPropertyOverrider<Product>(dbContext);
+
+
+            var excelIoWrapper = new FakeExcelIo();
+            excelIoWrapper.Rows.Clear();
+            var cookieType = "Mint Cookies";
+            excelIoWrapper.Rows.Add(new Dictionary<string, string>
+            {
+                {"xlsCol1", "CK"},
+                {"xlsCol2", cookieType },
+                {"xlsCol5", "" },
+
+            });
+
+            excelIoWrapper.Rows.Add(new Dictionary<string, string>
+            {
+                {"xlsCol1", "NC"}, // updating the category, we are matching on product name
+                {"xlsCol2", existingProduct.ProductName },
+                {"xlsCol5", existingProduct.Id.ToString() },
+
+            });
+
+
+
+            var importer = new XlsxToTableImporter(dbContext, excelIoWrapper);
+
+            var prod = new Product();
+            var importMatchingData = new DataMatchesForImportingOrderData
+            {
+                FileName = "foo.xlsx",
+                Sheet = "mysheet",
+                Selected = new List<XlsToEfColumnPair>
+                {
+                    XlsToEfColumnPair.Create(() => prod.Id, "xlsCol5"),
+                    XlsToEfColumnPair.Create("ProductCategory", "xlsCol1"),
+                    XlsToEfColumnPair.Create(() => prod.ProductName, "xlsCol2"),
+
+                },
+            };
+
+
+            Func<string, Expression<Func<Product, bool>>> finderExpression = selectorValue => entity => entity.ProductName.Equals(selectorValue);
+            var result = await importer.ImportColumnData(importMatchingData, finderExpression, overridingMapper: overrider, idPropertyName: "ProductName");
+
+            var newItem = GetDb().Set<Product>().Include(x => x.ProductCategory).First(x => x.ProductName == cookieType);
+            newItem.ProductCategory.CategoryName.ShouldBe("Cookies");
+            newItem.ProductName.ShouldBe(cookieType);
+
+            var updated = GetDb().Set<Product>().Include(x => x.ProductCategory).First(x => x.Id == existingProduct.Id);
+            updated.ProductCategory.CategoryName.ShouldBe("New Category");
+        }
+
+        private class ProductPropertyOverrider<T> : IUpdatePropertyOverrider<T> where T : Product
         {
             private readonly DbContext _context;
 
@@ -119,32 +185,33 @@ namespace XlsToEfCore.Tests
                 _context = context;
             }
 
-            public override async Task UpdateProperties(T destination1, Dictionary<string, string> matches, Dictionary<string, string> excelRow, RecordMode recordMode)
+            public async Task<IList<string>> UpdateProperties(T destination1, Dictionary<string, string> matches,
+                Dictionary<string, string> excelRow, RecordMode recordMode)
             {
-                {
-                    var product = new Product();
-                    var productCategoryPropertyName =
-                        PropertyNameHelper.GetPropertyName(() => product.ProductCategory);
-                    var productPropertyName = PropertyNameHelper.GetPropertyName(() => product.ProductName);
 
-                    foreach (var destinationProperty in matches.Keys)
+                var product = new Product();
+                var productCategoryPropertyName = PropertyNameHelper.GetPropertyName(() => product.ProductCategory);
+                var productPropertyName = PropertyNameHelper.GetPropertyName(() => product.ProductName);
+
+                foreach (var destinationProperty in matches.Keys)
+                {
+                    var xlsxColumnName = matches[destinationProperty];
+                    var value = excelRow[xlsxColumnName];
+                    if (destinationProperty == productCategoryPropertyName)
                     {
-                        var xlsxColumnName = matches[destinationProperty];
-                        var value = excelRow[xlsxColumnName];
-                        if (destinationProperty == productCategoryPropertyName)
-                        {
-                            var newCategory =
-                                await _context.Set<ProductCategory>().Where(x => x.CategoryCode == value).FirstAsync();
-                            if (newCategory == null)
-                                throw new RowParseException("Category Code does not match a category");
-                            destination1.ProductCategory = newCategory;
-                        }
-                        else if (destinationProperty == productPropertyName)
-                        {
-                            destination1.ProductName = value;
-                        }
+                        var newCategory =
+                            await _context.Set<ProductCategory>().Where(x => x.CategoryCode == value).FirstAsync();
+                        if (newCategory == null)
+                            throw new RowParseException("Category Code does not match a category");
+                        destination1.ProductCategory = newCategory;
+                    }
+                    else if (destinationProperty == productPropertyName)
+                    {
+                        destination1.ProductName = value;
                     }
                 }
+                var handledProps = new List<string> { productCategoryPropertyName, productPropertyName };
+                return handledProps;
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,6 +53,8 @@ namespace XlsToEf.Import
             {
                 using (var excel = new ExcelPackage(fileStream))
                 {
+                    EnsureSheetExists(sheetName, excel);
+
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
                     var headerCells =
                         sheet.Cells[
@@ -63,6 +64,12 @@ namespace XlsToEf.Import
             });
 
             return colNames;
+        }
+        
+        private static void EnsureSheetExists(string sheetName, ExcelPackage excel)
+        {
+            if (excel.Workbook.Worksheets.All(x => x.Name != sheetName))
+                throw new SheetNotFoundException(sheetName);
         }
 
         public async Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
@@ -87,8 +94,9 @@ namespace XlsToEf.Import
             {
                 using (var excel = new ExcelPackage(fileStream))
                 {
-                    var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
+                    EnsureSheetExists(sheetName, excel);
 
+                    var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
 
                     var rows = new List<Dictionary<string, string>>();
 
@@ -98,10 +106,12 @@ namespace XlsToEf.Import
                         var row = sheet.Cells[string.Format("{0}:{0}", rowNum)];
 
                         for (int colIndex = sheet.Dimension.Start.Column; colIndex <= sheet.Dimension.End.Column; colIndex++)
-                        { // ... Cell by cell...
+                        {
+                            // ... Cell by cell...
                             string cellValue = sheet.Cells[rowNum, colIndex].Text; // This got me the actual value I needed.
                             rowDict.Add(sheet.Cells[1, colIndex].Text, cellValue);
                         }
+
                         rows.Add(rowDict);
                     }
 
