@@ -12,8 +12,7 @@ namespace XlsToEfCore.Tests
     {
         public async Task ShouldGetFromSpreadsheet()
         {
-           // var excel = new ExcelIoWrapper();
-            var excel = new ExcelIoAlternateWrapper();
+            var excel = new ExcelIoWrapper();
             var cols =
                 await excel.GetImportColumnData(new XlsxColumnMatcherQuery
                 {
@@ -31,8 +30,7 @@ namespace XlsToEfCore.Tests
 
         public async Task ShouldGetFromSpreadsheetUsingStream()
         {
-            //var excel = new ExcelIoWrapper();
-            var excel = new ExcelIoAlternateWrapper();
+            var excel = new ExcelIoWrapper();
             await using var stream =
                 new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\TestExcelDoc.xlsx").OpenRead();
             var cols =
@@ -54,8 +52,7 @@ namespace XlsToEfCore.Tests
 
         public async Task ShouldGetFromCsvUsingStream()
         {
-            //var excel = new ExcelIoWrapper();
-            var excel = new ExcelIoAlternateWrapper();
+            var excel = new ExcelIoWrapper();
             await using var stream =
                 new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\TestCsvDoc.csv").OpenRead();
             var cols =
@@ -77,8 +74,7 @@ namespace XlsToEfCore.Tests
 
         public async Task ShouldThrowHelpfulErrorOnMissingSheet()
         {
-            // var excel = new ExcelIoWrapper();
-            var excel = new ExcelIoAlternateWrapper();
+            var excel = new ExcelIoWrapper();
             var cols =
                 await excel.GetImportColumnData(new XlsxColumnMatcherQuery
                 {

@@ -26,7 +26,7 @@ namespace XlsToEfCore.Import
         {
             _dbContext = dbContext;
             //_excelIoWrapper = new ExcelIoWrapper();
-            _excelIoWrapper = new ExcelIoAlternateWrapper();
+            _excelIoWrapper = new ExcelIoWrapper();
         }
 
 

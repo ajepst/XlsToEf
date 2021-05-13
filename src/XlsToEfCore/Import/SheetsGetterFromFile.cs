@@ -18,7 +18,7 @@ namespace XlsToEfCore.Import
         public SheetsGetterFromFile()
         {
             //_excelIoWrapper = new ExcelIoWrapper();
-            _excelIoWrapper = new ExcelIoAlternateWrapper();
+            _excelIoWrapper = new ExcelIoWrapper();
             _xlsxFileCreator = new XlsxFileCreator();
         }
 
