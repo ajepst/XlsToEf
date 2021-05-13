@@ -54,6 +54,8 @@ namespace XlsToEfCore.Import
             {
                 using (var excel = new ExcelPackage(fileStream))
                 {
+                    EnsureSheetExists(sheetName, excel);
+
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
                     var headerCells =
                         sheet.Cells[
@@ -63,6 +65,12 @@ namespace XlsToEfCore.Import
             });
 
             return colNames;
+        }
+
+        private static void EnsureSheetExists(string sheetName, ExcelPackage excel)
+        {
+            if (excel.Workbook.Worksheets.All(x => x.Name != sheetName))
+                throw new SheetNotFoundException(sheetName);
         }
 
         public Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery)
@@ -87,6 +95,8 @@ namespace XlsToEfCore.Import
             {
                 using (var excel = new ExcelPackage(fileStream))
                 {
+                    EnsureSheetExists(sheetName, excel);
+
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
 
 
