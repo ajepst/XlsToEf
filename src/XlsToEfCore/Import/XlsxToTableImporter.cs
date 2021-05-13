@@ -100,11 +100,10 @@ namespace XlsToEfCore.Import
                     if (ExcelRowIsBlank(excelRow))
                         continue;
 
-                    string idStringValue = null;
                     if (isImportingMatchableEntities)
                     {
                         var xlsxIdColName = selectedDict[idPropertyName];
-                        idStringValue = excelRow[xlsxIdColName];
+                        var idStringValue = excelRow[xlsxIdColName];
                         entityToUpdate = await GetMatchedDbObject(finder, idStringValue, pk.ClrType);
 
                         ValidateDbResult(entityToUpdate, saveBehavior.RecordMode, xlsxIdColName, idStringValue);
@@ -112,7 +111,11 @@ namespace XlsToEfCore.Import
 
                     if (entityToUpdate == null)
                     {
-                        EnsureNoEntityCreationWithIdWhenAutoIncrementIdType(pk.Name, isDbGeneratedId, idStringValue);
+                        if (selectedDict.ContainsKey(pk.Name))
+                        {
+                            var trueIdXlsxIdFieldName = selectedDict[pk.Name];
+                            EnsureNoEntityCreationWithIdWhenAutoIncrementIdType(pk.Name, isDbGeneratedId, excelRow[trueIdXlsxIdFieldName]);
+                        }
                         entityToUpdate = new TEntity();
                         await _dbContext.Set<TEntity>().AddAsync(entityToUpdate);
                     }
@@ -213,18 +216,16 @@ namespace XlsToEfCore.Import
                 : EntityState.Unchanged;
         }
 
-        private async Task MapIntoEntity<TEntity>(Dictionary<string, string> matchingData, string idPropertyName,
+        private async Task MapIntoEntity<TEntity>(Dictionary<string, string> matchingData, string trueIdPropName,
             IUpdatePropertyOverrider<TEntity> overridingMapper, TEntity entityToUpdate, Dictionary<string, string> excelRow, bool isAutoIncrementingId, RecordMode recordMode) where TEntity : class
 
         {
+            IList<string> alreadyHandledPropertyNames = new List<string>();
             if (overridingMapper != null)
             {
-                await overridingMapper.UpdateProperties(entityToUpdate, matchingData, excelRow, recordMode);
+                alreadyHandledPropertyNames =  await overridingMapper.UpdateProperties(entityToUpdate, matchingData, excelRow, recordMode);
             }
-            else
-            {
-                UpdateProperties(entityToUpdate, matchingData, excelRow, idPropertyName, isAutoIncrementingId);
-            }
+            UpdateProperties(entityToUpdate, matchingData, excelRow, trueIdPropName, isAutoIncrementingId, alreadyHandledPropertyNames);
         }
 
         // this condition might happen when Upserting. unlike the other check, this check is per-row.
@@ -327,11 +328,13 @@ namespace XlsToEfCore.Import
         }
 
         private void UpdateProperties<TSelector>(TSelector matchedObject, Dictionary<string, string> matches,
-            Dictionary<string, string> excelRow, string selectorColName, bool shouldSkipIdInsert) where TSelector : class
+            Dictionary<string, string> excelRow, string trueIdPropName, bool shouldSkipIdInsert, IList<string> alreadyHandledPropertyNames) where TSelector : class
         {
             foreach (var entityPropertyName in matches.Keys)
             {
-                if ((entityPropertyName == selectorColName) && shouldSkipIdInsert) continue;
+                if (alreadyHandledPropertyNames.Contains(entityPropertyName))
+                    continue;
+                if ((entityPropertyName == trueIdPropName) && shouldSkipIdInsert) continue;
                 var xlsxColumnName = matches[entityPropertyName];
                 var xlsxItemData = excelRow[xlsxColumnName];
 
