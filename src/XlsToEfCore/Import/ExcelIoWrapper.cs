@@ -8,24 +8,24 @@ namespace XlsToEfCore.Import
 {
     public interface IExcelIoWrapper
     {
-        Task<IList<string>> GetSheets(string filePath);
-        Task<IList<string>> GetSheets(Stream fileStream);
-        Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName);
-        Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName);
+        Task<IList<string>> GetSheets(string filePath, FileFormat fileFormat);
+        Task<IList<string>> GetSheets(Stream fileStream, FileFormat fileFormat);
+        Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName, FileFormat fileFormat);
+        Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName, FileFormat fileFormat);
         Task<IList<string>> GetImportColumnData(XlsxColumnMatcherQuery matcherQuery);
     }
 
     public class ExcelIoWrapper : IExcelIoWrapper
     {
-        public async Task<IList<string>> GetSheets(string filePath)
+        public async Task<IList<string>> GetSheets(string filePath, FileFormat fileFormat)
         {
             using (var stream = new FileInfo(filePath).OpenRead())
             {
-                return await GetSheets(stream);
+                return await GetSheets(stream, fileFormat);
             }
         }
 
-        public async Task<IList<string>> GetSheets(Stream fileStream)
+        public async Task<IList<string>> GetSheets(Stream fileStream, FileFormat fileFormat)
         {
             var sheetNames = await Task.Run(() =>
             {
@@ -80,15 +80,16 @@ namespace XlsToEfCore.Import
             return GetColumns(matcherQuery.FileStream, matcherQuery.Sheet);
         }
 
-        public async Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName)
+        public async Task<List<Dictionary<string, string>>> GetRows(string filePath, string sheetName,
+            FileFormat fileFormat)
         {
             using (var stream = new FileInfo(filePath).OpenRead())
             {
-                return await GetRows(stream, sheetName);
+                return await GetRows(stream, sheetName, FileFormat.OpenExcel);
             }
         }
 
-        public async Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName)
+        public async Task<List<Dictionary<string, string>>> GetRows(Stream fileStream, string sheetName, FileFormat fileFormat)
         {
             var worksheetRows = await Task.Run(() =>
             {

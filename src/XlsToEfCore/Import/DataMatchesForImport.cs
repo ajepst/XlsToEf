@@ -17,7 +17,8 @@ namespace XlsToEfCore.Import
         public string FileName { get; set; }
         public Stream FileStream { get; set; }
         public string Sheet { get; set; }
-        public List<XlsToEfColumnPair> Selected { get; set; } 
+        public List<XlsToEfColumnPair> Selected { get; set; }
+        public FileFormat? FileFormat { get; set; }
     }
 
     public class XlsToEfColumnPair

@@ -25,7 +25,8 @@ namespace XlsToEfCore.Import
         public XlsxToTableImporter(DbContext dbContext)
         {
             _dbContext = dbContext;
-            _excelIoWrapper = new ExcelIoWrapper();
+            //_excelIoWrapper = new ExcelIoWrapper();
+            _excelIoWrapper = new ExcelIoAlternateWrapper();
         }
 
 
@@ -178,12 +179,29 @@ namespace XlsToEfCore.Import
 
         private Task<List<Dictionary<string, string>>> GetExcelRows(DataMatchesForImport matchingData, string fileLocation)
         {
-            if(matchingData.FileStream != null)
-                return _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet);
+            if (matchingData.FileStream != null)
+            {
+                var streamFileFormat = matchingData.FileFormat ?? FileFormat.OpenExcel;
+                return _excelIoWrapper.GetRows(matchingData.FileStream, matchingData.Sheet, streamFileFormat);
+            }
 
             var filePath = Path.Combine((fileLocation ?? Path.GetTempPath()), matchingData.FileName);
+            var fileFormat = matchingData.FileFormat ?? GetFileFormatFromFile(matchingData.FileName);
 
-            return _excelIoWrapper.GetRows(filePath, matchingData.Sheet);
+            return _excelIoWrapper.GetRows(filePath, matchingData.Sheet, fileFormat);
+        }
+
+        private FileFormat GetFileFormatFromFile(string filePath)
+        {
+            var fileExtension = Path.GetExtension(filePath);
+            if (fileExtension == ".csv")
+                return FileFormat.Csv;
+            else if (fileExtension == ".xlsx")
+            {
+                return FileFormat.OpenExcel;
+            }
+
+            throw new NotSupportedException("XlsToEf only supports xlsx and csv files");
         }
 
         private Dictionary<string, string> BuildDictionaryFromSelected(List<XlsToEfColumnPair> selected)

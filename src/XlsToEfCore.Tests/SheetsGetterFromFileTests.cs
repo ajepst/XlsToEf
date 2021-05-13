@@ -12,7 +12,7 @@ namespace XlsToEfCore.Tests
             var excelIoWrapper = new FakeExcelIo();
             var sheetsGetterFromFile = new SheetsGetterFromFile(excelIoWrapper, new FakeXlsxFileCreator());
 
-            var result = await sheetsGetterFromFile.Handle(Stream.Null);
+            var result = await sheetsGetterFromFile.Handle(Stream.Null, FileFormat.OpenExcel);
 
             result.File.ShouldBe(FakeXlsxFileCreator.FileName);
             result.Sheets.ShouldBe(excelIoWrapper.Sheets);
