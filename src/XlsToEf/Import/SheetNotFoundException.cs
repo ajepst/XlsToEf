@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XlsToEfCore.Import
+namespace XlsToEf.Import
 {
     public class SheetNotFoundException : Exception
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -98,7 +97,6 @@ namespace XlsToEfCore.Import
                     EnsureSheetExists(sheetName, excel);
 
                     var sheet = excel.Workbook.Worksheets.First(x => x.Name == sheetName);
-
 
                     var rows = new List<Dictionary<string, string>>();
 
