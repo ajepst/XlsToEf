@@ -4,7 +4,7 @@
 
 ### What is XlsToEf? ###
 
-XlsToEf is a library you can use to help you import rows from excel files and then save right to the database with Entity Framework.  It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.
+XlsToEf is a library you can use to help you import rows from excel AND csv files and then save right to the database with Entity Framework.  It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.
 
 ### What is XlsToEfCore? ###
 
@@ -12,7 +12,7 @@ XlsToEfCore is a version of XlsToEf set up to use with EF Core. Usage is the sam
 
 ### Where can I get it? ###
 
-It's available on nuget at https://www.nuget.org/packages/XlsToEf and you can install it from the package manager console:
+It's available on nuget at https://www.nuget.org/packages/XlsToEf and https://www.nuget.org/packages/XlsToEfCore and you can install it from the package manager console:
 
 ```
 PM> Install-package XlsToEF
@@ -34,6 +34,8 @@ var importMatchingData = new DataMatchesForImport
 {
     FileName = "c:\foo.xlsx",               // path to the uploaded file
     Sheet = "Sheet 2",                      // sheet in the excel doc you want to import
+    FileFormat = FileFormat.OpenExcel,      // flag to indicate file format. If null, will look at the file extension, 
+                                            //   but will default to excel if unknown (as with a stream).
     Selected =                              // entity fields (or just a placeholder for the field, if you use  
         new List<XlsToEfColumnPair>         //   the custom method below) mapping to the columns in the spreadsheet
         {
@@ -47,7 +49,7 @@ var importMatchingData = new DataMatchesForImport
 return await _xlsxToTableImporter.ImportColumnData<Order>(importMatchingData); 
 
 ```
-The *EfName* above is the destination field name in your EF entity, and the *XlsName* is the source column in your excel sheet. The "magic" string key as shown above going to what you'll use when the structure is being built client side using a matching UI and bound to your controller parameter (the EFName string wouldn't actually be magic as it would be generated earlier via the ImportColumnData.TableColumns collection and sent to the UI, dicussed below in the Additional Tools section) However if you are implementing a backend-only import with no user input, then you may be handcoding the Selected collection.  In that case, I'd avoid the "magic strings" by using an expression: 
+The *EfName* above is the destination field name in your EF entity, and the *XlsName* is the source column in your excel sheet. The "magic" string key as shown above going to what you'll use when the structure is being built client side using a matching UI and bound to your controller parameter (the EFName string wouldn't actually be magic as it would be generated earlier via the DataForMatcherUi.TableColumns collection and sent to the UI, dicussed below in the Additional Tools section) However if you are implementing a backend-only import with no user input, then you may be handcoding the Selected collection.  In that case, I'd avoid the "magic strings" by using an expression: 
 
 ```
 var cat = new ProductCategory();
