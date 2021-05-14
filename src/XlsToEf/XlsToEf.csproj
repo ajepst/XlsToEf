@@ -12,7 +12,7 @@
     <Description>XlsToEf is a library you can use to help you import rows from excel files into your entities and then save right to the database with Entity Framework. It includes components to take care of most of the mechanical work of an import, and also includes several helper functions that you can use in your UI.</Description>
     <Authors>Headspring</Authors>
     <Copyright>Copyright © 2020 Headspring</Copyright>
-    <license type="expression">MIT</license>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ajepst/XlsToEf</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ajepst/XlsToEf</RepositoryUrl>
     <PackageTags>EF EntityFramework Excel xlsx</PackageTags>
