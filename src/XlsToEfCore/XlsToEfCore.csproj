@@ -12,7 +12,7 @@
     <Copyright>Copyright © 2021 Headspring</Copyright>
     <PackageProjectUrl>https://github.com/HeadspringLabs/XlsToEf</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HeadspringLabs/XlsToEf</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/HeadspringLabs/XlsToEf/blob/master/license.txt</PackageLicenseUrl>
+    <license type="expression">MIT</license>
     <PackageTags>EF EfCore EntityFramework Excel xlsx Core</PackageTags>
   </PropertyGroup>
 
